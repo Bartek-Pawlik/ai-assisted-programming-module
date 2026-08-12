@@ -79,10 +79,13 @@ it is one line to edit.
 The source repos are left in place, untouched. Nothing is deleted from the
 organisation as part of this change.
 
-**Known loss:** `aiap-w3-lab-prompting` carries real autograding
-(`.github/scripts/score.py`, `classroom.yml`, a score badge). Retiring
-Classroom retires that. It is recoverable as a plain CI job in the student's
-own copy but does not come across for free, and is not part of this change.
+**Partial loss (better than expected):** `aiap-w3-lab-prompting` carried
+autograding in two halves. The **local** half — `scripts/run_and_grade.py`
+and `scripts/setup_check.py` — migrated intact and still works, so a student
+can still self-check a task in one command. Only the Classroom-hosted half
+(`.github/workflows/classroom.yml`, `.github/scripts/score.py` and the score
+badge) is gone. The lab README now frames the score as a self-check that
+reports nowhere, rather than a submission.
 
 ### 3. Solutions and instructor material leave the public repository
 
@@ -105,6 +108,33 @@ A pre-migration scan of all eleven source repositories for credential-shaped
 strings, `.env` files, private keys and service-account JSON found nothing.
 The only match was `aiap-w9-lab-baas-template/frontend/.env.example`, which is
 safe by design and ships.
+
+### What the gates actually found (added after implementation)
+
+The scan above was clean, but the gates were not. Four classes of problem
+surfaced only once the checks ran, and all four are now fixed:
+
+1. **Worked answers inside the exercise files.** Six of the ten blank
+   worksheets in `labs/prompting/lab/prompts/` (tasks 1, 3, 5, 6, 7, 10) had
+   somebody's completed answers appended to the template. Students were being
+   handed the solutions inside the files they were supposed to fill in. This
+   was not in `solutions/` and no filename suggested it.
+2. **A real student's name in the project brief** — the worked example of a
+   submission textbox quoted a GitHub URL from a previous year's cohort,
+   which carried that student's name in the repo slug, alongside a personal
+   SharePoint video link. Both replaced with generic placeholders. (The name
+   is deliberately not repeated here: quoting it to document the fix would
+   put it straight back into the repo.)
+3. **Moodle group enrolment passwords** in the week-01 PowerPoint. The
+   converted deck states that they are given out verbally instead, because
+   the deck is published to a public website.
+4. **Corrupted markdown in the CLI-agents lab** — four closing fences had
+   been written *over* the first three characters of the following line
+   (`` ```on't pipe… ``, `` ```heck version ``, `` ```ilot  # Then try… ``),
+   plus one orphan fence rendering eight lines of prose as a code block.
+
+Point 1 is the one worth remembering: the repo-boundary decision above
+protects `solutions/`, and `solutions/` was never where the real leak was.
 
 ### 4. The project brief becomes canonical here
 
@@ -289,7 +319,14 @@ kept and reported.
 - **Snippet verification is parsing, not execution.** Weaker than OOC's
   `javac` gate, and 3 of 9 labs cannot be fully verified in CI without live
   API keys.
-- **The prompting lab's autograder does not survive** the move off Classroom.
+- **The prompting lab's autograder survives only locally.** The self-check
+  command works; the Classroom-hosted score and badge do not.
+- **The practice bank is one topic deep.** 25 prompting questions ship;
+  the other eight topics are authored as their decks convert.
+- **`LAB_OVERRIDES` and `PENDING_DECKS` are both escape hatches** in
+  `build_index.py`, and each is a place the derived layout stops deriving.
+  `PENDING_DECKS` must shrink to empty as decks convert; the build fails if
+  a week is listed there *and* has a deck, so it cannot rot silently.
 - **Content ages fast.** These decks are from 2025 and the field has moved.
   Week-by-week conversion is also a refresh, which is a benefit, but it means
   the repository is incomplete for most of the semester.
