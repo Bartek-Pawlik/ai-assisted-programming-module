@@ -33,9 +33,10 @@ straight from the workflow. Labs are plain Python (plus one TypeScript
 frontend) under `labs/<topic>/`, each with its instructions in a README.
 Conventions and editing rules live in [`CLAUDE.md`](CLAUDE.md).
 
-Decks are being converted from PowerPoint week by week; unconverted weeks
-are listed in `PENDING_DECKS` in `scripts/build_index.py` and render as
-marker rows until their `slides.md` lands.
+All ten teaching decks are written. Every deck except the module
+introduction is self-contained and carries no lecturer or institution
+name, so any week can be lifted into another course unchanged —
+`scripts/check_deck_portability.py` enforces that.
 
 </details>
 
@@ -48,17 +49,17 @@ marker rows until their `slides.md` lands.
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
 | 1 | Module Introduction | [slides](weeks/week-01-introduction/slides.md) | _no lab in week 1_ |
-| 2 | AIAP Overview | _deck pending_ | [lab](labs/setup/) |
-| 3 | Prompting | _deck pending_ | [lab](labs/prompting/) |
-| 4 | RAG | _deck pending_ | [lab](labs/rag/) |
-| 5 | MCP | _deck pending_ | [lab](labs/mcp/) |
-| 6 | Coding Agents | _deck pending_ | [lab](labs/agents/) |
+| 2 | AIAP Overview | [slides](weeks/week-02-overview/slides.md) | [lab](labs/setup/) |
+| 3 | Prompting & Context Engineering | [slides](weeks/week-03-prompting/slides.md) | [lab](labs/prompting/) |
+| 4 | RAG & Retrieval Strategy | [slides](weeks/week-04-rag/slides.md) | [lab](labs/rag/) |
+| 5 | MCP | [slides](weeks/week-05-mcp/slides.md) | [lab](labs/mcp/) |
+| 6 | Coding Agents | [slides](weeks/week-06-agents/slides.md) | [lab](labs/agents/) |
 | — | Reading week | [details](weeks/week-06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (20%) | [details](weeks/week-07-mcq1/README.md) | — |
 | 8 | Security of AI-Generated Code | [slides](weeks/week-08-security/slides.md) | [lab](labs/security/) |
-| 9 | BaaS | _deck pending_ | [lab](labs/baas/) |
-| 10 | CI/CD | _deck pending_ | [lab](labs/cicd/) |
-| 11 | Vibe Coding | _deck pending_ | [lab](labs/vibe-coding/) |
+| 9 | BaaS | [slides](weeks/week-09-baas/slides.md) | [lab](labs/baas/) |
+| 10 | CI/CD & Evals | [slides](weeks/week-10-cicd/slides.md) | [lab](labs/cicd/) |
+| 11 | Vibe Coding & Spec-Driven | [slides](weeks/week-11-vibe-coding/slides.md) | [lab](labs/vibe-coding/) |
 | 12 | **MCQ 2** (20%) | [details](weeks/week-12-mcq2/README.md) | — |
 
 **Scheduling rule:** reading week always falls on the week of the Irish

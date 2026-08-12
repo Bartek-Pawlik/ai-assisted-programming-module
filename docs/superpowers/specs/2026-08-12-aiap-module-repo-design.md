@@ -4,6 +4,43 @@
 `danielcregg/object-oriented-computing`, adapted where AIAP's content
 differs.*
 
+> ## Status — as built, 12 August 2026
+>
+> Everything below was implemented, and four decisions changed during the
+> build. **Where this document and the repo disagree, the repo is right**;
+> this box records the deltas so the original reasoning stays readable.
+>
+> | Decision | As designed | As built |
+> |---|---|---|
+> | Deck conversion | Week by week, ahead of teaching | **All 10 written at once**, and *authored* rather than converted — the PowerPoints were too thin and too dated to transcribe |
+> | Weeks | 12, agents split across 6 and 8 | **Agents merged into week 6**; week 8 became **Security of AI-Generated Code**, which the module previously lacked entirely |
+> | Gates | 6 | **9** — added lab structure, deck portability, speaker notes |
+> | Evals | Not in scope | Folded into **week 10** alongside CI/CD |
+>
+> Also added after the fact, all at the module owner's direction:
+>
+> - **Portability is now a hard requirement.** Every deck except the module
+>   introduction must be liftable into another lecturer's course at another
+>   institution, unchanged — no owner name, no institution, no schedule
+>   coupling. Enforced by `check_deck_portability.py`, which caught four of
+>   the author's own violations during the build.
+> - **One lab formula**, enforced by `check_lab_structure.py`. All nine labs
+>   conform; every DIY carries steps, a self-check block and a hint.
+> - **No image files.** Diagrams are CSS (`.flow`, `.stack`); prompts get
+>   their own component (`.prompt`, `.prompt.bad`/`.good`, `.reply`) because
+>   a prompt is neither prose nor code. Genuine UI screenshots remain
+>   permitted under `weeks/*/img/` but none have been added yet.
+> - **Speaker notes are for an AI first**, not a presenter — see the
+>   sibling module's `MODEL-REPO.local.md`. `check_speaker_notes.py`
+>   requires every `Predict:` slide's note to name the wrong answer to
+>   expect, which is the one thing an assistant cannot infer from a slide.
+>
+> **Known gaps at handover:** no screenshots extracted; the practice bank
+> covers one topic (33 questions) of ten; week 1 still names the
+> institution and is the single permanent portability exemption; and the
+> 30 misconception notes are the author's predictions, not the module
+> owner's observed experience — that is the part most worth reviewing.
+
 ---
 
 ## Purpose

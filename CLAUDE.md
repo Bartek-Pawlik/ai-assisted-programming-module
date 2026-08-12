@@ -102,23 +102,20 @@ in a file that is about to be committed, say so loudly.
   minutes, and speaker-note comments ship inside the rendered HTML where
   anyone can read them.
 
-## Deck conversion is in progress
+## All ten decks are written
 
-Lectures are being converted from PowerPoint week by week, ahead of the
-week they are taught. The originals live in the module owner's OneDrive,
-not here.
+`PENDING_DECKS` in `scripts/build_index.py` is an **empty set** and must
+stay that way. It exists for the case where a week folder is created
+before its deck; a week in that list *and* holding a `slides.md` fails the
+build, deliberately, because a written deck hidden behind a "pending" row
+is the same failure as a missing one.
 
-`PENDING_DECKS` in `scripts/build_index.py` lists the weeks not yet
-converted; they render as marker rows on the site instead of broken links.
-**Delete a week from that list the moment its `slides.md` lands** — the
-build fails if a week is in both places, deliberately, because a converted
-deck hidden behind a "pending" row is the same failure as a missing one.
+The 2025 PowerPoints in the module owner's OneDrive are **superseded, not
+sources**. The decks here were authored, not transcribed: the originals
+averaged ~1,300 words an hour, carried zero speaker notes and 2024
+statistics, and several were materially wrong by 2026.
 
-### What a converted deck must carry (2026 refresh)
-
-The PowerPoints are from 2025 and several are materially out of date. A
-conversion is **not** a transcription — the lab READMEs were refreshed in
-August 2026 and each deck must land in step with its lab. Specifically:
+### What each deck carries, and must keep carrying
 
 - **Week 3 (Prompting)** — keep the SPEC drills, then teach
   **context engineering**: the shift from *how you ask* to *what you put
@@ -309,14 +306,17 @@ produces; never omit both, or the student has no way to self-check.
 
 ## The gates
 
-Six run on every push. Before any push, all must pass:
+Nine run on every push. Before any push, all must pass:
 
-    python scripts/safety_audit.py        # credentials, student data, bad paths
-    python scripts/check_links.py         # every relative link and anchor resolves
-    python scripts/verify_snippets.py     # every fenced snippet parses
-    python scripts/verify_labs.py         # lab code compiles; tests where possible
-    python scripts/check_practice_bank.py # practice bank is well-formed
-    python scripts/build_index.py build   # week <-> deck <-> lab structure holds
+    python scripts/safety_audit.py           # credentials, student data, bad paths
+    python scripts/check_links.py            # every relative link and anchor resolves
+    python scripts/verify_snippets.py        # every fenced snippet parses
+    python scripts/verify_labs.py            # lab code compiles; tests where possible
+    python scripts/check_practice_bank.py    # practice bank is well-formed
+    python scripts/check_lab_structure.py    # every lab follows the formula
+    python scripts/check_deck_portability.py # every deck is liftable to another course
+    python scripts/check_speaker_notes.py    # notes are AI-usable; predicts name the misconception
+    python scripts/build_index.py build      # week <-> deck <-> lab structure holds
 
 - `verify_snippets.py` is this repo's replacement for OOC's `javac` gate.
   There is no single language to compile here, so it PARSES: `ast.parse`
