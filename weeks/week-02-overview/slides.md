@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 This hour has one job: give them a MODEL of what the tool is, accurate
 enough to predict its behaviour. Everything afterwards depends on it. A
@@ -26,7 +26,7 @@ find hallucination obvious. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook. Put the completion up and ask what
+<!-- Speaker notes: ~0:02. The hook. Put the completion up and ask what
 happens next. Nearly everyone has seen this behaviour; almost nobody has
 asked why it does it.
 
@@ -48,7 +48,7 @@ def calculate_median(numbers):
 
 ---
 
-<!-- Speaker notes: ~3:30. THE idea of the hour, and the single most
+<!-- Speaker notes: ~0:04. THE idea of the hour, and the single most
 useful sentence in it. Say it slowly.
 
 The misconception this kills: students assume the tool SEARCHES — that it
@@ -73,7 +73,7 @@ and over, based on everything it has seen so far.
 
 ---
 
-<!-- Speaker notes: ~5:30. Agenda. Reference slide, immediate bullets,
+<!-- Speaker notes: ~0:06. Agenda. Reference slide, immediate bullets,
 brisk. -->
 
 ## This hour
@@ -86,7 +86,7 @@ brisk. -->
 
 ---
 
-<!-- Speaker notes: ~7:00. The mechanism, one slide, no more. Resist
+<!-- Speaker notes: ~0:07. The mechanism, one slide, no more. Resist
 teaching transformers — they do not need architecture, they need a
 predictive model of behaviour.
 
@@ -111,7 +111,7 @@ own work within a fortnight. -->
 
 ---
 
-<!-- Speaker notes: ~10:00. PREDICT beat 1. Give them 30 seconds and take
+<!-- Speaker notes: ~0:10. PREDICT beat 1. Give them 30 seconds and take
 hands on each option before revealing.
 
 The wrong answer to expect is (b), "it will say it doesn't know". Students
@@ -136,7 +136,7 @@ You ask for a function using `pandas.read_excel_fast()`.
 
 ---
 
-<!-- Speaker notes: ~13:00. The reveal. It writes the code — because a
+<!-- Speaker notes: ~0:13. The reveal. It writes the code — because a
 confident continuation is more plausible than an admission of ignorance.
 
 Then name it: hallucination. Tie it forward — this exact behaviour becomes
@@ -162,7 +162,7 @@ mechanism working exactly as designed.
 
 ---
 
-<!-- Speaker notes: ~16:00. The shapes. This is the slide that ages
+<!-- Speaker notes: ~0:16. The shapes. This is the slide that ages
 fastest, so teach the CATEGORIES and treat the named products as examples
 that will change. Say that out loud — it is honest and it makes the slide
 still useful in two years.
@@ -182,7 +182,7 @@ Reference slide: immediate bullets, brisk pace. -->
 
 ---
 
-<!-- Speaker notes: ~19:00. Genuinely good at. Be positive here and mean
+<!-- Speaker notes: ~0:19. Genuinely good at. Be positive here and mean
 it — a lecture that only warns gets discounted, and the room already knows
 these tools are useful.
 
@@ -207,7 +207,7 @@ of plausible text is excellent at what is, by definition, typical.
 
 ---
 
-<!-- Speaker notes: ~22:00. The mirror image. Symmetry with the previous
+<!-- Speaker notes: ~0:22. The mirror image. Symmetry with the previous
 slide is deliberate — same mechanism explains both columns, which is the
 whole point of teaching prediction first.
 
@@ -228,7 +228,7 @@ are actually context problems. -->
 
 ---
 
-<!-- Speaker notes: ~25:00. PREDICT beat 2. Show both, ask which gets the
+<!-- Speaker notes: ~0:25. PREDICT beat 2. Show both, ask which gets the
 better answer. Take a vote before revealing.
 
 The wrong answer to expect is that they are equivalent — "it knows Python,
@@ -249,7 +249,7 @@ want RFC 5322 compliance. Reject anything over 254 characters.</p>
 
 ---
 
-<!-- Speaker notes: ~28:00. The reveal and the lesson. B wins, and not
+<!-- Speaker notes: ~0:28. The reveal and the lesson. B wins, and not
 because it is longer — because it makes a DECISION the tool would
 otherwise make for you, silently and probably wrong.
 
@@ -273,7 +273,7 @@ predictor and you get whatever was most common in its training data.
 
 ---
 
-<!-- Speaker notes: ~31:00. What the job becomes. This reframes the whole
+<!-- Speaker notes: ~0:31. What the job becomes. This reframes the whole
 module and answers the anxious question in the room, which is usually
 "does this replace me".
 
@@ -294,7 +294,7 @@ is a more senior job than the one it replaced. -->
 
 ---
 
-<!-- Speaker notes: ~34:00. PREDICT beat 3, and the honest one. Ask for a
+<!-- Speaker notes: ~0:34. PREDICT beat 3, and the honest one. Ask for a
 show of hands on each before revealing that the honest answer is "it
 depends, and measured results are mixed".
 
@@ -313,7 +313,7 @@ perception gap is the finding worth remembering. -->
 
 ---
 
-<!-- Speaker notes: ~37:00. The honest answer. Both of the last two are
+<!-- Speaker notes: ~0:37. The honest answer. Both of the last two are
 right, and the "feels faster than it is" result is the one that changes
 behaviour.
 
@@ -337,7 +337,7 @@ speed come apart.
 
 ---
 
-<!-- Speaker notes: ~40:00. Common mistakes. These are the five behaviours
+<!-- Speaker notes: ~0:40. Common mistakes. These are the five behaviours
 that will cost them most this semester, in the order they will meet them.
 
 The last is the important one — an assistant asked to solve a problem does
@@ -355,7 +355,7 @@ not stop to ask whether the problem is worth solving. -->
 
 ---
 
-<!-- Speaker notes: ~43:00. Summary and close. Return to the opening
+<!-- Speaker notes: ~0:43. Summary and close. Return to the opening
 completion — they can now answer both halves of the question themselves,
 so ask THEM rather than restating it.
 

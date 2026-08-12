@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 The framing of this hour is deliberately different from the usual RAG
 lecture. Most teach the pipeline and stop. This one teaches the DECISION
@@ -25,7 +25,7 @@ not need is a commoner and costlier mistake than the reverse. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook. Ask it straight and take hands.
+<!-- Speaker notes: ~0:02. The hook. Ask it straight and take hands.
 
 Almost everyone assumes the model must be TAUGHT the document — retrained
 or fine-tuned. That instinct is the thing to dislodge, and it dissolves
@@ -43,7 +43,7 @@ A user asks a question whose answer is in one of them.
 
 ---
 
-<!-- Speaker notes: ~3:30. The idea. Say it slowly — it is the whole hour
+<!-- Speaker notes: ~0:04. The idea. Say it slowly — it is the whole hour
 in one sentence, and it reframes the problem from "teach the model" to
 "put the right text in front of it".
 
@@ -66,7 +66,7 @@ and put it in the prompt.**
 
 ---
 
-<!-- Speaker notes: ~5:00. Agenda. Brisk. Flag section 1 as the one that
+<!-- Speaker notes: ~0:05. Agenda. Brisk. Flag section 1 as the one that
 distinguishes this from the version of this lecture taught last year. -->
 
 ## This hour
@@ -79,7 +79,7 @@ distinguishes this from the version of this lecture taught last year. -->
 
 ---
 
-<!-- Speaker notes: ~6:30. The decision, and the part most RAG lectures
+<!-- Speaker notes: ~0:07. The decision, and the part most RAG lectures
 skip entirely.
 
 The history matters: when RAG became popular, context windows held a few
@@ -104,7 +104,7 @@ thing in.** No chunking, no embeddings, no database to maintain.
 
 ---
 
-<!-- Speaker notes: ~9:00. PREDICT beat 1. Take a vote before revealing.
+<!-- Speaker notes: ~0:09. PREDICT beat 1. Take a vote before revealing.
 
 The wrong answer to expect is "build the RAG pipeline" — students have
 been told RAG is what you do with documents, so they reach for it
@@ -125,7 +125,7 @@ questions about them.
 
 ---
 
-<!-- Speaker notes: ~11:30. The reveal, then the decision table — the
+<!-- Speaker notes: ~0:12. The reveal, then the decision table — the
 slide to photograph.
 
 Be explicit that this is a trade-off table, not a ranking. The cost
@@ -144,7 +144,7 @@ gives them a number to reason with rather than a vibe. -->
 
 ---
 
-<!-- Speaker notes: ~14:00. The honest limits of the "just paste it"
+<!-- Speaker notes: ~0:14. The honest limits of the "just paste it"
 answer, so they do not leave with the opposite oversimplification.
 
 "Lost in the middle" is the memorable one: models attend less reliably to
@@ -168,7 +168,7 @@ understanding.
 
 ---
 
-<!-- Speaker notes: ~16:30. Now the pipeline, having earned it. Keep it to
+<!-- Speaker notes: ~0:17. Now the pipeline, having earned it. Keep it to
 one slide of shape — the detail is the lab's job.
 
 Emphasise that only step 5 involves the model at all. Steps 1-4 are
@@ -191,7 +191,7 @@ problem wearing an AI hat. -->
 
 ---
 
-<!-- Speaker notes: ~19:00. Embeddings. The intuition only — no maths.
+<!-- Speaker notes: ~0:19. Embeddings. The intuition only — no maths.
 
 The one thing they must take away: an embedding puts MEANING in space, so
 "car" and "automobile" land near each other even though they share no
@@ -210,7 +210,7 @@ letters. That is what keyword search cannot do and why this works. -->
 
 ---
 
-<!-- Speaker notes: ~22:00. PREDICT beat 2. This one is about chunk size,
+<!-- Speaker notes: ~0:22. PREDICT beat 2. This one is about chunk size,
 and it is the parameter students get wrong most often in the lab.
 
 The wrong answer to expect is "smaller chunks are more precise, so
@@ -231,7 +231,7 @@ You split a manual into chunks. Which works best?
 
 ---
 
-<!-- Speaker notes: ~24:30. The reveal: roughly a paragraph, and more
+<!-- Speaker notes: ~0:25. The reveal: roughly a paragraph, and more
 importantly WHY both extremes fail.
 
 The pronoun example is the one that sticks — read it out. Then the honest
@@ -257,7 +257,7 @@ and the only way to know is to **measure**.
 
 ---
 
-<!-- Speaker notes: ~27:00. Grounding — the payoff, and the reason RAG is
+<!-- Speaker notes: ~0:27. Grounding — the payoff, and the reason RAG is
 worth the trouble even where long context would also work.
 
 Two properties: the answer is anchored to supplied text, and you can SHOW
@@ -278,7 +278,7 @@ Question: {question}</p>
 
 ---
 
-<!-- Speaker notes: ~30:00. PREDICT beat 3, and the honest one. Vote
+<!-- Speaker notes: ~0:30. PREDICT beat 3, and the honest one. Vote
 before revealing.
 
 The wrong answer to expect is "yes, RAG fixes hallucination" — it is the
@@ -298,7 +298,7 @@ out loud. -->
 
 ---
 
-<!-- Speaker notes: ~32:30. The reveal and the failure modes. Be specific
+<!-- Speaker notes: ~0:33. The reveal and the failure modes. Be specific
 — vague warnings do not change behaviour.
 
 The last one is the important one: if retrieval returns nothing useful and
@@ -320,7 +320,7 @@ you have to **explicitly permit it** — and then check that it does.
 
 ---
 
-<!-- Speaker notes: ~35:00. Where it goes wrong in practice — the
+<!-- Speaker notes: ~0:35. Where it goes wrong in practice — the
 operational failures, distinct from the model failures above.
 
 Retrieval quality is the one that surprises people: if step 4 returns the
@@ -341,7 +341,7 @@ looks like a model problem when it is a search problem. -->
 
 ---
 
-<!-- Speaker notes: ~38:00. The 2026 shape. Worth saying explicitly
+<!-- Speaker notes: ~0:38. The 2026 shape. Worth saying explicitly
 because it resolves the false either/or the hour opened with.
 
 Also worth naming agentic retrieval: their coding assistant does not
@@ -367,7 +367,7 @@ demand. Same problem, solved with search instead of embeddings. -->
 
 ---
 
-<!-- Speaker notes: ~41:00. Common mistakes. The first is the one this
+<!-- Speaker notes: ~0:41. Common mistakes. The first is the one this
 whole hour is arranged to prevent.
 
 The last one deserves a beat: an evaluation set of questions with known
@@ -386,7 +386,7 @@ nobody builds one. -->
 
 ---
 
-<!-- Speaker notes: ~44:00. Summary and close. Return to the opening
+<!-- Speaker notes: ~0:44. Summary and close. Return to the opening
 problem — 40,000 documents — and note they can now answer it, including
 the part where they check whether 40,000 is really the number.
 

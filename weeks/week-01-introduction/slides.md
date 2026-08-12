@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title slide while the room settles. This is a
+<!-- Speaker notes: ~0:01. Title slide while the room settles. This is a
 two-act hour: logistics first (they need it today), then what the module
 actually argues. Say the argument out loud early — most of them assume
 this module is "how to use Copilot", and it is not. -->
@@ -25,7 +25,7 @@ Atlantic Technological University
 
 ---
 
-<!-- Speaker notes: ~2:00. The hook. Ask for hands: "who used an AI tool
+<!-- Speaker notes: ~0:02. The hook. Ask for hands: "who used an AI tool
 to write code in the last week?" Nearly every hand goes up. Then the
 second question, and far fewer hands stay up.
 
@@ -48,7 +48,7 @@ what replaced it. Let them sit in the discomfort for three slides. -->
 
 ---
 
-<!-- Speaker notes: ~4:00. The thesis. The misconception to name out loud:
+<!-- Speaker notes: ~0:04. The thesis. The misconception to name out loud:
 students expect a tools module ("learn Copilot, learn Cursor"). Tools
 change every few months; the judgement does not. Say that the tool list in
 week 13 will not match the tool list in week 1 — and that this is the
@@ -71,18 +71,25 @@ write. The assistant is fast; your name is on the commit.
 
 ---
 
-<!-- Speaker notes: ~5:00. THE stats slide — expect photographs, so pause.
-Read the second and third numbers together and let the contradiction land
-before saying anything: they don't trust it, and they ship it anyway.
+<!-- Speaker notes: ~0:05. The load-bearing pair is rows two and three: 29%
+trust the output and 48% always review it. Those two numbers together say
+that the majority of developers ship code they do not trust and did not
+check — not through carelessness, but because reviewing everything is no
+longer possible at the rate it arrives. The rest of the table is the
+consequence: 1.7x the major issues, ~45% carrying a known vulnerability
+class.
 
-The misconception to name: students assume professionals have solved this
-and there is a correct process they are about to be taught. There isn't.
-The industry is running an uncontrolled experiment and these are the
-early results.
+The misconception is that professionals have solved this and there is a
+correct process about to be taught. There is not. The faulty model is that
+industry practice is settled and students are being inducted into it; in
+fact this is an uncontrolled experiment in progress and these are early
+results. A student who believes a solved process exists will look for the
+rule instead of building the judgement.
 
-Provenance caveat, say it out loud: these come from 2026 industry surveys
-of varying quality that recycle each other. Trust the DIRECTION, not the
-decimal point. That scepticism is itself part of the module. -->
+Provenance matters as much as the figures: these are 2026 industry surveys
+of varying rigour that recycle each other, so the direction is sound and
+the precision is not. Deck weight: heavy, and it pays off the opening two
+questions. Delivery: pause. -->
 
 ## Where this actually is, in 2026
 
@@ -98,7 +105,7 @@ decimal point. That scepticism is itself part of the module. -->
 
 ---
 
-<!-- Speaker notes: ~8:00. This resolves the opening question honestly,
+<!-- Speaker notes: ~0:08. This resolves the opening question honestly,
 and it is the intellectual spine of the hour. Do NOT let them leave with
 "so reading code doesn't matter".
 
@@ -128,7 +135,7 @@ you have not moved up a level — you have just stopped checking.
 
 ---
 
-<!-- Speaker notes: ~11:00. Vocabulary slide. These are current terms
+<!-- Speaker notes: ~0:11. Vocabulary slide. These are current terms
 students will meet online and in interviews this year, and knowing them
 is genuinely useful social capital — say that.
 
@@ -152,7 +159,7 @@ codebase from their own past self. Most hands go up, AI or no AI. -->
 
 ---
 
-<!-- Speaker notes: ~6:00. Agenda. Reference slide, immediate bullets, take
+<!-- Speaker notes: ~0:06. Agenda. Reference slide, immediate bullets, take
 it at pace. Point at the two-act structure so they know logistics end and
 content begins. -->
 
@@ -163,7 +170,7 @@ content begins. -->
 
 ---
 
-<!-- Speaker notes: ~7:00. Schedule. The number that matters is 12 weeks,
+<!-- Speaker notes: ~0:07. Schedule. The number that matters is 12 weeks,
 not 13 — this changed from previous years. Reading week is the October
 bank-holiday week and sits between weeks 6 and 7, right before MCQ 1. Say
 explicitly that reading week is for revision, not a holiday from the
@@ -182,7 +189,7 @@ project. -->
 
 ---
 
-<!-- Speaker notes: ~10:00. Enrolment. Do this live — walk the room while
+<!-- Speaker notes: ~0:10. Enrolment. Do this live — walk the room while
 they enrol, it is faster than answering it by email for two weeks. The
 group passwords are given out HERE, verbally, and are deliberately not in
 this deck or the repo: the deck is published on a public website. -->
@@ -203,7 +210,7 @@ them, email me — this deck is on a public site.
 
 ---
 
-<!-- Speaker notes: ~13:00. Learning outcomes. Reference slide, read fast,
+<!-- Speaker notes: ~0:13. Learning outcomes. Reference slide, read fast,
 it is a validation requirement more than a teaching moment. Outcome 3 is
 the one that actually drives the assessment design — flag it. -->
 
@@ -219,7 +226,7 @@ the one that actually drives the assessment design — flag it. -->
 
 ---
 
-<!-- Speaker notes: ~16:00. Assessment. THE slide of the hour — expect
+<!-- Speaker notes: ~0:16. Assessment. THE slide of the hour — expect
 photographs, pause here. The weighting changed this year: MCQs are 20%
 each (down from 33%) and the project is 60%. Say the number twice. The
 misconception to head off: "the project is at the end so I start it at the
@@ -243,7 +250,7 @@ not in week 10.
 
 ---
 
-<!-- Speaker notes: ~20:00. How the MCQs work. Point out they are drawn
+<!-- Speaker notes: ~0:20. How the MCQs work. Point out they are drawn
 from lectures AND labs — students consistently revise only the slides and
 are surprised by lab questions. The NotebookLM tip is genuinely good; also
 point at the practice app on the module site, which is built from this
@@ -262,7 +269,7 @@ week's material to a tool like NotebookLM and ask it to generate questions.
 
 ---
 
-<!-- Speaker notes: ~23:00. The project. Two hard requirements: it must
+<!-- Speaker notes: ~0:23. The project. Two hard requirements: it must
 incorporate some AI technology, and it must follow the brief. Language is
 their choice — say this clearly, people ask every year. The interesting
 constraint is the defence: they present it, so they must understand it.
@@ -281,7 +288,7 @@ That is what makes a 60% project safe to hand to a cohort with AI tools. -->
 
 ---
 
-<!-- Speaker notes: ~26:00. Effort. Say the hours out loud: 5 credits is
+<!-- Speaker notes: ~0:26. Effort. Say the hours out loud: 5 credits is
 100-125 hours across 12 weeks, which is roughly 8-10 hours a week
 INCLUDING the 3 contact hours. So 5-7 hours of their own time weekly. Most
 students underestimate this by half. -->
@@ -301,7 +308,7 @@ Three of those hours are timetabled. The rest are yours to schedule.
 
 ---
 
-<!-- Speaker notes: ~29:00. Act 2 begins — tools. This is the slide they
+<!-- Speaker notes: ~0:29. Act 2 begins — tools. This is the slide they
 need to act on before next week's lab, so be concrete. The Student
 Developer Pack is free and takes ten minutes; without it they hit paywalls
 in week 4 onward. -->
@@ -319,7 +326,7 @@ in week 4 onward. -->
 
 ---
 
-<!-- Speaker notes: ~32:00. The to-do. Make them write these two down. The
+<!-- Speaker notes: ~0:32. The to-do. Make them write these two down. The
 username one sounds trivial and is not: they will be sending me repo links
 all semester, and "xX_dark_slayer_Xx" makes marking genuinely harder. Also
 it is the account they will show an employer. -->
@@ -340,7 +347,7 @@ mean to continue.
 
 ---
 
-<!-- Speaker notes: ~35:00. Where everything lives. Show the site live —
+<!-- Speaker notes: ~0:35. Where everything lives. Show the site live —
 open it, click into a lab, show it works on a phone. Emphasise that the
 site is canonical: if a lab is corrected mid-semester, the site has the
 correction and their copy may not. -->
@@ -358,7 +365,7 @@ correction and their copy may not. -->
 
 ---
 
-<!-- Speaker notes: ~38:00. Summary and close. Return to the two questions
+<!-- Speaker notes: ~0:38. Summary and close. Return to the two questions
 from the start — that symmetry is the point of the hour. Then: next week
 is the overview lecture and the first lab, which is environment setup.
 Leave time for questions. -->

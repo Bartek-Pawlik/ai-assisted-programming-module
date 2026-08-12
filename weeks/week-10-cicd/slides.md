@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 Two halves that are really one idea: automated checks for code that
 behaves the same every time, and automated checks for code that does not.
@@ -24,7 +24,7 @@ The second half is the one nobody teaches and the one their project needs. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook. It follows directly from the argument
+<!-- Speaker notes: ~0:02. The hook. It follows directly from the argument
 that you cannot read every line of generated code.
 
 Ask it and let it sit. If review moved from your eyes to your tests, then
@@ -41,7 +41,7 @@ good. Do not resolve yet. -->
 
 ---
 
-<!-- Speaker notes: ~3:30. The idea. Say it once.
+<!-- Speaker notes: ~0:04. The idea. Say it once.
 
 The misconception: students treat CI as an administrative hurdle imposed
 by lecturers or employers. It is the opposite — it is the thing that makes
@@ -62,7 +62,7 @@ checking.
 
 ---
 
-<!-- Speaker notes: ~5:00. Agenda. Flag the second half — evals — as the
+<!-- Speaker notes: ~0:05. Agenda. Flag the second half — evals — as the
 part most people have never met. -->
 
 ## This hour
@@ -75,7 +75,7 @@ part most people have never met. -->
 
 ---
 
-<!-- Speaker notes: ~6:30. What a pipeline is. Deliberately unglamorous —
+<!-- Speaker notes: ~0:07. What a pipeline is. Deliberately unglamorous —
 it is a script that runs on a trigger, and that is genuinely all it is.
 
 The only real distinction from running it yourself: it runs whether or not
@@ -95,7 +95,7 @@ you remembered. -->
 
 ---
 
-<!-- Speaker notes: ~9:00. What to put in it, in value order. This is the
+<!-- Speaker notes: ~0:09. What to put in it, in value order. This is the
 practical slide for their project.
 
 The ordering is the teaching: linting is cheap and catches least; tests
@@ -116,7 +116,7 @@ thing that ends careers. -->
 
 ---
 
-<!-- Speaker notes: ~12:00. PREDICT beat 1. Vote before revealing.
+<!-- Speaker notes: ~0:12. PREDICT beat 1. Vote before revealing.
 
 The wrong answer to expect is "a full test suite" — students think CI
 means tests, so they conclude a project without good tests gets nothing
@@ -133,7 +133,7 @@ fixing the code. -->
 
 ---
 
-<!-- Speaker notes: ~14:00. The reveal, with the asymmetry stated plainly.
+<!-- Speaker notes: ~0:14. The reveal, with the asymmetry stated plainly.
 
 A failing test costs you a red build. A leaked key costs you a rotation,
 possibly a bill, possibly a breach — and pushing a fix does not un-leak
@@ -153,7 +153,7 @@ Order your checks by **irreversibility**, not by sophistication.
 
 ---
 
-<!-- Speaker notes: ~16:30. AI inside the pipeline. Short section — the
+<!-- Speaker notes: ~0:17. AI inside the pipeline. Short section — the
 useful framing is what AI can check that a compiler cannot.
 
 A linter finds style. A compiler finds type errors. Neither can say "this
@@ -174,7 +174,7 @@ compiles — a compiler answers that exactly, and a model guesses.
 
 ---
 
-<!-- Speaker notes: ~19:00. The honesty rule for AI in CI, and it is
+<!-- Speaker notes: ~0:19. The honesty rule for AI in CI, and it is
 worth a slide because it is a real failure mode.
 
 If a model call fails, that is a FAILURE. It must not be written into the
@@ -197,7 +197,7 @@ that never ran.
 
 ---
 
-<!-- Speaker notes: ~22:00. The turn into evals. This is where the hour
+<!-- Speaker notes: ~0:22. The turn into evals. This is where the hour
 changes gear.
 
 Set it up with the concrete problem: their project has an AI feature.
@@ -216,7 +216,7 @@ output, assertEqual. That assumption is now false. -->
 
 ---
 
-<!-- Speaker notes: ~24:00. The idea of evals. One sentence.
+<!-- Speaker notes: ~0:24. The idea of evals. One sentence.
 
 The shift from a test to a test SET, and from pass/fail to a rate, is the
 whole concept. Everything else is technique. -->
@@ -236,7 +236,7 @@ cases, how often is it acceptable — and is that number moving?"**
 
 ---
 
-<!-- Speaker notes: ~26:30. The assertion ladder. THE practical slide of
+<!-- Speaker notes: ~0:27. The assertion ladder. THE practical slide of
 the second half — put it up and leave it.
 
 Work down it: use the strongest assertion the task allows. Most teams jump
@@ -257,7 +257,7 @@ cheap and deterministic. -->
 
 ---
 
-<!-- Speaker notes: ~29:00. PREDICT beat 2. Vote before revealing.
+<!-- Speaker notes: ~0:29. PREDICT beat 2. Vote before revealing.
 
 The wrong answer to expect is "LLM-as-judge, because summaries are
 subjective". The faulty model is that subjective output requires
@@ -277,7 +277,7 @@ Your feature summarises articles. Which do you build first?
 
 ---
 
-<!-- Speaker notes: ~31:30. The reveal. Property checks first — cheap,
+<!-- Speaker notes: ~0:32. The reveal. Property checks first — cheap,
 deterministic, and they catch the failures that actually happen (empty
 output, prompt echo, runaway length).
 
@@ -295,7 +295,7 @@ express. -->
 
 ---
 
-<!-- Speaker notes: ~34:00. LLM-as-judge and its failure modes. Be honest
+<!-- Speaker notes: ~0:34. LLM-as-judge and its failure modes. Be honest
 — it is genuinely useful and genuinely biased.
 
 Self-preference is the one to name: a model scoring output from the same
@@ -319,7 +319,7 @@ order affects the verdict. Both are measurable, both are real. -->
 
 ---
 
-<!-- Speaker notes: ~37:00. PREDICT beat 3, and the one that most changes
+<!-- Speaker notes: ~0:37. PREDICT beat 3, and the one that most changes
 their behaviour on the project.
 
 The wrong answer to expect is "it got better — I improved the prompt and
@@ -339,7 +339,7 @@ Is the feature better?
 
 ---
 
-<!-- Speaker notes: ~39:00. The reveal, and the regression point that
+<!-- Speaker notes: ~0:39. The reveal, and the regression point that
 makes evals worth the effort at all.
 
 This is the entire argument: without a measured set, prompt tuning is
@@ -362,7 +362,7 @@ engineering.
 
 ---
 
-<!-- Speaker notes: ~41:30. Practical shape for their project. Keep it
+<!-- Speaker notes: ~0:42. Practical shape for their project. Keep it
 small and achievable — 20 cases in a JSON file is a real eval suite and
 takes an afternoon.
 
@@ -383,7 +383,7 @@ Discourage the instinct to build a framework. -->
 
 ---
 
-<!-- Speaker notes: ~44:00. Common mistakes. Mixed across both halves of
+<!-- Speaker notes: ~0:44. Common mistakes. Mixed across both halves of
 the hour. -->
 
 ## Common mistakes
@@ -398,7 +398,7 @@ the hour. -->
 
 ---
 
-<!-- Speaker notes: ~46:00. Summary and close. Return to the opening
+<!-- Speaker notes: ~0:46. Summary and close. Return to the opening
 question — "what is checking it, and who checks that?" — and let them
 answer both halves.
 

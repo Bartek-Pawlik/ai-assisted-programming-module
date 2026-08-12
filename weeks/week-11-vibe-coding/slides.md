@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 This hour is an argument with two sides, not a demonstration of a tool.
 Resist letting it become a tools tour — the tools will have changed by
@@ -24,7 +24,7 @@ next year and the argument will not. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook — the original quote, with its date.
+<!-- Speaker notes: ~0:02. The hook — the original quote, with its date.
 
 Read it out. It is more radical than students expect, and the phrase
 "forget that the code even exists" is doing real work. Note the date:
@@ -44,7 +44,7 @@ February 2025. Then note what it became. -->
 
 ---
 
-<!-- Speaker notes: ~3:30. The idea of the hour. State the tension
+<!-- Speaker notes: ~0:04. The idea of the hour. State the tension
 directly rather than picking a side yet.
 
 The misconception to head off early: students expect a lecture telling
@@ -65,7 +65,7 @@ which task you are on — before you start, not afterwards.
 
 ---
 
-<!-- Speaker notes: ~5:00. Agenda. Brisk. -->
+<!-- Speaker notes: ~0:05. Agenda. Brisk. -->
 
 ## This hour
 
@@ -77,7 +77,7 @@ which task you are on — before you start, not afterwards.
 
 ---
 
-<!-- Speaker notes: ~6:30. The case FOR, made properly. If you skip this
+<!-- Speaker notes: ~0:07. The case FOR, made properly. If you skip this
 the room stops listening, because they know these tools work.
 
 The unifying property: all four are situations where being wrong is cheap
@@ -98,7 +98,7 @@ The pattern: being wrong is **cheap**, because the artefact is disposable.
 
 ---
 
-<!-- Speaker notes: ~9:30. What happened next. The data slide — expect
+<!-- Speaker notes: ~0:10. What happened next. The data slide — expect
 photographs, pause.
 
 Read the middle two together. The contradiction is the finding: they do
@@ -119,7 +119,7 @@ not trust it, and they ship it anyway. -->
 
 ---
 
-<!-- Speaker notes: ~12:30. The provenance caveat, said out loud. This is
+<!-- Speaker notes: ~0:13. The provenance caveat, said out loud. This is
 a small slide that buys a lot of credibility.
 
 These figures come from 2026 industry surveys of varying rigour that cite
@@ -141,7 +141,7 @@ engineering skill.
 
 ---
 
-<!-- Speaker notes: ~15:00. The two terms. Comprehension debt is the one
+<!-- Speaker notes: ~0:15. The two terms. Comprehension debt is the one
 to dwell on — it is the technical-debt metaphor applied to understanding.
 
 Ask who has inherited a haunted codebase from their own past self. Most
@@ -161,7 +161,7 @@ rather than inventing it. -->
 
 ---
 
-<!-- Speaker notes: ~18:00. PREDICT beat 1. Vote before revealing.
+<!-- Speaker notes: ~0:18. PREDICT beat 1. Vote before revealing.
 
 The wrong answer to expect is "at the start" — students imagine AI-built
 projects fail immediately in a visible way. They do not: day one is
@@ -178,7 +178,7 @@ project, by which point the decisions are baked in. -->
 
 ---
 
-<!-- Speaker notes: ~20:30. The reveal. Day one is euphoric. That is
+<!-- Speaker notes: ~0:21. The reveal. Day one is euphoric. That is
 precisely what makes it dangerous — the feedback signal arrives long after
 the decision.
 
@@ -202,7 +202,7 @@ traceable to AI-generated code.
 
 ---
 
-<!-- Speaker notes: ~23:00. The counter-trend. Introduce SDD as a response
+<!-- Speaker notes: ~0:23. The counter-trend. Introduce SDD as a response
 rather than as a competing fashion.
 
 The core move: the artefact you review changes from the implementation to
@@ -224,7 +224,7 @@ of generated code. -->
 
 ---
 
-<!-- Speaker notes: ~25:30. The two shapes side by side. Short slide,
+<!-- Speaker notes: ~0:26. The two shapes side by side. Short slide,
 mostly for the contrast.
 
 Say the honest thing about step 3 in the SDD row: reviewing the plan is
@@ -244,7 +244,7 @@ Spec-driven:   intent -> spec -> plan -> tasks -> code -> check against spec
 
 ---
 
-<!-- Speaker notes: ~28:00. The honest objection, and this slide is why
+<!-- Speaker notes: ~0:28. The honest objection, and this slide is why
 the hour is an argument rather than a sermon.
 
 Practitioners genuinely complain that SDD produces piles of markdown to
@@ -268,7 +268,7 @@ all you get.
 
 ---
 
-<!-- Speaker notes: ~31:00. PREDICT beat 2. Vote before revealing.
+<!-- Speaker notes: ~0:31. PREDICT beat 2. Vote before revealing.
 
 The wrong answer to expect is "spec-driven, always — it's the responsible
 one". Students who have absorbed the lecture's warnings over-correct. For
@@ -287,7 +287,7 @@ Which mode?
 
 ---
 
-<!-- Speaker notes: ~33:00. The reveal, and the reframe: specification
+<!-- Speaker notes: ~0:33. The reveal, and the reframe: specification
 requires knowledge you may not have yet.
 
 You cannot specify what you have not yet understood. Sometimes building
@@ -309,7 +309,7 @@ then **keep**.
 
 ---
 
-<!-- Speaker notes: ~35:30. The decision table. THE slide of the hour —
+<!-- Speaker notes: ~0:36. The decision table. THE slide of the hour —
 put it up and leave it while you talk.
 
 The bottom row is the sharpest: who maintains this? If the answer is
@@ -326,7 +326,7 @@ The bottom row is the sharpest: who maintains this? If the answer is
 
 ---
 
-<!-- Speaker notes: ~38:00. PREDICT beat 3, and the one that lands closest
+<!-- Speaker notes: ~0:38. PREDICT beat 3, and the one that lands closest
 to home — their own 60% project.
 
 The wrong answer to expect is a single mode for the whole project. The
@@ -343,7 +343,7 @@ per-task, not per-project. -->
 
 ---
 
-<!-- Speaker notes: ~40:30. The reveal. Mode is chosen per task, not per
+<!-- Speaker notes: ~0:41. The reveal. Mode is chosen per task, not per
 project, and switching deliberately is the mark of someone who understands
 both.
 
@@ -365,7 +365,7 @@ something you should have specified.
 
 ---
 
-<!-- Speaker notes: ~43:00. Common mistakes. Both directions — over-
+<!-- Speaker notes: ~0:43. Common mistakes. Both directions — over-
 correction is as real as under-correction, and the room contains both. -->
 
 ## Common mistakes
@@ -380,7 +380,7 @@ correction is as real as under-correction, and the room contains both. -->
 
 ---
 
-<!-- Speaker notes: ~45:00. Summary and close. Return to Karpathy's quote:
+<!-- Speaker notes: ~0:45. Summary and close. Return to Karpathy's quote:
 he said "forget that the code even exists", and the hour's answer is that
 this is fine right up until you have to change it.
 

@@ -195,14 +195,55 @@ that caveat attached, and do not sharpen these into false precision.
   keypress in the HTML presentation), `- ` = shown immediately. Fragment
   build-up slides; leave reference slides (agendas, summaries, tables)
   immediate.
-- Speaker notes live in `<!-- Speaker notes: ... -->` comments at the TOP
-  of the slide, straight after the `---`. A note carries what the slide
-  does NOT show: elapsed time and tempo, **the misconception** (the
-  specific wrong answer students give and the faulty model behind it),
-  the slide's weight, and what it links to. Never restate the slide's own
-  bullets. Notes **ship inside the rendered HTML** and are readable by
-  anyone viewing source, so write them publishable: nothing about
-  individual students.
+### Speaker notes are primarily FOR AN AI, not for a presenter
+
+This is the single highest-value convention in the repo and the easiest to
+get wrong. Notes live in `<!-- Speaker notes: ... -->` comments at the TOP
+of the slide, straight after the `---`.
+
+**Who reads them, in priority order:**
+
+1. **An assistant helping a student** who is stuck on this slide. It can
+   already infer what the code does. What it cannot infer is what a
+   learner *characteristically gets wrong here* — and without that it
+   explains the right answer to someone who needed the wrong one
+   diagnosed.
+2. **An assistant reading the deck** to answer questions about the
+   material, needing the slide's intent rather than its bullets.
+3. **A presenter**, who gets pacing and weight as a by-product.
+
+Reader 3 is a by-product. Do not write for reader 3 first.
+
+**So a note carries:**
+
+- `~H:MM` cumulative elapsed time, matching the sibling OOC module's
+  format — `~0:20` means twenty minutes in, **not** twenty seconds.
+- **The concept the slide is actually testing**, stated so an assistant
+  could teach from it without the slide.
+- **The misconception** — the specific wrong answer to expect and the
+  faulty mental model that produces it. **Mandatory on every `Predict:`
+  slide**, and enforced by `scripts/check_speaker_notes.py`.
+- What it connects to: which earlier idea it pays off, which later one it
+  sets up, whether it maps onto an assessment.
+
+**What a note is NOT:**
+
+- Not stage direction. "Ask for hands", "take a vote", "expect
+  photographs", "put it on the board" are worth at most a clause, and
+  most notes should have none. An assistant cannot use any of it, and it
+  crowds out what it can use.
+- Not a restatement of the slide's own bullets.
+
+**The asymmetry that justifies all of this:** the slide states the *right*
+answer. It never states the wrong one — and the wrong one is the entire
+reason a predict slide exists. A student who got it wrong does not need
+the correct answer repeated; they need to know *which* mistaken model
+produced theirs. Write that down and an assistant stops explaining and
+starts diagnosing.
+
+Notes **ship inside the rendered HTML** and are readable by anyone viewing
+source, so write them publishable: nothing about individual students or
+cohorts.
 - Decks are SELF-CONTAINED and reusable: never reference other weeks or
   the module schedule. Exempt: title-slide kickers, frontmatter `week:`,
   and week-01's module-logistics act.

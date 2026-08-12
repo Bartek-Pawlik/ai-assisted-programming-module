@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 Two halves, and the join is the point of the hour: prompting (how you ask)
 was the whole skill in 2023; context engineering (what the model can see)
@@ -25,7 +25,7 @@ it is where most real failures live. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook. Put both up, take a vote, do NOT
+<!-- Speaker notes: ~0:02. The hook. Put both up, take a vote, do NOT
 reveal yet.
 
 Nearly everyone votes B, and they are right — but for the wrong reason.
@@ -45,7 +45,7 @@ anything else. No external libraries.</p>
 
 ---
 
-<!-- Speaker notes: ~3:30. The idea. Say it once, plainly, then move.
+<!-- Speaker notes: ~0:04. The idea. Say it once, plainly, then move.
 
 The misconception to kill immediately: students think a good prompt is a
 LONG prompt, and start padding. Length is not the variable. Decisions
@@ -65,7 +65,7 @@ most common in its training data.
 
 ---
 
-<!-- Speaker notes: ~5:00. Agenda. Reference slide, brisk. Flag the second
+<!-- Speaker notes: ~0:05. Agenda. Reference slide, brisk. Flag the second
 half explicitly — it is the part that is new this year. -->
 
 ## This hour
@@ -79,7 +79,7 @@ half explicitly — it is the part that is new this year. -->
 
 ---
 
-<!-- Speaker notes: ~6:30. Tokens. Keep this SHORT and make it earn its
+<!-- Speaker notes: ~0:07. Tokens. Keep this SHORT and make it earn its
 place — this is not a machine-learning lecture. They need tokens only so
 that context windows and cost make sense.
 
@@ -102,7 +102,7 @@ identifiers and punctuation fragment heavily.
 
 ---
 
-<!-- Speaker notes: ~9:00. Context window. THIS is the slide that makes
+<!-- Speaker notes: ~0:09. Context window. THIS is the slide that makes
 context engineering make sense later, so spend the time.
 
 The framing that sticks: short-term memory with a hard edge. Everything
@@ -124,7 +124,7 @@ There is no partial credit for "I told you earlier" if earlier fell out. -->
 
 ---
 
-<!-- Speaker notes: ~12:00. SPEC. The recipe, and the thing they will
+<!-- Speaker notes: ~0:12. SPEC. The recipe, and the thing they will
 actually use every day. Four letters, one slide.
 
 Say that any framework works and the discipline matters more than the
@@ -144,7 +144,7 @@ way of avoiding the work. -->
 
 ---
 
-<!-- Speaker notes: ~15:00. Back to the opening pair, now analysable.
+<!-- Speaker notes: ~0:15. Back to the opening pair, now analysable.
 Walk B through SPEC letter by letter and let them see all four present.
 
 Then the payoff line: the difference is not detail, it is DECISIONS. Day
@@ -169,7 +169,7 @@ decision to a text predictor. **That** is the difference, not the length.
 
 ---
 
-<!-- Speaker notes: ~18:00. Constraints and non-goals. Non-goals are the
+<!-- Speaker notes: ~0:18. Constraints and non-goals. Non-goals are the
 under-used half and the one that saves them most pain.
 
 The misconception: students think an assistant that adds extra things is
@@ -197,7 +197,7 @@ because they are the changes nobody was reviewing.
 
 ---
 
-<!-- Speaker notes: ~21:00. PREDICT beat 1. Show the code, ask what the
+<!-- Speaker notes: ~0:21. PREDICT beat 1. Show the code, ask what the
 assistant does with this prompt. Vote before revealing.
 
 The wrong answer to expect is "it just fixes the bug". Students assume a
@@ -218,7 +218,7 @@ experience rather than assertion. -->
 
 ---
 
-<!-- Speaker notes: ~24:00. The reveal — usually the last option. Then the
+<!-- Speaker notes: ~0:24. The reveal — usually the last option. Then the
 fix, which is one sentence of non-goal.
 
 Land the review point: a 3-line diff gets read. A 40-line diff gets
@@ -242,7 +242,7 @@ which one you are reviewing when you write the prompt.
 
 ---
 
-<!-- Speaker notes: ~27:00. The three advanced techniques, one slide each
+<!-- Speaker notes: ~0:27. The three advanced techniques, one slide each
 would be too slow — keep them together and let the lab drill them.
 
 Say what each is FOR, because students collect techniques without knowing
@@ -261,7 +261,7 @@ correctness. Few-shot = exact output format. -->
 
 ---
 
-<!-- Speaker notes: ~30:00. The turn. Everything so far has been about
+<!-- Speaker notes: ~0:30. The turn. Everything so far has been about
 WORDING. This is where the hour pivots, and it is the newest material.
 
 Set it up with the honest history: models got much better at inferring
@@ -284,7 +284,7 @@ What they still cannot do is **invent information they were never given.**
 
 ---
 
-<!-- Speaker notes: ~32:30. The definition, and the comparison table that
+<!-- Speaker notes: ~0:33. The definition, and the comparison table that
 makes it concrete. This is the slide to photograph.
 
 Emphasise the last row — prompt engineering optimises a human talking to a
@@ -302,7 +302,7 @@ do more, the second matters more. -->
 
 ---
 
-<!-- Speaker notes: ~35:00. PREDICT beat 2 — the diagnostic, and the most
+<!-- Speaker notes: ~0:35. PREDICT beat 2 — the diagnostic, and the most
 practically useful thirty seconds of the hour.
 
 The wrong answer to expect is "reword it again" — it is what everyone
@@ -321,7 +321,7 @@ What does that tell you?
 
 ---
 
-<!-- Speaker notes: ~37:30. The answer and the rule. This is the sentence
+<!-- Speaker notes: ~0:38. The answer and the rule. This is the sentence
 to leave on the board.
 
 Then the counter-intuitive half: MORE context is not better. A huge
@@ -347,7 +347,7 @@ something?*
 
 ---
 
-<!-- Speaker notes: ~40:30. Professional practice. These four are what
+<!-- Speaker notes: ~0:41. Professional practice. These four are what
 separates someone using an assistant well from someone typing at it.
 
 Tests-first is the one worth dwelling on: it converts "looks right" into
@@ -367,7 +367,7 @@ it here. -->
 
 ---
 
-<!-- Speaker notes: ~43:00. Limits. Be blunt: no amount of prompting fixes
+<!-- Speaker notes: ~0:43. Limits. Be blunt: no amount of prompting fixes
 these, and pretending otherwise wastes their time.
 
 The last bullet is the honest one — a well-prompted answer to the wrong
@@ -385,7 +385,7 @@ asked the wrong question. -->
 
 ---
 
-<!-- Speaker notes: ~45:00. Common mistakes. Five behaviours, in the order
+<!-- Speaker notes: ~0:45. Common mistakes. Five behaviours, in the order
 they will hit them.
 
 The first one is the commonest and the easiest to fix: padding a prompt
@@ -405,7 +405,7 @@ professional function" specifies nothing. -->
 
 ---
 
-<!-- Speaker notes: ~47:00. Summary and close. Return to the opening pair
+<!-- Speaker notes: ~0:47. Summary and close. Return to the opening pair
 and ask the room to explain the difference now — they should say
 "decisions", not "detail".
 

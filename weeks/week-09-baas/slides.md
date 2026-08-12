@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 This hour sits slightly apart from the rest of the course: it is not about
 AI. It is here because an assistant can now produce a convincing frontend
@@ -25,7 +25,7 @@ in minutes, and that frontend needs somewhere to put data. The gap between
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook. This is a situation most of them have
+<!-- Speaker notes: ~0:02. The hook. This is a situation most of them have
 already been in, so ask for hands.
 
 An assistant builds you a beautiful task app in ten minutes. Refresh the
@@ -41,7 +41,7 @@ An assistant builds you a task list. It looks right. It works.
 
 ---
 
-<!-- Speaker notes: ~3:30. The idea. Say it plainly.
+<!-- Speaker notes: ~0:04. The idea. Say it plainly.
 
 The misconception: students conflate "the UI works" with "the app works".
 An AI-generated frontend is genuinely impressive and genuinely stateless.
@@ -63,7 +63,7 @@ build you somewhere to **keep the data** — or decide who may read it.
 
 ---
 
-<!-- Speaker notes: ~5:00. Agenda. Brisk. -->
+<!-- Speaker notes: ~0:05. Agenda. Brisk. -->
 
 ## This hour
 
@@ -75,7 +75,7 @@ build you somewhere to **keep the data** — or decide who may read it.
 
 ---
 
-<!-- Speaker notes: ~6:30. What a backend does. Five jobs, and the point
+<!-- Speaker notes: ~0:07. What a backend does. Five jobs, and the point
 is that all five exist whether or not you write them.
 
 Students think "backend" means "the code I write". It means these five
@@ -95,7 +95,7 @@ responsibilities existing somewhere. -->
 
 ---
 
-<!-- Speaker notes: ~9:30. What BaaS is. One line, then the trade.
+<!-- Speaker notes: ~0:10. What BaaS is. One line, then the trade.
 
 The honest framing: you are renting all five responsibilities. That is a
 genuinely good deal for a student project or an early product, and a real
@@ -114,7 +114,7 @@ commitment you should make with your eyes open. -->
 
 ---
 
-<!-- Speaker notes: ~12:00. PREDICT beat 1, and the one that most changes
+<!-- Speaker notes: ~0:12. PREDICT beat 1, and the one that most changes
 their project. Vote before revealing.
 
 The wrong answer to expect is "the frontend talks to the database, that's
@@ -133,7 +133,7 @@ Your BaaS-backed app runs entirely in the browser.
 
 ---
 
-<!-- Speaker notes: ~14:30. The reveal, and it genuinely surprises people.
+<!-- Speaker notes: ~0:15. The reveal, and it genuinely surprises people.
 
 The config IS public. It is not a secret and was never meant to be. Which
 raises the obvious question — what stops a stranger reading your whole
@@ -153,7 +153,7 @@ So what stops a stranger reading your entire database?
 
 ---
 
-<!-- Speaker notes: ~17:00. Security rules — the answer, and the most
+<!-- Speaker notes: ~0:17. Security rules — the answer, and the most
 important slide in the hour.
 
 The model: the database itself enforces access, per request, regardless of
@@ -177,7 +177,7 @@ allow write:  if request.auth != null
 
 ---
 
-<!-- Speaker notes: ~20:00. PREDICT beat 2. Vote before revealing.
+<!-- Speaker notes: ~0:20. PREDICT beat 2. Vote before revealing.
 
 The wrong answer to expect is "it works fine, that's how you develop".
 Open rules are the default in most tutorials and in most AI-generated
@@ -197,7 +197,7 @@ perfectly. What happens?
 
 ---
 
-<!-- Speaker notes: ~22:30. The reveal. Open rules mean an open database,
+<!-- Speaker notes: ~0:23. The reveal. Open rules mean an open database,
 and these endpoints are actively scanned.
 
 Then the practical instruction: an assistant that scaffolds BaaS for you
@@ -222,7 +222,7 @@ time.
 
 ---
 
-<!-- Speaker notes: ~25:30. Data modelling. The genuinely different skill,
+<!-- Speaker notes: ~0:26. Data modelling. The genuinely different skill,
 and where relational habits hurt.
 
 Document stores have no joins. So you model around the QUERIES you need
@@ -242,7 +242,7 @@ rather than around normalised truth, and duplication stops being a sin. -->
 
 ---
 
-<!-- Speaker notes: ~28:00. The duplication trade, stated honestly so it
+<!-- Speaker notes: ~0:28. The duplication trade, stated honestly so it
 does not read as sloppiness.
 
 Storage is cheap; a read that needs three round trips is not. But the cost
@@ -265,7 +265,7 @@ database will not tell you when they disagree.
 
 ---
 
-<!-- Speaker notes: ~30:30. Real-time. Brief — it is the genuinely
+<!-- Speaker notes: ~0:31. Real-time. Brief — it is the genuinely
 delightful feature and it demos well, but it is not the hour's spine.
 
 Worth noting the cost: a listener is an open connection, and listeners on
@@ -282,7 +282,7 @@ large collections are the commonest surprise-bill story. -->
 
 ---
 
-<!-- Speaker notes: ~33:00. PREDICT beat 3 — the cost model, which nobody
+<!-- Speaker notes: ~0:33. PREDICT beat 3 — the cost model, which nobody
 reads until it hurts.
 
 The wrong answer to expect is "storage" — students model database cost as
@@ -299,7 +299,7 @@ a count is cheap once and ruinous at scale. -->
 
 ---
 
-<!-- Speaker notes: ~35:30. The reveal, with the concrete pattern.
+<!-- Speaker notes: ~0:36. The reveal, with the concrete pattern.
 
 The count example is the one that lands: reading 10,000 documents to
 display "10,000 items" costs 10,000 reads every time the page loads. Store
@@ -321,7 +321,7 @@ and ruinous with real data.
 
 ---
 
-<!-- Speaker notes: ~38:00. The choice. Be even-handed — BaaS is the right
+<!-- Speaker notes: ~0:38. The choice. Be even-handed — BaaS is the right
 answer for their project and not the right answer for everything.
 
 The lock-in point is honest: your data model, your auth and your queries
@@ -340,7 +340,7 @@ become that vendor's shapes, and migrating later is real work. -->
 
 ---
 
-<!-- Speaker notes: ~40:30. Common mistakes. The first is the one that
+<!-- Speaker notes: ~0:41. Common mistakes. The first is the one that
 will actually happen to somebody in the room this semester. -->
 
 ## Common mistakes
@@ -355,7 +355,7 @@ will actually happen to somebody in the room this semester. -->
 
 ---
 
-<!-- Speaker notes: ~43:00. Summary and close. Return to the opening: they
+<!-- Speaker notes: ~0:43. Summary and close. Return to the opening: they
 now know exactly why the refresh lost everything, and what the five jobs
 are.
 

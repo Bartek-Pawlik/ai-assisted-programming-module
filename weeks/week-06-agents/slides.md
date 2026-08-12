@@ -10,7 +10,7 @@ paginate: true
 transition: fade
 ---
 
-<!-- Speaker notes: ~0:30. Title while they settle.
+<!-- Speaker notes: ~0:01. Title while they settle.
 
 The spine of this hour is a LADDER, and the skill being taught is picking
 a rung deliberately. Students arrive with one of two defaults — always the
@@ -24,7 +24,7 @@ most autonomous, or never — and both are unexamined. -->
 
 ---
 
-<!-- Speaker notes: ~1:30. The hook. Read all three out and ask what
+<!-- Speaker notes: ~0:02. The hook. Read all three out and ask what
 changed between them. Take answers.
 
 The answer people give is "it got smarter". The answer that matters is
@@ -42,7 +42,7 @@ The answer people give is "it got smarter". The answer that matters is
 
 ---
 
-<!-- Speaker notes: ~3:30. The idea, and the reframe the hour turns on.
+<!-- Speaker notes: ~0:04. The idea, and the reframe the hour turns on.
 
 The misconception to kill: students believe agent mode is a smarter model.
 It is not — it is the same model with permission to act and to loop. That
@@ -64,7 +64,7 @@ It is not a smarter model. It is the **same model with permission to act**
 
 ---
 
-<!-- Speaker notes: ~5:00. Agenda. Brisk. -->
+<!-- Speaker notes: ~0:05. Agenda. Brisk. -->
 
 ## This hour
 
@@ -76,7 +76,7 @@ It is not a smarter model. It is the **same model with permission to act**
 
 ---
 
-<!-- Speaker notes: ~6:30. The ladder itself. THE slide of the hour — put
+<!-- Speaker notes: ~0:07. The ladder itself. THE slide of the hour — put
 it up and leave it up while you walk each rung.
 
 The right-hand column is the payload: what you are actually reviewing
@@ -95,7 +95,7 @@ changes at every rung, and most people never notice it changed. -->
 
 ---
 
-<!-- Speaker notes: ~9:30. Ask mode, and a defence of it — students skip
+<!-- Speaker notes: ~0:10. Ask mode, and a defence of it — students skip
 it because it feels slow.
 
 The argument: it is the only rung where the output lands in your HEAD
@@ -120,7 +120,7 @@ files. Every rung above assumes you already understand the code.
 
 ---
 
-<!-- Speaker notes: ~12:00. Edit mode and the diff. Short section — the
+<!-- Speaker notes: ~0:12. Edit mode and the diff. Short section — the
 important content is the next slide's predict beat. -->
 
 ## Edit: the diff is the safety mechanism
@@ -134,7 +134,7 @@ important content is the next slide's predict beat. -->
 
 ---
 
-<!-- Speaker notes: ~14:00. PREDICT beat 1. Vote before revealing.
+<!-- Speaker notes: ~0:14. PREDICT beat 1. Vote before revealing.
 
 The wrong answer to expect is "just the rename". Students assume a narrow
 instruction produces a narrow change. In practice assistants tidy while
@@ -155,7 +155,7 @@ What comes back?
 
 ---
 
-<!-- Speaker notes: ~16:30. The reveal — usually the tidying. Then the
+<!-- Speaker notes: ~0:17. The reveal — usually the tidying. Then the
 rule, which is the practical takeaway of the whole edit section.
 
 Say the sentence about diff size out loud; it is the one people repeat
@@ -177,7 +177,7 @@ which you are reviewing when you write the prompt.
 
 ---
 
-<!-- Speaker notes: ~19:00. Agent mode. The genuine step change, and the
+<!-- Speaker notes: ~0:19. Agent mode. The genuine step change, and the
 thing to be clear about: you stop reviewing a change and start reviewing
 a RESULT.
 
@@ -200,7 +200,7 @@ whether it got there — and you will accept whatever looks finished.
 
 ---
 
-<!-- Speaker notes: ~21:30. PREDICT beat 2, and the most useful thirty
+<!-- Speaker notes: ~0:22. PREDICT beat 2, and the most useful thirty
 seconds of the hour for their project work.
 
 The wrong answer to expect is "the detailed one, obviously" — students
@@ -219,7 +219,7 @@ Add a test covering it. All existing tests must still pass.</p>
 
 ---
 
-<!-- Speaker notes: ~24:00. The reveal and the distinction — this is
+<!-- Speaker notes: ~0:24. The reveal and the distinction — this is
 subtle and worth the time.
 
 Precision moves from the ROUTE to the DESTINATION. Be vague about how, be
@@ -241,7 +241,7 @@ Precision moves from the **route** to the **destination**. Vague about
 
 ---
 
-<!-- Speaker notes: ~26:30. Terminal agents. The distinction that matters
+<!-- Speaker notes: ~0:27. Terminal agents. The distinction that matters
 is scope, not capability.
 
 An editor agent works in the file you have open. A terminal agent has your
@@ -261,7 +261,7 @@ radius. -->
 
 ---
 
-<!-- Speaker notes: ~29:00. The discipline. Short and practical — these
+<!-- Speaker notes: ~0:29. The discipline. Short and practical — these
 are the four habits that make higher rungs survivable.
 
 Commit first is the one to insist on. Without a clean starting point,
@@ -286,7 +286,7 @@ not an undo. You have neither.
 
 ---
 
-<!-- Speaker notes: ~31:30. Review the diff, not the story. This deserves
+<!-- Speaker notes: ~0:32. Review the diff, not the story. This deserves
 its own beat because it is the subtlest failure at high autonomy.
 
 An agent reports what it INTENDED. The summary is fluent, confident and
@@ -308,7 +308,7 @@ you were not expecting — that list is where the surprises live.
 
 ---
 
-<!-- Speaker notes: ~34:00. PREDICT beat 3. The honest one about where
+<!-- Speaker notes: ~0:34. PREDICT beat 3. The honest one about where
 autonomy costs you.
 
 The wrong answer to expect is "the big refactor" — it sounds hardest. In
@@ -326,7 +326,7 @@ a pile of speculative changes and no diagnosis. Debugging wants ask mode. -->
 
 ---
 
-<!-- Speaker notes: ~36:30. The reveal. Unknown-cause debugging is the
+<!-- Speaker notes: ~0:37. The reveal. Unknown-cause debugging is the
 trap, and the reason is worth stating: an agent optimises for making the
 symptom go away, and you wanted a diagnosis.
 
@@ -349,7 +349,7 @@ mode.
 
 ---
 
-<!-- Speaker notes: ~39:00. Common mistakes. Five, ordered by how often
+<!-- Speaker notes: ~0:39. Common mistakes. Five, ordered by how often
 they will hit them.
 
 The last one connects to the whole hour: reaching for the top rung by
@@ -367,7 +367,7 @@ default is the same unexamined choice as never leaving the bottom one. -->
 
 ---
 
-<!-- Speaker notes: ~42:00. Summary and close. Return to the three
+<!-- Speaker notes: ~0:42. Summary and close. Return to the three
 requests from the start and ask the room what changed — they should say
 "permission", not "intelligence".
 
