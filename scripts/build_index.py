@@ -46,8 +46,7 @@ LAB_OVERRIDES = {"week-02-overview": "setup"}
 # that exists, which is the same class of failure as a week with no deck at
 # all rendering as if it were fine.
 PENDING_DECKS = {
-    "week-04-rag", "week-05-mcp", "week-06-agents", "week-09-baas",
-    "week-10-cicd", "week-11-vibe-coding",
+    "week-06-agents", "week-09-baas", "week-10-cicd", "week-11-vibe-coding",
 }
 
 TITLE_RE = re.compile(r'^title:\s*"?([^"\n]+?)"?\s*$', re.MULTILINE)
