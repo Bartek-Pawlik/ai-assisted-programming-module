@@ -24,6 +24,7 @@ Exits 1 if anything fails to compile or a runnable test fails.
 """
 import argparse
 import py_compile
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -39,7 +40,27 @@ NEEDS_KEY = {
     "baas": "Firestore project credentials",
 }
 
+# Test files that are SCAFFOLDING, not tests: the lab hands the student a
+# failing placeholder and the exercise is to replace it. Their expected state
+# is RED, so a normal pytest run would report the lab broken forever.
+#
+# The check is inverted instead, which turns a nuisance into a useful gate:
+# if a placeholder starts PASSING, someone has committed a worked solution
+# into the public repo. Given that solutions live in a separate private repo
+# and this module's tutor brief puts no restriction on the assistant, that
+# boundary is worth watching automatically.
+PLACEHOLDER_TESTS = {
+    "prompting": ["lab/tests/test_extract_domain.py"],
+}
+
 TEST_GLOBS = ("test_*.py", "*_test.py")
+
+# A collection error naming one of these is "the lab's dependencies are not
+# installed", not "the lab is broken". Reported differently so a developer
+# without every lab's requirements installed does not see nine red lines.
+THIRD_PARTY_HINTS = ("flask", "fastapi", "chromadb", "sentence_transformers",
+                     "google", "firebase", "mcp", "openai", "anthropic",
+                     "uvicorn", "pydantic", "httpx", "requests", "numpy")
 
 
 def lab_dirs() -> list[Path]:
@@ -57,7 +78,9 @@ def test_files(lab: Path) -> list[Path]:
         found.update(p for p in lab.rglob(pattern)
                      if "__pycache__" not in p.parts
                      and "node_modules" not in p.parts)
-    return sorted(found)
+    placeholders = {(lab / rel).resolve()
+                    for rel in PLACEHOLDER_TESTS.get(lab.name, [])}
+    return sorted(p for p in found if p.resolve() not in placeholders)
 
 
 def compile_lab(lab: Path) -> list[str]:
@@ -71,17 +94,69 @@ def compile_lab(lab: Path) -> list[str]:
     return errors
 
 
-def run_tests(lab: Path) -> tuple[bool, str]:
-    """Run pytest for one lab. Returns (passed, summary line)."""
-    r = subprocess.run(
-        [sys.executable, "-m", "pytest", str(lab), "-q", "--no-header",
+def _pytest(lab: Path, targets: list[str]) -> subprocess.CompletedProcess:
+    """Run pytest from INSIDE the lab directory.
+
+    cwd matters: labs are self-contained projects, and their tests import
+    their code as a top-level package (labs/cicd/tests/test_app.py does
+    `from hello_app.webapp import app`). Run from the repo root, that import
+    fails and the lab looks broken when it is merely being run from the
+    wrong place. Students run it from the lab folder; so does this.
+    """
+    return subprocess.run(
+        [sys.executable, "-m", "pytest", *targets, "-q", "--no-header",
          "-p", "no:cacheprovider"],
-        capture_output=True, text=True)
-    tail = [ln for ln in (r.stdout or "").strip().split("\n") if ln.strip()]
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+        cwd=str(lab))
+
+
+def _missing_dependency(output: str) -> str | None:
+    """Name the third-party module a collection error is really about."""
+    m = re.search(r"No module named '([^']+)'", output or "")
+    if not m:
+        return None
+    root = m.group(1).split(".")[0].lower()
+    return m.group(1) if root in THIRD_PARTY_HINTS else None
+
+
+def run_tests(lab: Path) -> tuple[str, str]:
+    """Run a lab's real tests. Returns (status, summary) where status is
+    'pass', 'fail' or 'deps'."""
+    r = _pytest(lab, ["."])
+    out = (r.stdout or "") + (r.stderr or "")
+    tail = [ln for ln in out.strip().split("\n") if ln.strip()]
     summary = tail[-1] if tail else "(no output)"
-    # pytest exit 5 == "no tests collected", which is not a failure here:
-    # test_files() found something pytest chose not to collect.
-    return (r.returncode in (0, 5)), summary
+
+    missing = _missing_dependency(out)
+    if missing:
+        return "deps", f"needs {missing} — pip install -r requirements.txt"
+    # exit 5 == "no tests collected", which is not a failure: every test file
+    # this lab has may be a student placeholder.
+    return ("pass" if r.returncode in (0, 5) else "fail"), summary
+
+
+def check_placeholders(lab: Path) -> list[str]:
+    """Confirm each student-placeholder test is still RED.
+
+    A placeholder that passes means a worked solution reached the public
+    repo. See PLACEHOLDER_TESTS.
+    """
+    findings = []
+    for rel in PLACEHOLDER_TESTS.get(lab.name, []):
+        if not (lab / rel).is_file():
+            findings.append(f"{lab.as_posix()}/{rel}: placeholder test is "
+                            f"listed in PLACEHOLDER_TESTS but does not exist")
+            continue
+        r = _pytest(lab, [rel])
+        out = (r.stdout or "") + (r.stderr or "")
+        if _missing_dependency(out):
+            continue  # cannot judge without the lab's dependencies
+        if r.returncode == 0:
+            findings.append(
+                f"{lab.as_posix()}/{rel}: placeholder test PASSES — it is "
+                f"meant to fail until the student writes it. A solution may "
+                f"have been committed to the public repo.")
+    return findings
 
 
 def main() -> int:
@@ -114,13 +189,19 @@ def main() -> int:
             rows.append((name, n_py, f"tests SKIPPED — needs {NEEDS_KEY[name]}"))
             continue
 
+        failures.extend(check_placeholders(lab))
+        n_placeholder = len(PLACEHOLDER_TESTS.get(name, []))
+        note = f" (+{n_placeholder} student placeholder)" if n_placeholder else ""
+
         tests = test_files(lab)
         if not tests:
-            rows.append((name, n_py, "no tests in this lab"))
+            rows.append((name, n_py, f"no tests in this lab{note}"))
             continue
-        passed, summary = run_tests(lab)
-        if passed:
-            rows.append((name, n_py, f"tests passed — {summary}"))
+        status, summary = run_tests(lab)
+        if status == "pass":
+            rows.append((name, n_py, f"tests passed — {summary}{note}"))
+        elif status == "deps":
+            rows.append((name, n_py, f"tests not run — {summary}"))
         else:
             rows.append((name, n_py, f"TESTS FAILED — {summary}"))
             failures.append(f"{lab.as_posix()}: pytest failed — {summary}")

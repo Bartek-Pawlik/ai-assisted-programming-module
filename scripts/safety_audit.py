@@ -6,35 +6,30 @@ failure mode that matters, not false positives. Every check below is a
 "must come up empty" check -- exit 0 with no output when the repo is clean;
 otherwise print every finding and exit non-zero.
 
+If it flags something, FIX THE CONTENT. Never widen a detector to make a
+warning go away.
+
 Checks:
-  1. tracked-file extension check -- no spreadsheet/archive/compiled-binary
-     extensions tracked.
-  2. text scan -- every tracked *.md *.yml *.yaml *.py *.html *.xml *.json
-     file, line by line, for leaked Moodle submission-path text, ATU
-     student ID numbers, or 32-char hex tokens. Three known-safe shapes
-     are length-bounded regexes: a Classroom invite/invitation URL (both
-     fixed-shape; there is no whitelist for the open-ended /classrooms/
-     slug shape, since Classroom is retired and no such URL should appear
-     here again), the literal pattern-quoting text this file's own regex
-     is built from, and the backtick-quoted mention of that text used in
-     prose elsewhere in the repo. A sensitive match is
-     suppressed ONLY when its entire span lies within one safe-shape span
-     on the SAME (unmodified) line -- the line is never mutated and never
-     dropped whole, so a real token glued directly onto, or merely
-     sharing a line with, a safe shape still surfaces. This file's own
-     source contains all three shapes verbatim and clears itself through
-     this exact mechanism -- it is not exempted by name anywhere below.
-  3. top-level allowlist -- every tracked path lives under one of the
-     documented top-level entries.
-  4. pptx placement -- every tracked .pptx lives under */lecture/original/.
-  5. pptx internals -- every tracked .pptx is opened as a zip; every
-     .xml/.rels member is decoded and put through the same text scan as
-     check 2 (PowerPoint can carry hidden reviewer comments/notes that
-     the Markdown deck never surfaces); any member that is itself an
-     embedded office/binary object (an `embeddings/` path, or an
-     .xlsx/.xls/.docx/.doc/.bin extension) is reported directly for
-     manual inspection instead, since its content can't be meaningfully
-     text-scanned.
+  1. tracked-file extensions -- no spreadsheet/archive/compiled-binary
+     extensions, and no .pptx at all: lecture decks are Marp markdown here,
+     so a tracked PowerPoint means a conversion was skipped.
+  2. env files -- `.env.example` is the ONLY env file that may be tracked.
+     Three labs (rag, mcp, baas) need live API access and students supply
+     their own keys, so a real .env reaching a public repo is this module's
+     single most likely credential leak.
+  3. credential shapes -- API keys and tokens by provider prefix, private
+     key headers, and service-account JSON. This check does not exist in
+     the OOC repo; it exists here because these labs genuinely handle
+     secrets.
+  4. text scan -- tracked text files, line by line, for leaked Moodle
+     submission-path text, ATU student ID numbers, or 32-char hex tokens.
+     A match is suppressed ONLY when its entire span lies within one
+     known-safe span on the SAME (unmodified) line, so a real token glued
+     onto a safe shape still surfaces. This file's own source contains the
+     safe shapes verbatim and clears itself through that mechanism -- it is
+     not exempted by name.
+  5. top-level allowlist -- every tracked path lives under a documented
+     top-level entry.
 
 Usage (from repo root): python scripts/safety_audit.py
 """
@@ -43,84 +38,94 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
-import zipfile
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Check 1: tracked-file extensions that must never be committed.
-BAD_EXTENSION_RE = re.compile(r"\.(xlsx|xls|mbz|zip|class|jar)$", re.IGNORECASE)
+#   pptx: decks are markdown in this repo. A tracked PowerPoint is a deck
+#   that never got converted, and it is opaque to every other gate.
+#   mbz/zip: Moodle course backups carry student data.
+BAD_EXTENSION_RE = re.compile(
+    r"\.(xlsx|xls|mbz|zip|class|jar|pptx|ppt|docx|doc|pem|key|p12|pfx)$",
+    re.IGNORECASE)
 
 # ---------------------------------------------------------------------------
-# Check 2 / 5: sensitive text patterns, and the known-safe shapes checked
-# for span-containment before a match is flagged. Kept to exactly three:
-# a Classroom URL, the literal pattern-quoting text, and its backticked
-# mention. Each is an exact or length-bounded regex -- never a bare `\S+`
-# or an unconditional substring strip -- so a real token glued directly
-# onto one of these shapes (no separating whitespace) still extends past
-# its span and gets reported; only content genuinely and fully inside the
-# shape is suppressed.
-TEXT_SCAN_GLOBS = ("*.md", "*.yml", "*.yaml", "*.py", "*.html", "*.xml", "*.json")
-SENSITIVE_RE = re.compile(r"assignsubmission|G00[0-9]{6}|\b[0-9a-f]{32}\b", re.IGNORECASE)
+# Check 2: env files. .env.example ships (it documents which variables a lab
+# needs); anything else matching .env* is a real environment file.
+ENV_FILE_RE = re.compile(r"(^|/)\.env(\..*)?$")
+ENV_ALLOWED = re.compile(r"(^|/)\.env\.example$")
 
-# Classroom URL shapes. GitHub Classroom is RETIRED for this module and no
-# Classroom URL is referenced anywhere in the repo any more, so there is no
-# whitelist: an invite link appearing here again would be a mistake worth
-# surfacing, not something to wave through.
-#   /a/<code>                     -- short invite code, 8 chars in practice,
-#                                     length-bounded (never "or more").
-#   /assignment-invitations/<hex> -- documented as a 32-hex id (also matches
-#                                     the 32-hex sensitive pattern, which is
-#                                     exactly why this exemption exists: it's
-#                                     a shareable link, not a secret), exact
-#                                     32 (not "32 or more").
-# Each bound is chosen so it can never fully cover an adjacent, glued-on
-# sensitive match (shortest is G00 + 6 digits = 9 chars): both are
-# comfortably under or exactly that, so any extra glued content starts
-# outside the safe span and still gets reported.
-CLASSROOM_URL_SAFE_RE = re.compile(
-    r"https://classroom\.github\.com/(?:"
-    r"a/[A-Za-z0-9_-]{1,8}"
-    r"|assignment-invitations/[0-9a-f]{32}"
-    r")"
-)
+# ---------------------------------------------------------------------------
+# Check 3: credential shapes, by provider.
+#
+# Each pattern is written with a character class immediately after its
+# literal prefix, which is what lets this file clear ITSELF: the regex
+# source text `sk-[A-Za-z0-9...` has a `[` where the class expects an
+# alphanumeric, so no pattern below matches its own definition. Do not
+# "simplify" these to bare \S+ -- that breaks the property and the audit
+# starts reporting its own source.
+CREDENTIAL_PATTERNS = {
+    "OpenAI-style key": re.compile(r"\bsk-[A-Za-z0-9_-]{20,}"),
+    "Anthropic key": re.compile(r"\bsk-ant-[A-Za-z0-9_-]{20,}"),
+    "Google API key": re.compile(r"\bAIza[A-Za-z0-9_-]{30,}"),
+    "GitHub token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{30,}"),
+    "GitHub fine-grained PAT": re.compile(r"\bgithub_pat_[A-Za-z0-9_]{50,}"),
+    "Slack token": re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}"),
+    "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    "GitLab PAT": re.compile(r"\bglpat-[A-Za-z0-9_-]{15,}"),
+    "HuggingFace token": re.compile(r"\bhf_[A-Za-z0-9]{30,}"),
+    "private key header": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+    "service-account JSON": re.compile(r'"private_key"\s*:\s*"'),
+    # An assignment with a long literal on the right-hand side. Deliberately
+    # narrow: it requires a quoted value of real length, so KEY = os.environ
+    # and KEY = "" (both correct) do not trip it.
+    "hardcoded key assignment": re.compile(
+        r"(?i)\b(api[_-]?key|secret|token|password|passwd)\b\s*[:=]\s*"
+        r"[\"'][A-Za-z0-9_\-./+]{16,}[\"']"),
+}
+
+# ---------------------------------------------------------------------------
+# Check 4: sensitive text patterns and the known-safe shapes checked for
+# span-containment before a match is flagged.
+TEXT_SCAN_GLOBS = ("*.md", "*.yml", "*.yaml", "*.py", "*.html", "*.xml",
+                   "*.json", "*.txt", "*.js", "*.ts", "*.tsx", "*.jsx",
+                   "*.sh", "*.toml", "*.cfg", "*.ini", "*.env.example")
+SENSITIVE_RE = re.compile(r"assignsubmission|G00[0-9]{6}|\b[0-9a-f]{32}\b",
+                          re.IGNORECASE)
+
+# GitHub Classroom is RETIRED for this module: labs are distributed by
+# template now. There is deliberately NO whitelist for Classroom URLs -- a
+# leftover invite link in a migrated lab is exactly what this should surface,
+# because it would send students to a dead assignment.
 PATTERN_QUOTE = "assignsubmission|G00"
 BACKTICK_QUOTE = "`assignsubmission`"
 SAFE_SPAN_PATTERNS = (
-    CLASSROOM_URL_SAFE_RE,
     re.compile(re.escape(PATTERN_QUOTE)),
     re.compile(re.escape(BACKTICK_QUOTE)),
 )
 CONTEXT_RADIUS = 40  # chars of context kept either side of a match in output
 
 # ---------------------------------------------------------------------------
-# Check 3: only these top-level paths may be tracked.
+# Check 5: only these top-level paths may be tracked.
 TOP_LEVEL_ALLOW_RE = re.compile(
-    r"^(\.github/|\.gitignore$|README\.md$|CLAUDE\.md$|docs/|module/|scripts/|weeks/"
-    r"|themes/|\.vscode/|\.devcontainer/|labs/|practice/|package\.json$|package-lock\.json$)"
-)
-
-# ---------------------------------------------------------------------------
-# Check 4 / 5: pptx placement and internals.
-PPTX_ALLOWED_SEGMENT = "/lecture/original/"
-EMBEDDED_OBJECT_EXTENSIONS = (".xlsx", ".xls", ".docx", ".doc", ".bin")
+    r"^(\.github/|\.gitignore$|\.gitattributes$|README\.md$|CLAUDE\.md$|docs/"
+    r"|module/|scripts/|weeks/|themes/|\.vscode/|\.devcontainer/|labs/"
+    r"|practice/|project/|package\.json$|package-lock\.json$)")
 
 
 def git_ls_files(*pathspecs: str) -> list[str]:
     """Tracked paths (repo-relative, forward slashes) matching pathspecs."""
-    cmd = ["git", "ls-files", *pathspecs]
-    result = subprocess.run(
-        cmd, capture_output=True, text=True, encoding="utf-8", check=True
-    )
+    result = subprocess.run(["git", "ls-files", *pathspecs],
+                            capture_output=True, text=True,
+                            encoding="utf-8", check=True)
     return [line for line in result.stdout.splitlines() if line]
 
 
 def safe_spans(line: str) -> list[tuple[int, int]]:
     """Start/end offsets of every known-safe shape occurring in line."""
-    spans = []
-    for pattern in SAFE_SPAN_PATTERNS:
-        for match in pattern.finditer(line):
-            spans.append((match.start(), match.end()))
-    return spans
+    return [(m.start(), m.end())
+            for pattern in SAFE_SPAN_PATTERNS
+            for m in pattern.finditer(line)]
 
 
 def _snippet(line: str, match: re.Match) -> str:
@@ -131,16 +136,20 @@ def _snippet(line: str, match: re.Match) -> str:
     return prefix + line[start:end].strip() + suffix
 
 
-def scan_text_for_leaks(text: str) -> list[tuple[int, str]]:
-    """(line_number, context) for every real leak in text.
+def _redact(line: str, match: re.Match) -> str:
+    """Context with the matched span masked.
 
-    SENSITIVE_RE runs over each ORIGINAL line -- it is never mutated. A
-    match is suppressed only when its entire span lies within one of that
-    line's known-safe spans (see safe_spans); a match that merely starts
-    inside a safe span but extends past its end is still reported. Every
-    match on every line is reported (not just the first), since a false
-    negative here is the failure mode that matters.
+    A credential finding must never print the credential: CI logs are
+    readable by anyone who can see the run, so echoing a live key there
+    would leak it a second time and in a more durable place.
     """
+    head = line[max(0, match.start() - CONTEXT_RADIUS):match.start()]
+    tail = line[match.end():match.end() + CONTEXT_RADIUS]
+    return f"{head.strip()}<REDACTED {len(match.group(0))} chars>{tail.strip()}"
+
+
+def scan_text_for_leaks(text: str) -> list[tuple[int, str]]:
+    """(line_number, context) for every real leak in text."""
     hits: list[tuple[int, str]] = []
     for lineno, line in enumerate(text.splitlines(), start=1):
         spans = safe_spans(line)
@@ -159,11 +168,34 @@ def read_text_relaxed(path: Path) -> str:
 
 
 def check_bad_extensions() -> list[str]:
-    return [
-        f"{path}: disallowed tracked extension"
-        for path in git_ls_files()
-        if BAD_EXTENSION_RE.search(path)
-    ]
+    return [f"{p}: disallowed tracked extension"
+            for p in git_ls_files() if BAD_EXTENSION_RE.search(p)]
+
+
+def check_env_files() -> list[str]:
+    return [f"{p}: only .env.example may be tracked — this looks like a real "
+            f"environment file"
+            for p in git_ls_files()
+            if ENV_FILE_RE.search(p) and not ENV_ALLOWED.search(p)]
+
+
+def check_credentials() -> list[str]:
+    findings = []
+    for rel_path in git_ls_files():
+        path = Path(rel_path)
+        if not path.is_file():
+            continue
+        try:
+            text = read_text_relaxed(path)
+        except OSError:
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for label, pattern in CREDENTIAL_PATTERNS.items():
+                for match in pattern.finditer(line):
+                    findings.append(
+                        f"{rel_path}:{lineno}: possible {label} — "
+                        f"{_redact(line, match)}")
+    return findings
 
 
 def check_text_scan() -> list[str]:
@@ -171,73 +203,34 @@ def check_text_scan() -> list[str]:
     for rel_path in git_ls_files(*TEXT_SCAN_GLOBS):
         path = Path(rel_path)
         if not path.is_file():
-            continue  # tracked-but-deleted in the working tree; nothing to scan
-        text = read_text_relaxed(path)
-        for lineno, snippet in scan_text_for_leaks(text):
+            continue  # tracked-but-deleted in the working tree
+        for lineno, snippet in scan_text_for_leaks(read_text_relaxed(path)):
             findings.append(f"{rel_path}:{lineno}: {snippet}")
     return findings
 
 
 def check_top_level_allowlist() -> list[str]:
-    return [
-        f"{path}: not under an allowed top-level path"
-        for path in git_ls_files()
-        if not TOP_LEVEL_ALLOW_RE.match(path)
-    ]
-
-
-def check_pptx_placement() -> list[str]:
-    return [
-        f"{path}: pptx must live under */lecture/original/"
-        for path in git_ls_files()
-        if path.lower().endswith(".pptx") and PPTX_ALLOWED_SEGMENT not in path
-    ]
-
-
-def check_pptx_internals() -> list[str]:
-    findings = []
-    for rel_path in git_ls_files():
-        if not rel_path.lower().endswith(".pptx"):
-            continue
-        path = Path(rel_path)
-        if not path.is_file():
-            continue
-        try:
-            with zipfile.ZipFile(path) as archive:
-                for member in archive.namelist():
-                    lower = member.lower()
-                    if "embeddings/" in lower or lower.endswith(EMBEDDED_OBJECT_EXTENSIONS):
-                        findings.append(
-                            f"embedded object inside {rel_path}: {member} -- inspect manually"
-                        )
-                        continue
-                    if not (lower.endswith(".xml") or lower.endswith(".rels")):
-                        continue
-                    text = archive.read(member).decode("utf-8", errors="ignore")
-                    for lineno, snippet in scan_text_for_leaks(text):
-                        findings.append(f"{rel_path}!{member}:{lineno}: {snippet}")
-        except zipfile.BadZipFile as exc:
-            findings.append(f"{rel_path}: could not open as zip ({exc})")
-    return findings
+    return [f"{p}: not under an allowed top-level path"
+            for p in git_ls_files() if not TOP_LEVEL_ALLOW_RE.match(p)]
 
 
 def main() -> int:
-    # Windows consoles default to a legacy codepage that cannot encode
-    # every character read out of a decoded pptx part; never let a print
-    # crash the audit itself.
+    # Windows consoles default to a legacy codepage that cannot encode every
+    # character in this repo; never let a print crash the audit itself.
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
     findings: list[str] = []
     findings += check_bad_extensions()
+    findings += check_env_files()
+    findings += check_credentials()
     findings += check_text_scan()
     findings += check_top_level_allowlist()
-    findings += check_pptx_placement()
-    findings += check_pptx_internals()
 
     for line in findings:
         print(line)
-
+    if not findings:
+        print(f"safety_audit: clean ({len(git_ls_files())} tracked files)")
     return 1 if findings else 0
 
 

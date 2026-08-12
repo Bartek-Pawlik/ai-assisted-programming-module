@@ -6,9 +6,9 @@ one timeline row per week — lecture weeks get title + slides/lab buttons
 (downloads live in the repo, linked once from the intro), MCQ weeks and
 reading week render as "// comment" marker rows.
 
-The page carries the visual identity of themes/ooc.css ("the lecture as
+The page carries the visual identity of themes/aiap.css ("the lecture as
 source code"): paper background, editor-gutter rail, "week N" labels set
-like line numbers, mono headings ending in an orange semicolon.
+like line numbers, mono headings ending in a coloured semicolon.
 
 A few lines of inline JS highlight the current teaching week like an
 editor's current line — same derived calendar as
@@ -25,30 +25,50 @@ import sys
 from pathlib import Path
 
 WEEKS = Path("weeks")
-LABS = Path("labs/src/ie/atu")
+LABS = Path("labs")
 # Teaching weeks that deliberately ship no lab. Anything else missing a lab
 # fails the build (see lab_slug).
 NO_LAB_WEEKS = {"week-01-introduction"}
+
+# Weeks whose lab folder is NOT the topic slug. Keep this as close to empty as
+# possible -- every entry is a place where the derived layout stops being
+# derived, and therefore a place a rename can silently break. The one entry
+# here exists because week 2 lectures the module overview but its lab is the
+# environment setup, and neither name describes the other.
+LAB_OVERRIDES = {"week-02-overview": "setup"}
+
+# Weeks whose deck has not been converted from PowerPoint yet. Decks are
+# converted week by week ahead of teaching; until then the week renders as a
+# marker row rather than a broken link, and the build stays green.
+#
+# THIS LIST MUST SHRINK TO EMPTY. Delete a week from it the moment its
+# slides.md lands -- a week left here after conversion silently hides a deck
+# that exists, which is the same class of failure as a week with no deck at
+# all rendering as if it were fine.
+PENDING_DECKS = {
+    "week-02-overview", "week-03-prompting", "week-04-rag", "week-05-mcp",
+    "week-06-agents", "week-08-cli-coding-agents", "week-09-baas",
+    "week-10-cicd", "week-11-vibe-coding",
+}
 
 TITLE_RE = re.compile(r'^title:\s*"?([^"\n]+?)"?\s*$', re.MULTILINE)
 WEEK_NO_RE = re.compile(r"week-(\d+)")
 
 MCQ_LABELS = {
-    "mcq1": "MCQ 1 &middot; held during the lab slot &middot; 33% of the module",
-    "mcq2": "MCQ 2 &middot; held during the lab slot &middot; 33% of the module",
-    "mcq3": "MCQ 3 &middot; held during the lab slot &middot; 33% of the module",
+    "mcq1": "MCQ 1 &middot; held during the lab slot &middot; 20% of the module",
+    "mcq2": "MCQ 2 &middot; held during the lab slot &middot; 20% of the module",
 }
 READING_LABEL = "reading week &middot; October bank-holiday week &middot; no lecture or lab"
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
            "viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' "
            "fill='%23FBFAF7'/%3E%3Ctext x='16' y='25' font-family='Consolas,monospace' "
-           "font-size='26' font-weight='700' fill='%23E76F00' "
+           "font-size='26' font-weight='700' fill='%236741D9' "
            "text-anchor='middle'%3E;%3C/text%3E%3C/svg%3E")
 
 STYLE = """<style>
   :root {
-    --paper: #FBFAF7; --ink: #1E2833; --blue: #33698C; --orange: #E76F00;
+    --paper: #FBFAF7; --ink: #1E2833; --blue: #33698C; --orange: #6741D9;
     --slate: #46536B; --rule: #DED8C9; --muted: #8B8471; --gutter-num: #AFA893;
     --tint: #F3EFE5;
     --mono: 'Cascadia Code', 'SF Mono', Menlo, Consolas, 'Courier New', monospace;
@@ -144,17 +164,19 @@ def page_head(title: str) -> str:
     return (f'<!doctype html>\n<html lang="en">\n<head>\n'
             f'<meta charset="utf-8">\n'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-            f'<meta name="description" content="Lecture decks for the '
-            f'Object-Oriented Computing module (Java), Atlantic Technological University.">\n'
+            f'<meta name="description" content="Lectures, labs and the project '
+            f'brief for the AI-Assisted Programming module, Atlantic '
+            f'Technological University.">\n'
             f'<title>{title}</title>\n'
             f'<link rel="icon" href="{FAVICON}">\n{STYLE}\n</head>\n<body>\n')
 
 MAIN_HEADER = """<header>
-  <p class="kicker">Atlantic Technological University &middot; Semester 1 &middot; Java</p>
-  <h1>Object-Oriented Computing</h1>
+  <p class="kicker">Atlantic Technological University &middot; Semester 1</p>
+  <h1>AI-Assisted Programming</h1>
   <p class="standfirst">One lecture deck per teaching week — slides and lab
   open right in your browser, and every deck has a PDF beside it if you want
   to take it with you. Also here: <a href="labs/">all the labs</a> &middot;
+  <a href="project/">the project brief</a> &middot;
   <a href="practice/">MCQ practice</a>.</p>
 </header>
 <main>
@@ -211,15 +233,19 @@ MAIN_FOOT = """</ol>
 """
 
 def lab_slug(folder: str) -> str | None:
-    """Week folder -> its lab package, e.g. week-02-classes-and-objects ->
-    classesandobjects (Java package segments cannot contain hyphens).
+    """Week folder -> its lab folder, e.g. week-04-rag -> labs/rag.
+
+    Labs are addressed by TOPIC, never by week number: week numbers move
+    between years (this module went 13 -> 12) and a student's instructions
+    should not follow them. So the mapping is the week's topic slug, with
+    LAB_OVERRIDES for the rare week whose lab has a different name.
 
     A teaching week whose lab is missing is a BUILD ERROR, not a silently
-    dropped button: this mapping is derived, so a rename on either side
-    would otherwise publish a lab-less site with CI still green. Weeks that
+    dropped button: the mapping is derived, so a rename on either side would
+    otherwise publish a lab-less site with CI still green. Weeks that
     legitimately have no lab must be named in NO_LAB_WEEKS.
     """
-    slug = re.sub(r"^week-\d+-", "", folder).replace("-", "")
+    slug = LAB_OVERRIDES.get(folder) or re.sub(r"^week-\d+-", "", folder)
     if (LABS / slug).is_dir():
         return slug
     if folder in NO_LAB_WEEKS:
@@ -227,8 +253,8 @@ def lab_slug(folder: str) -> str | None:
     raise SystemExit(
         f"build_index: {folder} has a lecture but no lab at {LABS / slug}.\n"
         f"  Either the lab folder is misnamed (it must be the week's topic "
-        f"with hyphens removed), or the week has no lab and belongs in "
-        f"NO_LAB_WEEKS in this script.")
+        f"slug), or the week's lab has a different name and needs an entry in "
+        f"LAB_OVERRIDES, or the week has no lab and belongs in NO_LAB_WEEKS.")
 
 
 def lecture_row(folder: str, week_no: str, title: str) -> str:
@@ -272,6 +298,14 @@ def build_main_rows() -> tuple[str, int, int]:
         week_no = week_match.group(1).lstrip("0") if week_match else ""
         slug = name.split("-", 2)[-1]
         deck = folder / "slides.md"
+        if name in PENDING_DECKS and deck.is_file():
+            raise SystemExit(
+                f"build_index: {name} has a slides.md but is still listed in "
+                f"PENDING_DECKS.\n"
+                f"  Remove it from that list -- leaving it there hides a deck "
+                f"that exists, and the week renders as 'deck not converted "
+                f"yet' on a site where it is perfectly available.")
+
         if slug in MCQ_LABELS:
             rows.append(marker_row(week_no, MCQ_LABELS[slug]))
             markers += 1
@@ -281,6 +315,16 @@ def build_main_rows() -> tuple[str, int, int]:
         elif deck.is_file():
             rows.append(lecture_row(name, week_no, deck_title(deck, slug)))
             lectures += 1
+        elif name in PENDING_DECKS:
+            # Deck not converted from PowerPoint yet. Still verify the lab
+            # mapping holds, so a lab rename cannot hide behind a pending deck.
+            lab = lab_slug(name)
+            label = (f"{html.escape(slug.replace('-', ' '))} &middot; "
+                     f"deck not converted yet")
+            if lab:
+                label += f' &middot; <a href="labs/{lab}/">lab is ready</a>'
+            rows.append(marker_row(week_no, label))
+            markers += 1
         else:
             # A week folder that is neither an MCQ week, nor reading week, nor
             # a deck used to be skipped in silence -- the week simply vanished
@@ -303,7 +347,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     rows, lectures, markers = build_main_rows()
-    page = (page_head("Object-Oriented Computing &mdash; Lecture Decks")
+    page = (page_head("AI-Assisted Programming")
             + MAIN_HEADER + rows + MAIN_FOOT)
     (out_dir / "index.html").write_text(page, encoding="utf-8", newline="\n")
     print(f"wrote {out_dir / 'index.html'} ({lectures} lectures, {markers} marker rows)")

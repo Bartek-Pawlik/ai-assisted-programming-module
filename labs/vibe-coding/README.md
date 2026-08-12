@@ -8,7 +8,7 @@ Welcome to the Vibe Coding Lab! In this lab, you'll explore three powerful AI-dr
 
 ## 🗂️ Agenda
 1. [🚀 Quick Start](#1--quick-start)  
-2. [🛠️ Tool 1: Google Antigravity](#2-️-tool-1-google-antigravity)  
+2. [🛠️ Tool 1: Google Antigravity](#2--tool-1-google-antigravity)  
 3. [⚡ Tool 2: Bolt.new](#3--tool-2-boltnew)  
 4. [🔥 Tool 3: Firebase Studio](#4--tool-3-firebase-studio)  
 5. [🎯 The Challenge: Build a To-Do App](#5--the-challenge-build-a-to-do-app)  

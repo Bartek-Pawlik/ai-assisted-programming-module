@@ -7,15 +7,15 @@
 # opened. This script copies files instead, which cannot conflict.
 #
 # It touches ONLY course content -- the lectures, the lab instructions and
-# the README. It never touches Main.java, any class you wrote, or any file
+# the README. It never touches any code you wrote, your .env, or any file
 # you created, and it skips anything you have edited yourself.
 #
 # Run it whenever you like:   bash scripts/update-course-content.sh
 # (In a Codespace it also runs by itself each time you open the workspace.)
 set -uo pipefail
 
-UPSTREAM_URL="https://github.com/danielcregg/object-oriented-computing.git"
-UPSTREAM_SLUG="danielcregg/object-oriented-computing"
+UPSTREAM_URL="https://github.com/danielcregg/ai-assisted-programming.git"
+UPSTREAM_SLUG="danielcregg/ai-assisted-programming"
 BRANCH="main"
 QUIET="${1:-}"                       # --quiet: say nothing unless something changed
 
@@ -44,9 +44,20 @@ fi
 
 # The content files, listed one by one (not as directories) so that editing
 # one deck never blocks the rest from updating.
+#
+# Lab instructions are nested more deeply here than in the sibling OOC repo:
+# several labs split their instructions across part folders
+# (labs/cli-coding-agents/part1/README.md), and some carry sibling guides in
+# SHOUTY_CASE (TROUBLESHOOTING.md, QUICKSTART.md, LAB_GUIDE.md). All of those
+# are instructions and should refresh; nothing below matches lab source code.
+#
+# Student worksheets (labs/prompting/lab/prompts/*.md, REFLECTION.md) do match
+# the SHOUTY_CASE arm in one case, but that is safe: a file the student has
+# edited is detected as theirs and kept, and a worksheet they have not touched
+# is still a blank template either way.
 mapfile -t PATHS < <(
   git ls-tree -r --name-only "upstream/$BRANCH" | grep -E \
-    '^(README\.md|labs/README\.md|weeks/.*|labs/src/ie/atu/[^/]+/README\.md)$' || true
+    '^(README\.md|labs/README\.md|project/.*\.md|weeks/.*|labs/[^/]+/README\.md|labs/[^/]+/[A-Z_]+\.md|labs/[^/]+/[^/]+/README\.md)$' || true
 )
 
 # Baseline = the content as you last received it: the commit recorded by the

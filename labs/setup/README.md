@@ -8,7 +8,7 @@ Welcome to the Setup Lab! This guide will help you set up your environment, unde
 
 ## 🗂️ Agenda
 1. [🚀 Quick Start](#1--quick-start)  
-2. [🛠️ Environment Setup](#2-️-environment-setup)  
+2. [🛠️ Environment Setup](#2--environment-setup)  
 3. [📚 Lab Structure](#3--lab-structure)  
 4. [💡 How to Complete the Lab](#4--how-to-complete-the-lab)  
 5. [📝 Submission Checklist](#5--submission-checklist)  

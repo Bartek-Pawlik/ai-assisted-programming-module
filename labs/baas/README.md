@@ -17,15 +17,16 @@ Welcome to the BaaS (Backend as a Service) Lab. In this hands-on lab, you'll bui
 
 ## 🗂️ Table of Contents
 1. [What You'll Learn](#what-youll-learn)
-2. [Prerequisites](#prerequisites)
-3. [Quick Setup](#quick-setup-5-minutes)
+2. [Architecture Overview](#architecture-overview)
+3. [Quick Setup](#quick-setup)
 4. [Project Structure](#project-structure)
-5. [Part 1: Verify the Setup](#part-1-verify-the-setup-10-minutes)
-6. [Part 2: Firebase Configuration](#part-2-firebase-configuration-15-minutes)
-7. [Part 3: Using AI to Build Features](#part-3-using-ai-to-build-features-20-minutes)
-8. [Part 4: Enhancement Exercises](#part-4-enhancement-exercises-15-minutes)
-9. [Troubleshooting](#troubleshooting)
-10. [Next Steps](#next-steps)
+5. [Part 1: Verify the Setup](#part-1-verify-the-setup)
+6. [Part 2: Firebase Configuration](#part-2-firebase-configuration)
+7. [Part 3: Using AI to Build Features](#part-3-using-ai-to-build-features)
+8. [Part 4: Enhancement Exercises](#part-4-enhancement-exercises)
+9. [Part 5: Firebase CLI Setup](#part-5-firebase-cli-setup)
+10. [Troubleshooting](#troubleshooting)
+11. [What's Next?](#whats-next)
 
 ---
 

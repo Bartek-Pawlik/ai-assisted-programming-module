@@ -118,11 +118,11 @@ By the end of this lab, you will be able to:
 ## 🗂️ Table of Contents
 1. [Setup](#setup-15-minutes)
 2. [Lab Structure](#lab-structure)
-3. [Part 1: GitHub Copilot CLI](#part-1-github-copilot-cli-40-minutes)
-4. [Part 2: Google Gemini CLI](#part-2-google-gemini-cli-40-minutes)
-5. [Part 3: Advanced Features & Comparison](#part-3-advanced-features--comparison-25-minutes)
-6. [Troubleshooting](#troubleshooting)
-7. [Resources](#additional-resources)
+3. [Part 1: GitHub Copilot CLI](part1/README.md)
+4. [Part 2: Google Gemini CLI](part2/README.md)
+5. [Part 3: Advanced Features & Comparison](part3/README.md)
+6. [Troubleshooting](TROUBLESHOOTING.md)
+7. [AI Programming Best Practices](#-ai-programming-best-practices)
 
 ---
 

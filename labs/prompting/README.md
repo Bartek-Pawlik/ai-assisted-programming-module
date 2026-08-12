@@ -1,13 +1,10 @@
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=20849466)
+# Lab: Prompting for Programmers
+
 <div align="center">
 
-# Lab: Prompting for Programmers
 ### From vague asks to reproducible results (≈ 1.5 hours / 90 minutes)
 
 💡 Goal: Learn to write clear, specific prompts that get reliable results from AI assistants.
-
-
-[![Autograding Status](https://github.com/DanielCreggOrganization/w3-lab-prompting-danielcregg/actions/workflows/classroom.yml/badge.svg)](https://github.com/DanielCreggOrganization/w3-lab-prompting-danielcregg/actions/workflows/classroom.yml) ![Autograde Score](https://img.shields.io/badge/autograde-100%2F100-green)
 
 </div>
 
@@ -617,15 +614,10 @@ Show me step-by-step how to:
 3. Take the last 2 parts
 ```
 
-### Grading Questions
-
-**Score not updating after fixes?**
-- Commit and push your changes
-- Check Actions tab for latest run
-- Badge updates automatically (may take 1-2 min)
+### Scoring Questions
 
 **Score stuck at 10/100?**
-- 10 = only reflection file exists
+- 10 = only the reflection file exists
 - Create prompt files (Tasks 1-7) for +20 points
 - Implement Task 8 for +70 points
 
@@ -633,14 +625,18 @@ Show me step-by-step how to:
 
 ## 🔁 Check Your Progress
 
-**Local (Fast):** `python scripts/run_and_grade.py`
-- Shows overall score, which files are missing, which tests are failing
-- Run this after each task to stay on track
+Run the checker as often as you like — it is instant and runs entirely on
+your own machine:
 
-**GitHub (Slower):** Check the Actions tab
-- Green = passing, Red = failing
-- Must score 60+ to pass
-- Badge shows your current score
+```bash
+python scripts/run_and_grade.py
+```
+
+It shows your overall score, which files are missing, and which tests are
+failing. Run it after each task to stay on track.
+
+This score is **for you**, not a submission. It is a self-check so you can
+tell whether a task is finished; nothing is reported anywhere.
 
 **Scoring Breakdown:**
 1. **Tests (70%):** Does Task 8 code work?
@@ -682,9 +678,8 @@ This will check and fix common setup problems automatically.
 - Avoid creating virtual environments for this lab - use the global Python
 
 **Score Not Updating?**
-- Run the local checker: `python scripts/run_and_grade.py`
-- Commit and push your changes to trigger GitHub grading
-- Check the Actions tab for detailed results
+- Run the checker again: `python scripts/run_and_grade.py`
+- It reads your files fresh each run, so save before you run it
 
 **Files You Should NOT Commit:**
 - `pytest-report.json` (auto-generated test results)
@@ -695,7 +690,7 @@ These files are already in `.gitignore` and will be ignored automatically.
 
 **Need Help?**
 1. Run `python scripts/setup_check.py` first
-2. Check the Actions tab for specific error messages
+2. Read the error it prints — it names the file and the problem
 3. Look at the specific test failures in the output
 
 ---

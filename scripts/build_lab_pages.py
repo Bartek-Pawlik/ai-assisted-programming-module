@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """Render the lab READMEs as styled pages for GitHub Pages.
 
-For every labs/src/ie/atu/<slug>/README.md this emits
+For every labs/<slug>/README.md this emits
 OUTPUT_DIR/labs/<slug>/index.html in the site's visual identity, plus a
 labs index page at OUTPUT_DIR/labs/index.html. Pages are READ-ONLY
 previews — each carries a banner telling students to make their own
 copy of the repo from the template and work in a Codespace.
 
 Mermaid fences render client-side (pinned mermaid, same version as the
-repo's Moodle assets), and ```java fences get client-side highlight.js
+repo's assets), and ```python fences get client-side highlight.js
 colouring — pinned to the same highlight.js version marp-core bundles,
-with the token palette copied from themes/ooc.css, so lab code looks
+with the token palette copied from themes/aiap.css, so lab code looks
 exactly like deck code. ```text fences (Expected output) stay flat.
 Requires the `markdown` package (pip install markdown).
 
@@ -24,8 +24,8 @@ from pathlib import Path
 
 import markdown
 
-LABS = Path("labs/src/ie/atu")
-REPO_URL = "https://github.com/danielcregg/object-oriented-computing"
+LABS = Path("labs")
+REPO_URL = "https://github.com/danielcregg/ai-assisted-programming"
 
 # Both scripts are third-party code executed on the module's public site, so
 # each carries a Subresource Integrity hash: the browser refuses to run the
@@ -50,7 +50,7 @@ FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
 
 STYLE = """<style>
   :root {
-    --paper:#FBFAF7; --ink:#1E2833; --blue:#33698C; --orange:#E76F00;
+    --paper:#FBFAF7; --ink:#1E2833; --blue:#33698C; --orange:#6741D9;
     --slate:#46536B; --rule:#DED8C9; --muted:#8B8471; --codebg:#16222E;
     --mono:'Cascadia Code','SF Mono',Menlo,Consolas,'Courier New',monospace;
     --sans:'Segoe UI','Helvetica Neue',Arial,sans-serif;
@@ -88,7 +88,7 @@ STYLE = """<style>
     overflow-x: auto; line-height: 1.5;
   }
   pre code { background: transparent; color: #E8ECF1; padding: 0; font-size: 14.5px; }
-  /* java token colours — same palette as section pre code in themes/ooc.css */
+  /* code token colours — same palette as section pre code in themes/aiap.css */
   pre code .hljs-string { color: #F0B26B; }
   pre code .hljs-keyword { color: #7FB4D8; }
   pre code .hljs-title, pre code .hljs-built_in { color: #A8D3EE; }
@@ -164,7 +164,7 @@ def page(title: str, kicker_html: str, body_html: str, needs_mermaid: bool,
     hljs = (f'<script src="{HLJS_JS}" integrity="{HLJS_SRI}"'
             ' crossorigin="anonymous"></script>'
             "<script>if(typeof hljs!=='undefined'){"
-            "document.querySelectorAll('pre code.language-java')"
+            "document.querySelectorAll('pre code.language-python')"
             ".forEach(function(el){hljs.highlightElement(el);});}</script>"
             if needs_hljs else "")
     return (f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
@@ -185,14 +185,13 @@ def main() -> None:
         text = readme.read_text(encoding="utf-8")
         heading = re.match(r"#\s+(.+)", text)
         if heading is None:
-            # Every lab README opens with `# Java <Topic> Lab` -- that line is
-            # the page title and the labs-index entry. Without the guard this
-            # was an AttributeError on None, which says nothing about which
-            # file is wrong or why.
+            # A lab README's first `# ` line is the page title and the
+            # labs-index entry. Without this guard it was an AttributeError on
+            # None, which says nothing about which file is wrong or why.
             raise SystemExit(
                 f"build_lab_pages: {readme} does not start with a `# ` "
                 f"heading, so it has no title. Every lab README must open "
-                f"with `# Java <Topic> Lab` on its first line.")
+                f"with a level-1 heading on its first line.")
         title = heading.group(1).strip()
         labs.append((slug, title))
 
@@ -204,14 +203,14 @@ def main() -> None:
         banner = (f'<div class="copy-banner">Read-only preview. To <strong>do</strong> '
                   f'this lab: <a href="{REPO_URL}/generate">make your own copy of the '
                   f'repo</a> ("Use this template"), open a Codespace on it, and work '
-                  f'in <code>labs/src/ie/atu/{slug}/</code>.</div>')
-        kicker = '<a href="./..">labs</a> · object-oriented computing'
+                  f'in <code>labs/{slug}/</code>.</div>')
+        kicker = '<a href="./..">labs</a> · ai-assisted programming'
         dest = out_root / slug
         dest.mkdir(parents=True, exist_ok=True)
         (dest / "index.html").write_text(
             page(html.escape(title), kicker, body, "```mermaid" in text or
                  'class="mermaid"' in body, banner,
-                 needs_hljs='language-java' in body),
+                 needs_hljs='language-python' in body),
             encoding="utf-8", newline="\n")
 
     rows = "".join(
@@ -226,7 +225,7 @@ def main() -> None:
                   f"a Codespace on it.</p>\n<ul class=\"row-list\">\n{rows}</ul>\n"
                   f'<p class="kicker"><a href="../">back to the lecture decks</a></p>')
     (out_root / "index.html").write_text(
-        page("OOC Labs", "object-oriented computing", index_body, False),
+        page("AIAP Labs", "ai-assisted programming", index_body, False),
         encoding="utf-8", newline="\n")
     print(f"wrote {len(labs)} lab pages + labs index under {out_root}")
 
