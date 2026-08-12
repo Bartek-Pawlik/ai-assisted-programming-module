@@ -1,0 +1,9 @@
+{
+  "markdown.marp.themes": ["./themes/aiap.css"],
+  "markdown.marp.enableHtml": true,
+  "python.analysis.extraPaths": ["labs"],
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true
+  }
+}

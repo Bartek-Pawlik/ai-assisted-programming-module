@@ -1,0 +1,6 @@
+# No Python packages required for this lab
+# Both GitHub Copilot CLI and Gemini CLI are npm packages
+# 
+# Install with:
+# npm install -g @github/copilot
+# npm install -g @google/gemini-cli

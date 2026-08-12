@@ -1,0 +1,28 @@
+# Lab Requirements
+
+## Python Packages
+# Note: This lab primarily uses GitHub Copilot which is built into VS Code
+# Only minimal Python packages are needed for the sample code
+
+# For Part 1 - Ask Mode examples
+# (No special packages needed - uses Python standard library)
+
+# For Part 2 - Edit Mode examples  
+# (No special packages needed - uses Python standard library)
+
+# For Part 3 - Agent Mode examples
+pytest>=7.4.0          # For running unit tests
+pytest-cov>=4.1.0      # For test coverage
+
+# Optional: For authentication example in Part 4
+flask>=3.0.0
+bcrypt>=4.0.1
+pyjwt>=2.8.0
+
+# Optional: For data validation examples
+email-validator>=2.0.0
+
+# Development tools
+black>=23.0.0          # Code formatter
+pylint>=3.0.0          # Linter
+mypy>=1.5.0            # Type checker

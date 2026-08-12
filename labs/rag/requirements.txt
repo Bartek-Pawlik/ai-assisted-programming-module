@@ -1,0 +1,21 @@
+# RAG Lab Dependencies
+# Atlantic Technological University - AI Assisted Programming
+# Python 3.11+
+
+# Core RAG Components
+sentence-transformers==2.2.2
+chromadb==0.4.22
+anthropic==0.18.1
+
+# Utilities
+python-dotenv==1.0.0
+numpy==1.24.3
+
+# Optional: For extension challenges
+# streamlit==1.31.1  # Uncomment for Challenge 1
+# pypdf==4.0.1  # Uncomment for Challenge 2
+# rank-bm25==0.2.2  # Uncomment for Challenge 3
+
+# Development
+pytest==7.4.4
+black==24.2.0
