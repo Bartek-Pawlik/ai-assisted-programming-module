@@ -169,6 +169,28 @@ that caveat attached, and do not sharpen these into false precision.
   `cols` (2-column bullets), `grid2`, `logos`, `dense`, `centered-table`,
   `side`, `code-sm`/`code-xs`. Kicker lines use
   `<span class="kicker">// ...</span>` (requires the workflow's `--html`).
+- **NO IMAGE FILES in the teaching path.** Every diagram is drawn in CSS.
+  A PNG of an attack chain cannot be diffed in git, cannot be restyled
+  from one place, and — the reason that matters most here — cannot be read
+  by an assistant helping a student. Shared components in the theme:
+
+  | Component | For |
+  |---|---|
+  | `.callout` | An aside or a warning. Warm violet |
+  | `.prompt` | **Something you type at a model.** Cool blue, monospace, labelled |
+  | `.prompt.bad` / `.prompt.good` | A vague-vs-better pair. Red / green |
+  | `.reply` | The model's response, when the contrast matters |
+  | `.flow` | Left-to-right chain of steps; `.step.danger` for the bad end |
+  | `.stack` | Ranked layers; `.layer.top`, `.layer.untrusted` |
+
+  A prompt is neither prose nor code and must not be set as either — this
+  module quotes prompts constantly, and undifferentiated grey text is how
+  a slide stops teaching. Anything bespoke to one deck goes in that deck's
+  own `<style>` block, which wins over the theme because it comes later.
+- **Code goes in a fenced block, always** — never inline in a bullet, never
+  as an image. Tag the fence with its real language: `verify_snippets.py`
+  parses `python`/`json`/`yaml`/`bash`, so a SQL example tagged ```python
+  fails the build (correctly).
 - Bullet markers carry meaning: `* ` = fragmented (revealed one per
   keypress in the HTML presentation), `- ` = shown immediately. Fragment
   build-up slides; leave reference slides (agendas, summaries, tables)
@@ -184,6 +206,65 @@ that caveat attached, and do not sharpen these into false precision.
 - Decks are SELF-CONTAINED and reusable: never reference other weeks or
   the module schedule. Exempt: title-slide kickers, frontmatter `week:`,
   and week-01's module-logistics act.
+
+### Deck flow — every topic deck, same shape
+
+Mirrors the sibling OOC module so a student moving between them never has
+to relearn where things are:
+
+    title (lead + kicker)
+      -> hook: a problem, a number, or a question (1-2 slides)
+      -> "the idea": the one sentence the hour is about
+      -> agenda
+      -> concepts, each with a worked example
+      -> 3-4 PREDICT beats spaced through the hour
+      -> common mistakes / honest limits
+      -> Summary            <- ALWAYS last, no resources slide after it
+
+**Predict beats** are the load-bearing part. A slide poses something and
+the room commits to an answer out loud *before* the reveal; answers are
+`* ` bullets so they appear after the class has committed. Every predict
+slide's speaker note must name **the wrong answer to expect and the
+faulty reasoning behind it** — the slide already states the right answer,
+and the misconception is the thing an AI reading the deck cannot infer.
+
+Week 1 is the one exception: a two-act deck (logistics, then content),
+still hook-first and Summary-last.
+
+### Lab formula — every lab, same shape
+
+    # AIAP <Topic> Lab
+    ## What you'll learn          <- 4-6 bullets, outcomes not topics
+    ## Table of Contents
+    ## Getting started            <- the standard block; identical everywhere
+    ## 1. <Section>
+    ### DIY 1: <name>
+    ## 2. <Section>
+    ### DIY 2: <name>
+    ...
+    ## Common mistakes
+    ## Summary                    <- ALWAYS last
+
+**Every `### DIY k` carries all three of:**
+
+1. numbered steps,
+2. a `**What you should have**` block (or `**Expected output**` with a
+   ```text fence where the step produces console output), and
+3. a hint in `<details><summary>Hint</summary>`.
+
+A DIY without a hint is not finished. `scripts/check_lab_structure.py`
+enforces all of this.
+
+**Size a lab to a two-hour slot, and judge it by COMPOSITION.** The number
+that matters is the fraction of DIY steps asking the student to *do or
+write something themselves* rather than copy a supplied fence. When a lab
+runs long, cut transcription before you cut exercises.
+
+**Why the deliverable differs from OOC.** OOC labs produce console output,
+so `**Expected output**` can be exact text. Many AIAP tasks produce a
+written artefact instead — a prompt, an audit, a comparison — which is why
+`**What you should have**` exists. Use whichever the exercise actually
+produces; never omit both, or the student has no way to self-check.
 
 ## The gates
 

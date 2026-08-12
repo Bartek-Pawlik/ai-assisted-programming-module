@@ -1,4 +1,4 @@
-# Part 2: Google Gemini CLI (40 minutes)
+# Part 7: Google Gemini CLI (40 minutes)
 
 Learn to use Google's official Gemini CLI - a powerful terminal-based coding agent with built-in tools and MCP extensibility.
 
@@ -671,4 +671,4 @@ gemini --clear-cache
 
 ---
 
-**Ready to continue?** Move on to [Part 3: Advanced Features & Comparison](../part3/README.md)
+**Ready to continue?** Move on to [Part 3: Advanced Features & Comparison](../part8_cli_comparison/README.md)

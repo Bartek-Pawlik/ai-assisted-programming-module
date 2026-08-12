@@ -22,14 +22,14 @@ everyone taking the module.
 | Week | Lab | What you build | Needs a key |
 |---|---|---|---|
 | 2 | [setup](setup/) | Your environment, verified | |
-| 3 | [prompting](prompting/) | SPEC prompts, personas, chain-of-thought, few-shot | |
-| 4 | [rag](rag/) | A retrieval pipeline: embed, retrieve, generate | yes |
+| 3 | [prompting](prompting/) | SPEC prompts, personas, chain-of-thought, few-shot, context engineering | |
+| 4 | [rag](rag/) | A retrieval pipeline — and when not to build one | yes |
 | 5 | [mcp](mcp/) | An MCP server and client, then your own | yes |
-| 6 | [agents](agents/) | Ask / edit / agent modes on real broken code | |
-| 8 | [cli-coding-agents](cli-coding-agents/) | Copilot CLI and Gemini CLI, compared | |
+| 6 | [agents](agents/) | The ladder of autonomy: ask → edit → act, editor and terminal | |
+| 8 | [security](security/) | Break it, then find the break: injection, slopsquatting, prompt injection | |
 | 9 | [baas](baas/) | FastAPI backend + React frontend on Firestore | yes |
 | 10 | [cicd](cicd/) | A GitHub Actions pipeline with AI in it | |
-| 11 | [vibe-coding](vibe-coding/) | The same app in three vibe-coding tools | |
+| 11 | [vibe-coding](vibe-coding/) | The same app three ways — then spec-first | |
 
 There is no lab in weeks 1, 7 or 12 (week 1 is the introduction; 7 and 12
 are the MCQs).

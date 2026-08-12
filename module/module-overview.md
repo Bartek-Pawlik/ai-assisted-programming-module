@@ -59,10 +59,10 @@ them.
 | 3 | Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../labs/prompting/) |
 | 4 | RAG &amp; Retrieval Strategy | Chunking, embeddings, vector search, grounded answers — and when long context beats retrieval outright | [rag](../labs/rag/) |
 | 5 | MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../labs/mcp/) |
-| 6 | Agents | Ask / edit / agent modes; autonomy, review loops, cloud agents | [agents](../labs/agents/) |
+| 6 | Coding Agents | The ladder of autonomy: ask → edit → act, in the editor and in the terminal; what review means at each rung | [agents](../labs/agents/) |
 | — | *Reading week* | October bank-holiday week — revision for MCQ 1 | — |
 | 7 | **MCQ 1 (20%)** | Assessment on weeks 1–6, lectures and labs | — |
-| 8 | CLI Coding Agents | Terminal-based agents: Copilot CLI, Gemini CLI, and how they differ from in-editor tools | [cli-coding-agents](../labs/cli-coding-agents/) |
+| 8 | Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../labs/security/) |
 | 9 | BaaS | Backend-as-a-service: Firestore, auth, and an API an AI-built frontend can call | [baas](../labs/baas/) |
 | 10 | CI/CD | Pipelines with GitHub Actions, and putting AI inside them (review, triage) | [cicd](../labs/cicd/) |
 | 11 | Vibe Coding &amp; Spec-Driven Development | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../labs/vibe-coding/) |

@@ -47,8 +47,7 @@ LAB_OVERRIDES = {"week-02-overview": "setup"}
 # all rendering as if it were fine.
 PENDING_DECKS = {
     "week-02-overview", "week-03-prompting", "week-04-rag", "week-05-mcp",
-    "week-06-agents", "week-08-cli-coding-agents", "week-09-baas",
-    "week-10-cicd", "week-11-vibe-coding",
+    "week-06-agents", "week-09-baas", "week-10-cicd", "week-11-vibe-coding",
 }
 
 TITLE_RE = re.compile(r'^title:\s*"?([^"\n]+?)"?\s*$', re.MULTILINE)

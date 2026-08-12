@@ -52,10 +52,10 @@ marker rows until their `slides.md` lands.
 | 3 | Prompting | _deck pending_ | [lab](labs/prompting/) |
 | 4 | RAG | _deck pending_ | [lab](labs/rag/) |
 | 5 | MCP | _deck pending_ | [lab](labs/mcp/) |
-| 6 | Agents | _deck pending_ | [lab](labs/agents/) |
+| 6 | Coding Agents | _deck pending_ | [lab](labs/agents/) |
 | — | Reading week | [details](weeks/week-06b-reading-week/README.md) | — |
 | 7 | **MCQ 1** (20%) | [details](weeks/week-07-mcq1/README.md) | — |
-| 8 | CLI Coding Agents | _deck pending_ | [lab](labs/cli-coding-agents/) |
+| 8 | Security of AI-Generated Code | [slides](weeks/week-08-security/slides.md) | [lab](labs/security/) |
 | 9 | BaaS | _deck pending_ | [lab](labs/baas/) |
 | 10 | CI/CD | _deck pending_ | [lab](labs/cicd/) |
 | 11 | Vibe Coding | _deck pending_ | [lab](labs/vibe-coding/) |

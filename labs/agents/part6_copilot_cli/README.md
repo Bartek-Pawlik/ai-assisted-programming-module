@@ -1,4 +1,4 @@
-# Part 1: GitHub Copilot CLI (40 minutes)
+# Part 6: GitHub Copilot CLI (40 minutes)
 
 Learn to use GitHub Copilot CLI - a full-featured terminal-based coding agent.
 
@@ -503,4 +503,4 @@ You'll then compare both agents to understand when to use each one.
 
 **Time Check:** You should have spent about 40 minutes on this section.
 
-**Ready to continue?** Move on to [Part 2: Google Gemini CLI](../part2/README.md)
+**Ready to continue?** Move on to [Part 2: Google Gemini CLI](../part7_gemini_cli/README.md)

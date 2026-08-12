@@ -165,5 +165,88 @@ section .mem .cell .idx { position: absolute; top: -30px; left: 0; right: 0; fon
 section .mem .cell.hot { background: #FDEFD9; border-color: #6741D9; color: #4C2FB0; font-weight: 600; }
 section .mem .cell.boom { background: #F9E3E3; border: 2px dashed #C0392B; color: #C0392B; }
 section .mem .name { align-self: center; margin-right: 22px; font-size: 23px; color: #33698C; font-weight: 600; }
+
+/* ── prompt boxes ────────────────────────────────────────────────
+   This module quotes PROMPTS constantly, and a prompt is neither prose
+   nor code: it is the thing you type at a model. It needs to read as
+   distinct from both, or slides turn into undifferentiated grey text.
+
+   Design: monospace like code (it is typed verbatim), but a COOL blue
+   ground rather than the dark code block, and labelled by a ::before
+   marker so it is unmistakable even in a photograph of a slide. The
+   callout stays warm violet; a prompt is never confused with an aside.
+
+   <p class="prompt">Write a Python function that…</p>
+   <p class="prompt bad">fix this</p>          <- the counter-example
+   <p class="prompt good">…</p>                <- the improved version   */
+section .prompt {
+  font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 0.82em; line-height: 1.45;
+  background: #EEF3F8; border-left: 4px solid #33698C; border-radius: 0 6px 6px 0;
+  padding: 13px 20px 13px 18px; margin: 14px 0; color: #22303F;
+  white-space: pre-wrap; position: relative;
+}
+section .prompt::before {
+  content: 'prompt'; display: block;
+  font-size: 0.72em; letter-spacing: 0.09em; text-transform: uppercase;
+  color: #33698C; margin-bottom: 6px;
+}
+/* A bad/good pair is the module's commonest teaching move, so it gets
+   first-class styling rather than a per-deck hack. */
+section .prompt.bad { background: #FBEEEE; border-left-color: #C0392B; color: #6B2B24; }
+section .prompt.bad::before { content: 'vague prompt'; color: #C0392B; }
+section .prompt.good { background: #ECF5EE; border-left-color: #2E7D4F; color: #21402F; }
+section .prompt.good::before { content: 'better prompt'; color: #2E7D4F; }
+/* The model's reply, when the contrast matters. */
+section .reply {
+  font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.78em;
+  background: #F5F3EE; border-left: 4px solid #AFA893; border-radius: 0 6px 6px 0;
+  padding: 12px 18px; margin: 12px 0; color: #46536B; white-space: pre-wrap;
+}
+section .reply::before {
+  content: 'reply'; display: block; font-size: 0.72em; letter-spacing: 0.09em;
+  text-transform: uppercase; color: #8B8471; margin-bottom: 5px;
+}
+
+/* ── diagram primitives ──────────────────────────────────────────
+   Deliberately NO image files anywhere in the teaching path. Diagrams
+   are drawn in CSS so that they diff in git, restyle from one place, and
+   can be READ by an assistant helping a student -- a PNG of an attack
+   chain is opaque to every one of those.
+
+   .flow  — a left-to-right chain of steps, arrows drawn with ::after
+   .stack — ranked layers, highest authority at the top                 */
+section .flow { display: flex; align-items: stretch; gap: 0; margin: 22px 0; }
+section .flow .step {
+  flex: 1; position: relative; background: #FFFFFF; border: 2px solid #33698C;
+  border-radius: 8px; padding: 13px 15px; margin-right: 26px;
+  font-size: 0.74em; line-height: 1.35; color: #1E2833;
+}
+section .flow .step:last-child { margin-right: 0; }
+section .flow .step:not(:last-child)::after {
+  content: '→'; position: absolute; right: -22px; top: 50%;
+  transform: translateY(-50%); color: #6741D9; font-size: 22px; font-weight: 700;
+}
+section .flow .step .n {
+  display: block; font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 0.8em; color: #8B8471; margin-bottom: 4px;
+}
+section .flow .step.danger { border-color: #C0392B; background: #FBEEEE; color: #6B2B24; }
+section .flow .step.danger .n { color: #C0392B; }
+
+section .stack { margin: 20px 0; }
+section .stack .layer {
+  border: 2px solid #33698C; border-radius: 8px; padding: 11px 18px;
+  margin: 7px 0; font-size: 0.8em; background: #FFFFFF; color: #1E2833;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 18px;
+}
+section .stack .layer .rank {
+  font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.8em;
+  color: #8B8471; white-space: nowrap;
+}
+section .stack .layer.top { border-color: #6741D9; background: #F4F0E6; }
+section .stack .layer.top .rank { color: #4C2FB0; }
+section .stack .layer.untrusted { border-style: dashed; border-color: #C0392B; background: #FBEEEE; color: #6B2B24; }
+section .stack .layer.untrusted .rank { color: #C0392B; }
 section .mem .name::after { content: ' →'; color: #6741D9; }
 section.lead .mem .cell .idx { color: #6E8497; }

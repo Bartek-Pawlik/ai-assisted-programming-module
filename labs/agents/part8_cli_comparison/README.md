@@ -1,4 +1,4 @@
-# Part 3: Advanced Features & Comparison (25 minutes)
+# Part 8: Advanced Features & Comparison (25 minutes)
 
 Explore advanced use cases, compare tools effectively, and develop strategies for choosing the right tool.
 

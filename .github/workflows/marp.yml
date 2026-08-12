@@ -69,7 +69,7 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Gates - safety, links, snippets, labs, practice bank
+      - name: Gates - safety, links, snippets, labs, structure, portability
         run: |
           set -euo pipefail
           python scripts/safety_audit.py
@@ -77,6 +77,8 @@ jobs:
           python scripts/verify_snippets.py
           python scripts/verify_labs.py
           python scripts/check_practice_bank.py
+          python scripts/check_lab_structure.py
+          python scripts/check_deck_portability.py
 
       - name: Install Marp CLI
         run: npm install -g @marp-team/marp-cli@4.5.0
