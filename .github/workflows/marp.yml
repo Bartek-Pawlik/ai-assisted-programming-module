@@ -88,10 +88,10 @@ jobs:
           # build_index.py is the sixth gate: it fails if a teaching week has
           # no deck and no PENDING_DECKS entry, or no matching lab.
           python scripts/build_index.py build
+          # also renders project/*.md to build/project/*.html
           python scripts/build_lab_pages.py build
-          mkdir -p build/practice build/project
+          mkdir -p build/practice
           cp -R practice/. build/practice/
-          cp -R project/. build/project/
           # mapfile, NOT find|while: a piped while-loop hands the pipe to the
           # loop body's stdin, and marp-cli treats piped stdin as an extra
           # markdown input ("Converting 2 markdowns" + output-path error).

@@ -229,6 +229,51 @@ def main() -> None:
         encoding="utf-8", newline="\n")
     print(f"wrote {len(labs)} lab pages + labs index under {out_root}")
 
+    n_project = build_project_pages(Path(sys.argv[1] if len(sys.argv) > 1 else "build"))
+    print(f"wrote {n_project} project pages under "
+          f"{Path(sys.argv[1] if len(sys.argv) > 1 else 'build') / 'project'}")
+
+
+# The project brief is 60% of the module, so it gets real pages rather than
+# raw .md files copied into the site. Without this, the landing page's
+# "project brief" link 404s and the markdown that IS copied downloads as a
+# file instead of rendering -- which is how it shipped the first time.
+PROJECT = Path("project")
+PROJECT_TITLES = {
+    "brief": "The Project",
+    "rubric": "Grading Rubric",
+    "ai-usage-template": "AI-USAGE.md Template",
+}
+
+
+def build_project_pages(out_dir: Path) -> int:
+    src = sorted(PROJECT.glob("*.md"))
+    if not src:
+        return 0
+    dest = out_dir / "project"
+    dest.mkdir(parents=True, exist_ok=True)
+
+    for path in src:
+        text = path.read_text(encoding="utf-8")
+        md = markdown.Markdown(
+            extensions=["fenced_code", "tables", "md_in_html", "toc"],
+            extension_configs={"toc": {"slugify": lambda v, s: gh_slugify(v)}})
+        # Rewrite sibling .md links to their rendered pages: brief.md links to
+        # rubric.md, which only exists here as rubric.html.
+        body = md.convert(preprocess(text))
+        for stem in PROJECT_TITLES:
+            body = body.replace(f'href="{stem}.md"', f'href="{stem}.html"')
+
+        title = PROJECT_TITLES.get(path.stem, path.stem.replace("-", " ").title())
+        kicker = '<a href="../">ai-assisted programming</a> · project'
+        name = "index.html" if path.stem == "brief" else f"{path.stem}.html"
+        (dest / name).write_text(
+            page(html.escape(title), kicker, body,
+                 "```mermaid" in text or 'class="mermaid"' in body,
+                 needs_hljs='language-python' in body),
+            encoding="utf-8", newline="\n")
+    return len(src)
+
 
 if __name__ == "__main__":
     main()
