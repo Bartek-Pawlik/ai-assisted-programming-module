@@ -1,904 +1,327 @@
-# 🚀 Building Your First RAG Application - Hands-On Lab
+# AIAP Retrieval Lab
 
-**Atlantic Technological University, Galway**  
-**AI Assisted Programming Module**  
-**Estimated Time: 2 hours**
+Build a retrieval pipeline by hand — chunk, embed, search, ground — and
+then find out whether this corpus needed one at all. Both halves matter.
+Building infrastructure a problem does not need is a commoner and more
+expensive mistake than the reverse.
 
----
+## What you'll learn
 
-## 🎯 Learning Objectives
+- Split documents into chunks and turn them into embeddings
+- Search by meaning rather than by keyword, and see the difference
+- Ground an answer in retrieved text, with a citation
+- Measure how chunk size changes what comes back
+- Decide, with evidence, when long context beats retrieval outright
 
-By the end of this lab, you will be able to:
-- ✅ Process documents and split them into chunks
-- ✅ Generate vector embeddings using sentence-transformers
-- ✅ Store and query embeddings in a vector database (ChromaDB)
-- ✅ Build a semantic search system
-- ✅ Integrate retrieval with LLM generation
-- ✅ Create a complete working RAG application
-- ✅ Understand the difference between standard LLMs and RAG-enhanced LLMs
-- ✅ **Decide when retrieval is the wrong tool** and long context is better
+## Table of Contents
 
----
+1. [Chunking and embeddings](#1-chunking-and-embeddings)
+2. [Retrieval](#2-retrieval)
+3. [Grounding the answer](#3-grounding-the-answer)
+4. [Measuring what you built](#4-measuring-what-you-built)
+5. [Did you need any of this?](#5-did-you-need-any-of-this)
+6. [Common mistakes](#common-mistakes)
+7. [Summary](#summary)
 
-## 🤔 First: is RAG even the right answer?
+## Getting started
 
-You will hear "RAG is dead" this year. It isn't — but the reason people
-say it is worth understanding *before* you build one, because it changes
-what this lab is for.
+1. Open a Codespace on **your own copy** of the module repo.
+2. Move into this lab and install its dependencies:
 
-When RAG became popular, model context windows held a few thousand tokens.
-Retrieval was the only way to work with a document larger than the window.
-Today's windows hold hundreds of thousands to millions of tokens, so for a
-lot of problems you can simply **put the whole thing in the prompt** — no
-chunking, no embeddings, no vector database, no pipeline to maintain.
+   ```bash
+   cd labs/rag
+   pip install -r requirements.txt
+   ```
 
-So the honest 2026 position is not "always retrieve" or "never retrieve":
+3. This lab needs a **free embeddings API key**. `check_setup.py` says
+   which and where to get one:
 
-| Situation | Reach for |
-|---|---|
-| A handful of documents, conversational Q&A | **Long context** — just paste it |
-| Thousands of documents, or a corpus that won't fit | **Retrieval** |
-| You must cite exactly which source said it | **Retrieval** |
-| The data changes constantly | **Retrieval** (or live search) |
-| Cost matters and the corpus is large | **Retrieval** — the crossover is roughly a couple of thousand pages |
+   ```bash
+   python check_setup.py
+   ```
 
-**Long context is not free either.** Stuffing the window has documented
-failure modes: models attend less reliably to material in the *middle* of
-a very long context ("lost in the middle"), and adding more marginally
-relevant text can dilute the relevant part and make answers worse. More
-tokens is not more understanding.
+4. Put the key in a `.env` file in this folder. **Never commit it** —
+   `.env` is gitignored and the repo's safety audit will reject it.
 
-**What most serious systems do now is hybrid:** retrieve a bounded,
-generous set of candidates, then let a long-context model reason over all
-of them at once. That is the shape worth recognising — and you cannot
-build it, or judge when to skip it, without having built the retrieval
-half by hand. Which is what you are about to do.
-
-> **Coding tools took a different route.** Your coding assistant mostly
-> does **agentic retrieval**: it greps and reads files on demand rather
-> than consulting a vector database of your repo. Same problem —
-> "find me the relevant context" — solved with search instead of
-> embeddings. Worth noticing which of the two any tool you meet is doing.
+`data/` holds five short documents about programming topics. They are the
+whole corpus, and their size becomes the point in section 5.
 
 ---
 
-## 📋 Prerequisites
+## 1. Chunking and embeddings
 
-- Basic Python knowledge (variables, functions, loops)
-- Familiarity with VS Code
-- GitHub account (for Codespaces)
-- GitHub Copilot enabled (free for students!)
+A model cannot search your documents. It can only read what you put in the
+prompt. So the first job is turning documents into pieces small enough to
+select from, and into numbers you can compare.
+
+### DIY 1: Chunk the corpus
+
+Work in `part2_embeddings.py`.
+
+1. Load all five files from `data/`.
+2. Split each into chunks of roughly **200 words**, with about **40 words
+   of overlap** between neighbours.
+3. Print how many chunks you produced and the length of the shortest and
+   longest.
+4. Print chunk 0 and chunk 1 and confirm you can see the overlap.
+
+**Expected output**
+
+```text
+Loaded 5 documents
+Produced 34 chunks
+  shortest: 118 words
+  longest:  200 words
+Overlap check: chunk 0 ends "...a variable is a named" /
+               chunk 1 begins "a variable is a named location..."
+```
+
+<details><summary>Hint</summary>
+
+Overlap exists so that a fact sitting on a chunk boundary is not cut in
+half. Without it, a sentence split across two chunks may be retrievable
+from neither.
+
+Split on words rather than characters — a chunk that ends mid-word embeds
+badly and reads worse when it reaches the prompt.
+
+</details>
+
+### DIY 2: Embed and store
+
+1. Embed every chunk and store the vectors alongside their text.
+2. Print the dimensionality of one vector.
+3. Embed the phrase `"what is a variable"` and print its first five
+   numbers.
+4. Confirm the query vector has the **same** dimensionality as the chunk
+   vectors.
+
+**Expected output**
+
+```text
+Embedded 34 chunks
+Vector dimensionality: 384
+Query vector (first 5): [0.021, -0.114, 0.087, 0.043, -0.009]
+Dimensions match: True
+```
+
+<details><summary>Hint</summary>
+
+Step 4 is not busywork. Comparing vectors of different dimensionality is
+meaningless, and mixing two embedding models in one index is a genuine
+and confusing bug — everything "works" and the results are nonsense.
+
+Use the same model for chunks and queries, always.
+
+</details>
 
 ---
 
-## 🛠️ Setup Instructions
+## 2. Retrieval
 
-### Option 1: GitHub Codespaces (Recommended)
-1. **Fork this repository** to your GitHub account
-2. Click the green **Code** button → **Codespaces** → **Create codespace on main**
-3. Wait for the environment to build (2-3 minutes)
-4. Open the terminal in VS Code
-5. Run: `python check_setup.py` to verify everything works
+### DIY 3: Find the nearest chunks
 
-### Option 2: Local Development
-```bash
-# You already have this lab — it is in your copy of the module repo.
-cd labs/rag
+Work in `part3_retrieval.py`.
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+1. Write `search(query, k=3)` returning the `k` closest chunks with their
+   similarity scores.
+2. Run it for `"what is a variable"`.
+3. Run it for `"how do I store a value under a name"` — **different
+   words, same meaning**.
+4. Compare the two result sets.
 
-# Install dependencies
-pip install -r requirements.txt
+**Expected output**
 
-# Verify setup
-python check_setup.py
+```text
+Query: "what is a variable"
+  0.81  introduction_to_programming.txt  "A variable is a named location..."
+  0.64  data_structures_basics.txt       "Variables can hold references..."
+
+Query: "how do I store a value under a name"
+  0.78  introduction_to_programming.txt  "A variable is a named location..."
 ```
+
+<details><summary>Hint</summary>
+
+Step 3 is the whole justification for embeddings. The second query shares
+almost no words with the text it should find — keyword search would return
+nothing useful, and meaning-based search returns the same top chunk.
+
+If the two result sets are completely different, check you are embedding
+the query with the same model as the chunks.
+
+</details>
+
+### DIY 4: Break it on purpose
+
+1. Search for something **not** in the corpus at all — `"how do I bake
+   sourdough"`.
+2. Look at what comes back and at the scores.
+3. Record what the system does when it has no good answer.
+
+**What you should have**
+
+The returned chunks and their scores, and one sentence on what a retrieval
+system does when nothing is relevant.
+
+<details><summary>Hint</summary>
+
+It still returns chunks. Nearest-neighbour search always has a nearest
+neighbour — there is no built-in notion of "nothing here is relevant".
+
+The scores are the only signal, which is why a **score threshold** matters
+and why the next section has to give the model permission to say it does
+not know.
+
+</details>
 
 ---
 
-## 📚 Lab Structure
+## 3. Grounding the answer
 
-| Part | Topic | Time | Difficulty |
-|------|-------|------|------------|
-| 1 | Setup & Environment | 15 min | 🟢 Easy |
-| 2 | Document Processing & Embeddings | 30 min | 🟡 Medium |
-| 3 | Retrieval System | 35 min | 🟡 Medium |
-| 4 | Generation Integration | 30 min | 🟠 Challenging |
-| 5 | Experimentation & Analysis | 10 min | 🟢 Easy |
+### DIY 5: Answer from retrieved text only
+
+Work in `part4_generation.py`.
+
+1. Build a prompt containing the retrieved chunks and the question.
+2. Instruct the model to answer **only** from that context, and to say
+   "I don't know" if the answer is not there.
+3. Ask a question the corpus answers.
+4. Ask the sourdough question again and confirm it declines.
+5. Make the answer print **which document** it came from.
+
+**Expected output**
+
+```text
+Q: What is a variable?
+A: A variable is a named location in memory used to store a value.
+   [source: introduction_to_programming.txt]
+
+Q: How do I bake sourdough?
+A: I don't know — the provided context does not cover this.
+```
+
+<details><summary>Hint</summary>
+
+Step 2's permission is load-bearing. "I don't know" is a rare continuation
+in training data, so without explicit permission the most plausible
+completion is a confident answer from training — which is precisely the
+failure grounding is supposed to prevent.
+
+If it still answers the sourdough question, make the instruction blunter
+and put it *after* the context rather than before.
+
+</details>
 
 ---
 
-## 🚦 Part 1: Setup & Environment (15 minutes)
+## 4. Measuring what you built
 
-### What You'll Learn
-- How to set up a RAG development environment
-- Load sample documents for retrieval
-- Verify all dependencies are working
+Everything so far had one setting. Now find out whether it was a good one.
 
-### Instructions
+### DIY 6: Change the chunk size and measure
 
-**Step 1.1: Verify Your Environment**
+Work in `part5_experiments.py`, recording results in `results.md`.
 
-Run the setup checker:
-```bash
-python check_setup.py
+1. Rebuild the index at **50 words**, **200 words**, and **800 words**
+   per chunk.
+2. Run the same three questions against each.
+3. Record for each size: was the right chunk retrieved, and how much
+   irrelevant text came with it?
+4. Write one sentence explaining what goes wrong at each extreme.
+
+**What you should have**
+
+A filled table in `results.md`:
+
+```text
+| Chunk size | Right chunk found? | Noise | Notes |
+|------------|--------------------|-------|-------|
+| 50 words   |                    |       |       |
+| 200 words  |                    |       |       |
+| 800 words  |                    |       |       |
 ```
 
-You should see:
-```
-✅ Python 3.11+ detected
-✅ sentence-transformers installed
-✅ chromadb installed
-✅ All dependencies ready!
-```
+<details><summary>Hint</summary>
 
-⚠️ **Troubleshooting**: If you see errors, check that requirements.txt installed correctly.
+At 50 words you should see chunks that have lost their own subject — a
+fragment saying "it must be declared before use" is useless when you
+cannot tell what "it" is.
 
-**Step 1.2: Explore the Sample Documents**
+At 800 you should see the right answer arriving buried in a page of
+unrelated text, which costs tokens and dilutes the model's attention.
 
-Look in the `data/` directory. You'll find 5 documents about CS topics:
-- `introduction_to_programming.txt`
-- `data_structures_basics.txt`
-- `algorithms_overview.txt`
-- `database_fundamentals.txt`
-- `web_development_intro.txt`
+There is no universally correct size. The answer depends on your
+documents, which is why measuring is the skill.
 
-Open one and read it. These will be your knowledge base!
-
-**Step 1.3: Run Your First Test**
-
-```bash
-python test_hello_rag.py
-```
-
-This simple script loads a document and prints it. Expected output:
-```
-📄 Loaded document: introduction_to_programming.txt
-📊 Document length: 412 characters
-✅ Setup complete!
-```
-
-### 💡 GitHub Copilot Tips
-- Type `# load a text file` and let Copilot suggest the code
-- Use Copilot Chat: "Explain what a vector database is"
-- Press `Ctrl+I` (or `Cmd+I` on Mac) to ask Copilot questions inline
-
-### ✅ Check Your Understanding
-1. How many sample documents do we have?
-2. What Python library will we use for embeddings?
-3. What is the vector database we're using?
-
-**Answers**: 5 documents, sentence-transformers, ChromaDB
+</details>
 
 ---
 
-## 📄 Part 2: Document Processing & Embeddings (30 minutes)
+## 5. Did you need any of this?
 
-### What You'll Learn
-- How to split documents into manageable chunks
-- Generate vector embeddings from text
-- Store embeddings in ChromaDB
-- Perform basic similarity searches
+You have built a working retrieval pipeline. Now find out whether this
+problem justified one.
 
-### Visual Overview
+### DIY 7: Skip retrieval entirely
+
+1. Concatenate **all five** documents in `data/` into one string.
+2. Count roughly how many tokens that is (words ÷ 0.75 is close enough).
+3. Send the whole thing as context with the same questions — **no
+   retrieval step at all**.
+4. Compare each answer with your RAG answer for the same question.
+5. Record the comparison in `results.md`.
+
+**What you should have**
+
+```text
+## Long context vs retrieval
+
+Whole corpus size: ................. [approx tokens]
+Question asked: .................... [your question]
+  RAG answer: ...................... [response]
+  Whole-corpus answer: ............. [response]
+Which was better? .................. [RAG / long context / no difference]
+At what corpus size would this flip? [your reasoning]
 ```
-Text Document → Chunk Splitter → Chunks → Embedding Model → Vectors → ChromaDB
-   (File)         (500 chars)     (List)   (384 dimensions)  (Arrays)   (Storage)
-```
+
+<details><summary>Hint</summary>
+
+**Long context should win on this corpus**, and that is the expected
+result, not a failure of your pipeline. Five short documents fit
+comfortably in a modern context window, and retrieval can only lose
+information that reading everything would have had.
+
+The last line is the real question. Retrieval earns its place on scale,
+on cost, on freshness, and when you must cite a source. None of those
+apply to five files that fit in the prompt.
+
+</details>
 
 ---
 
-### Exercise 2.1: Load Documents (5 minutes)
-
-**File**: `part2_embeddings.py`
-
-Find the function `load_documents()` and complete the TODO:
-
-```python
-def load_documents(data_dir="data"):
-    """Load all .txt files from the data directory."""
-    documents = []
-    
-    # TODO: Use os.listdir() to get all files in data_dir
-    # TODO: Filter for .txt files only
-    # TODO: Read each file and append to documents list
-    
-    return documents
-```
-
-**💡 Copilot Prompt**: "Read all text files from a directory and return their contents as a list"
-
-**Expected Output**:
-```python
-docs = load_documents()
-print(f"Loaded {len(docs)} documents")
-# Output: Loaded 5 documents
-```
-
----
-
-### Exercise 2.2: Split Documents into Chunks (10 minutes)
-
-**Why chunking?** Large documents won't fit in the LLM context window. We split them into smaller, semantically meaningful pieces.
-
-Complete the `chunk_text()` function:
-
-```python
-def chunk_text(text, chunk_size=500, overlap=50):
-    """
-    Split text into overlapping chunks.
-    
-    Args:
-        text: The full document text
-        chunk_size: Maximum characters per chunk (default 500)
-        overlap: Characters to overlap between chunks (default 50)
-    
-    Returns:
-        List of text chunks
-    """
-    chunks = []
-    
-    # TODO: Split text into chunks of chunk_size characters
-    # TODO: Add overlap between chunks to maintain context
-    # Hint: Use a loop with start position incrementing by (chunk_size - overlap)
-    
-    return chunks
-```
-
-**💡 Copilot Prompt**: "Split text into overlapping chunks with specified size and overlap"
-
-**Test It**:
-```python
-sample_text = "Your document text here..." * 100
-chunks = chunk_text(sample_text, chunk_size=500, overlap=50)
-print(f"Created {len(chunks)} chunks")
-print(f"First chunk: {chunks[0][:100]}...")
-```
-
----
-
-### Exercise 2.3: Generate Embeddings (10 minutes)
-
-**What are embeddings?** Numerical representations of text that capture semantic meaning. Similar text = similar vectors!
-
-Complete the `generate_embeddings()` function:
-
-```python
-from sentence_transformers import SentenceTransformer
-
-def generate_embeddings(chunks, model_name="all-MiniLM-L6-v2"):
-    """
-    Generate vector embeddings for text chunks.
-    
-    Args:
-        chunks: List of text chunks
-        model_name: Name of the sentence-transformer model
-    
-    Returns:
-        List of embedding vectors (numpy arrays)
-    """
-    # TODO: Load the SentenceTransformer model
-    # TODO: Use model.encode() to generate embeddings for all chunks
-    # TODO: Return the embeddings
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Use sentence-transformers to encode a list of text chunks into embeddings"
-
-**Test It**:
-```python
-chunks = ["Hello world", "Machine learning is awesome"]
-embeddings = generate_embeddings(chunks)
-print(f"Generated {len(embeddings)} embeddings")
-print(f"Each embedding has {len(embeddings[0])} dimensions")
-# Output: Each embedding has 384 dimensions
-```
-
-**🎯 Understanding Check**: What does "384 dimensions" mean?
-- Each chunk is represented as a list of 384 numbers
-- These numbers capture the semantic meaning
-- Similar chunks will have similar numbers
-
----
-
-### Exercise 2.4: Store in ChromaDB (5 minutes)
-
-**What is ChromaDB?** A vector database that stores embeddings and enables fast similarity search.
-
-Complete the `store_in_chromadb()` function:
-
-```python
-import chromadb
-
-def store_in_chromadb(chunks, embeddings, collection_name="cs_knowledge"):
-    """
-    Store chunks and their embeddings in ChromaDB.
-    
-    Args:
-        chunks: List of text chunks
-        embeddings: List of embedding vectors
-        collection_name: Name for the ChromaDB collection
-    
-    Returns:
-        ChromaDB collection object
-    """
-    # TODO: Initialize ChromaDB client
-    # TODO: Create or get collection
-    # TODO: Add documents with embeddings to collection
-    # Hint: collection.add(documents=chunks, embeddings=embeddings, ids=[...])
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Store text chunks and embeddings in a ChromaDB collection"
-
-**Test It**:
-```python
-collection = store_in_chromadb(chunks, embeddings)
-print(f"✅ Stored {collection.count()} chunks in database")
-```
-
----
-
-### 🎉 Part 2 Complete!
-
-Run the full Part 2 script:
-```bash
-python part2_embeddings.py
-```
-
-Expected output:
-```
-📚 Loading documents...
-✅ Loaded 5 documents
-
-✂️ Chunking documents...
-✅ Created 47 chunks
-
-🧮 Generating embeddings...
-✅ Generated 47 embeddings (384 dimensions each)
-
-💾 Storing in ChromaDB...
-✅ Stored 47 chunks in vector database
-
-🎉 Part 2 Complete! Your knowledge base is ready!
-```
-
----
-
-## 🔍 Part 3: Retrieval System (35 minutes)
-
-### What You'll Learn
-- Implement semantic search
-- Rank results by relevance
-- Manage context windows for LLMs
-- Visualize retrieval results
-
-### Visual Overview
-```
-User Query → Embed Query → Search Vector DB → Top-K Chunks → Rerank → Final Context
- "What is     [0.2, 0.5,   Cosine          [Chunk 3,     By Score    "Here are the
-  Python?"      ...]       Similarity       Chunk 7, ...]             3 most relevant..."
-```
-
----
-
-### Exercise 3.1: Semantic Search (15 minutes)
-
-**File**: `part3_retrieval.py`
-
-Complete the `semantic_search()` function:
-
-```python
-def semantic_search(query, collection, model, top_k=3):
-    """
-    Search for the most relevant chunks given a query.
-    
-    Args:
-        query: User's question (string)
-        collection: ChromaDB collection
-        model: SentenceTransformer model for embedding
-        top_k: Number of results to return
-    
-    Returns:
-        List of (chunk_text, distance_score) tuples
-    """
-    # TODO: Generate embedding for the query
-    # TODO: Use collection.query() to find similar chunks
-    # TODO: Return the top_k most similar chunks with their scores
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Query a ChromaDB collection with a text query and return top k similar results"
-
-**Test It**:
-```python
-from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer('all-MiniLM-L6-v2')
-collection = ...  # load the collection you built in part 2
-
-query = "What is a variable in programming?"
-results = semantic_search(query, collection, model, top_k=3)
-
-for i, (chunk, score) in enumerate(results, 1):
-    print(f"\n{i}. Score: {score:.3f}")
-    print(f"   {chunk[:150]}...")
-```
-
----
-
-### Exercise 3.2: Relevance Filtering (10 minutes)
-
-Sometimes retrieved chunks aren't relevant enough. Add a relevance threshold!
-
-Complete the `filter_by_relevance()` function:
-
-```python
-def filter_by_relevance(results, min_score=0.3):
-    """
-    Filter search results by minimum relevance score.
-    
-    Args:
-        results: List of (chunk, score) tuples
-        min_score: Minimum similarity score (0-1)
-    
-    Returns:
-        Filtered list of results
-    """
-    # TODO: Filter results where score >= min_score
-    # TODO: Return filtered results
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Filter a list of tuples by score threshold"
-
----
-
-### Exercise 3.3: Context Window Management (10 minutes)
-
-**The Problem**: LLMs have token limits! We need to fit retrieved chunks within the context window.
-
-Complete the `manage_context_window()` function:
-
-```python
-def manage_context_window(chunks, max_tokens=1500):
-    """
-    Combine chunks while staying within token limit.
-    
-    Args:
-        chunks: List of text chunks
-        max_tokens: Maximum tokens to use (approximate)
-    
-    Returns:
-        Combined context string
-    """
-    # TODO: Combine chunks with separators
-    # TODO: Estimate tokens (roughly 4 characters = 1 token)
-    # TODO: Truncate if exceeds max_tokens
-    # Hint: Use "\n\n---\n\n" as separator between chunks
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Combine text chunks into a single string staying within a token limit"
-
-**Test It**:
-```python
-chunks = ["Chunk 1" * 100, "Chunk 2" * 100, "Chunk 3" * 100]
-context = manage_context_window(chunks, max_tokens=500)
-print(f"Context length: {len(context)} characters")
-print(f"Approximate tokens: {len(context) // 4}")
-```
-
----
-
-### 🎉 Part 3 Complete!
-
-Run the full Part 3 script:
-```bash
-python part3_retrieval.py
-```
-
-Test with queries:
-```
-Query: "What is Python?"
-✅ Found 3 relevant chunks
-📊 Scores: [0.78, 0.65, 0.52]
-📝 Context window: 1,247 tokens
-
-Query: "How do databases work?"
-✅ Found 3 relevant chunks
-📊 Scores: [0.82, 0.71, 0.68]
-📝 Context window: 1,198 tokens
-```
-
----
-
-## 🤖 Part 4: Generation Integration (30 minutes)
-
-### What You'll Learn
-- Connect to an LLM API (Anthropic Claude)
-- Build effective RAG prompts
-- Combine retrieval + generation
-- Track source citations
-
-### Visual Overview
-```
-Query → Retrieve Context → Build Prompt → LLM API → Response + Citations
-        [Chunk 1, 2, 3]   "Answer using:  Claude     "Python is... 
-                           [contexts]"              [Source: Chunk 1]"
-```
-
----
-
-### Exercise 4.1: Connect to LLM API (10 minutes)
-
-**File**: `part4_generation.py`
-
-We'll use Anthropic's Claude API (free tier available for students).
-
-**Setup API Key**:
-```bash
-# Create a .env file (already in .gitignore)
-echo "ANTHROPIC_API_KEY=your-key-here" > .env
-```
-
-**Get your API key**: https://console.anthropic.com/
-
-Complete the `initialize_llm()` function:
-
-```python
-from anthropic import Anthropic
-import os
-from dotenv import load_dotenv
-
-def initialize_llm():
-    """Initialize the Anthropic Claude client."""
-    # TODO: Load environment variables from .env
-    # TODO: Get API key from environment
-    # TODO: Create and return Anthropic client
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Initialize Anthropic client with API key from environment variable"
-
-**Test It**:
-```python
-client = initialize_llm()
-response = client.messages.create(
-    model="claude-3-5-sonnet-20241022",
-    max_tokens=100,
-    messages=[{"role": "user", "content": "Say hello!"}]
-)
-print(response.content[0].text)
-```
-
----
-
-### Exercise 4.2: Build RAG Prompt Template (10 minutes)
-
-**The Key to RAG**: Instructing the LLM to use retrieved context!
-
-Complete the `build_rag_prompt()` function:
-
-```python
-def build_rag_prompt(query, context_chunks):
-    """
-    Build a prompt that combines the query with retrieved context.
-    
-    Args:
-        query: User's question
-        context_chunks: List of relevant text chunks
-    
-    Returns:
-        Formatted prompt string
-    """
-    # TODO: Create a prompt template that:
-    #   1. Provides the context chunks
-    #   2. Instructs the LLM to use ONLY the provided context
-    #   3. Asks it to cite which chunks were used
-    #   4. Includes the user's query
-    
-    prompt = """You are a helpful CS instructor assistant. Answer the student's question using ONLY the information provided in the context below.
-
-CONTEXT:
----
-{context}
----
-
-STUDENT QUESTION: {query}
-
-Provide a clear, accurate answer based on the context. If the context doesn't contain enough information, say so. Cite which parts of the context you used.
-
-ANSWER:"""
-    
-    # TODO: Format the prompt with actual context and query
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Create a RAG prompt template that instructs an LLM to answer using only provided context"
-
----
-
-### Exercise 4.3: Complete RAG Pipeline (10 minutes)
-
-**This is it!** The complete RAG system!
-
-Complete the `rag_query()` function:
-
-```python
-def rag_query(question, collection, model, llm_client):
-    """
-    Complete RAG pipeline: retrieve → augment → generate.
-    
-    Args:
-        question: User's question
-        collection: ChromaDB collection
-        model: Embedding model
-        llm_client: Anthropic client
-    
-    Returns:
-        dict with 'answer', 'sources', and 'context_used'
-    """
-    # TODO: 1. Retrieve relevant chunks using semantic_search()
-    # TODO: 2. Build context using manage_context_window()
-    # TODO: 3. Create prompt using build_rag_prompt()
-    # TODO: 4. Call LLM API to generate response
-    # TODO: 5. Return answer with metadata
-    
-    pass
-```
-
-**💡 Copilot Prompt**: "Implement a RAG pipeline that retrieves context, builds a prompt, and generates an LLM response"
-
-**Test It**:
-```python
-question = "What is a variable in programming?"
-result = rag_query(question, collection, model, llm_client)
-
-print(f"Question: {question}")
-print(f"\nAnswer: {result['answer']}")
-print(f"\nSources used: {len(result['sources'])}")
-```
-
----
-
-### 🎉 Part 4 Complete!
-
-Run the full RAG system:
-```bash
-python part4_generation.py
-```
-
-Try these test queries:
-```
-1. "What is Python used for?"
-2. "Explain what an algorithm is"
-3. "What are the benefits of using databases?"
-```
-
----
-
-## 📊 Part 5: Experimentation & Analysis (10 minutes)
-
-### What You'll Learn
-- Compare RAG vs non-RAG responses
-- Experiment with parameters
-- Document your findings
-
----
-
-### Exercise 5.1: Side-by-Side Comparison
-
-**File**: `part5_experiments.py`
-
-Run the comparison script:
-```bash
-python part5_experiments.py
-```
-
-This will show you:
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Question: What is a linked list?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🤖 WITHOUT RAG:
-[Generic answer from LLM's training...]
-
-✅ WITH RAG:
-[Specific answer from your documents...]
-
-Sources Used: 2 chunks from data_structures_basics.txt
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
----
-
-### Exercise 5.2: Parameter Experiments
-
-Complete the experiments in `results.md`:
-
-```markdown
-# RAG Experiments - Results
-
-## Experiment 1: Chunk Size Impact
-- Chunk size 300: ___ retrieved, answer quality: ___
-- Chunk size 500: ___ retrieved, answer quality: ___
-- Chunk size 1000: ___ retrieved, answer quality: ___
-
-**Observation**: [Your findings here]
-
-## Experiment 2: Top-K Retrieval
-- Top-1: Answer quality: ___
-- Top-3: Answer quality: ___
-- Top-5: Answer quality: ___
-
-**Observation**: [Your findings here]
-
-## Experiment 3: Hallucination Test
-Query: "What is quantum computing?" (NOT in our documents)
-
-- Without RAG: [Response]
-- With RAG: [Response]
-
-**Observation**: [Did RAG prevent hallucination?]
-```
-
-## Experiment 4: Would long context have done the job?
-
-You built a retrieval pipeline. Now find out whether you needed one.
-
-The five documents in `data/` total only a few thousand words — small
-enough to paste into a modern context window whole. So do exactly that:
-skip retrieval entirely, put **all five documents** in the prompt, and ask
-the same questions you asked your RAG system.
-
-1. Concatenate everything in `data/` into one string.
-2. Send it as context with a question, no retrieval step.
-3. Compare against your RAG answer for the same question.
-
-Then answer honestly in `results.md`:
-
-```
-## Long context vs RAG
-
-Question asked: [your question]
-
-- RAG answer:          [response]
-- Whole-corpus answer: [response]
-
-Which was better? ................ [RAG / long context / no difference]
-Roughly how many tokens did each send? ........ [estimate]
-At what corpus size would your answer flip? ... [your reasoning]
-```
-
-**The expected result is that long context wins on this corpus** — it is
-tiny, and retrieval can only lose information a full read would have had.
-That is the point. Retrieval earns its keep at scale, on cost, on freshness
-and on citation — not automatically.
-
-> **The engineering judgement being tested here** is not "can you build a
-> RAG pipeline". It is "can you tell when you shouldn't have". Building
-> infrastructure a problem doesn't need is a more common and more
-> expensive mistake than the reverse.
-
----
-
-## 🎉 Lab Complete!
-
-### What You Built
-✅ Document processing pipeline  
-✅ Vector embedding system  
-✅ Semantic search engine  
-✅ Complete RAG application  
-✅ Comparison analysis
-
-### What You Learned
-✅ How RAG improves LLM accuracy  
-✅ Vector databases and embeddings  
-✅ Context window management  
-✅ Prompt engineering for RAG  
-✅ Practical AI system design
-
----
-
-## 🚀 Extension Challenges (Optional)
-
-### Challenge 1: Add a Web Interface 🌐
-Use Streamlit to create a chat interface:
-```python
-import streamlit as st
-
-st.title("RAG Chatbot")
-query = st.text_input("Ask a question:")
-if query:
-    result = rag_query(query, ...)
-    st.write(result['answer'])
-```
-
-### Challenge 2: Multi-Document RAG 📚
-Extend to handle different document types (PDF, DOCX, HTML)
-
-### Challenge 3: Hybrid Search 🔍
-Combine semantic search with keyword search (BM25)
-
-### Challenge 4: Evaluation Metrics 📊
-Implement retrieval precision/recall measurements
-
-### Challenge 5: Conversation Memory 💬
-Add chat history to make it conversational
-
----
-
-## 📚 Resources
-
-### Documentation
-- [ChromaDB Docs](https://docs.trychroma.com/)
-- [Sentence Transformers](https://www.sbert.net/)
-- [Anthropic API](https://docs.anthropic.com/)
-
-### Further Learning
-- [LlamaIndex Tutorial](https://docs.llamaindex.ai/)
-- [RAG Paper (Lewis et al. 2020)](https://arxiv.org/abs/2005.11401)
-- [Vector Database Comparison](https://benchmark.vectorview.ai/)
-
----
-
-## ❓ Troubleshooting
-
-### "ModuleNotFoundError: No module named 'sentence_transformers'"
-```bash
-pip install -r requirements.txt
-```
-
-### "ChromaDB collection already exists"
-```bash
-# Delete the collection and recreate
-rm -rf ./chroma_db
-```
-
-### "API key not found"
-Check that `.env` file exists and contains:
-```
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-### "Out of memory"
-Reduce chunk size or process fewer documents
-
----
-
-## 🎓 Assignment Submission
-
-**What to Submit**:
-1. Completed code files (`part2_embeddings.py`, `part3_retrieval.py`, `part4_generation.py`)
-2. `results.md` with your experiments
-3. Screenshots of working RAG queries
-4. (Optional) Your extension challenge code
-
-**Due**: [Your deadline]
-
-**Grading Rubric**:
-- Part 2 (Document Processing): 25%
-- Part 3 (Retrieval): 25%
-- Part 4 (Generation): 30%
-- Part 5 (Experiments): 15%
-- Code Quality & Documentation: 5%
-
----
-
-**Created by**: Atlantic Technological University, Galway  
-**Module**: AI Assisted Programming  
-**Instructor**: [Your Name]  
-**Academic Year**: 2024-2025
-
-Good luck, and enjoy building your first RAG application! 🎉
+## Common mistakes
+
+- **Building a pipeline for a corpus that fits in the prompt.** Ask first.
+- **Embedding queries with a different model** from the chunks — silent
+  and baffling.
+- **Assuming retrieval means relevance.** Nearest-neighbour always returns
+  something; the score is your only signal.
+- **Forgetting to permit "I don't know"**, then blaming the model for
+  making something up.
+- **Never measuring chunk size**, so you never learn whether your one
+  setting was any good.
+- Blaming the model when the retrieval step returned the wrong chunks —
+  most "the AI is wrong" reports here are search bugs.
+
+## Summary
+
+- You do not teach a model your documents. You **find the relevant piece
+  and put it in the prompt**.
+- Embeddings retrieve by **meaning**, so wording that shares no words
+  still matches.
+- Grounding needs explicit permission to say **"I don't know"**.
+- Chunk size is a real parameter with failures at both extremes.
+  **Measure it.**
+- Retrieval earns its place on **scale, cost, freshness and citation** —
+  and on a corpus this size, it does not.

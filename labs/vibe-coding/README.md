@@ -1,507 +1,274 @@
-# Vibe Coding Lab
+# AIAP Vibe Coding Lab
+
+Build the same application three times without writing much code, then
+find out what you actually shipped — and build it once more the other way,
+so you have felt both sides of the argument rather than just heard it.
+
+## What you'll learn
+
+- Get a working application out of three prompt-first tools
+- Read code you did not write, and find something you would not ship
+- Recognise comprehension debt in something you made an hour ago
+- Write a specification first and observe what changes
+- Decide, with reasons, which mode a task deserves
+
+## Table of Contents
+
+1. [Build it three times](#1-build-it-three-times)
+2. [Read what you shipped](#2-read-what-you-shipped)
+3. [Build it once more, spec-first](#3-build-it-once-more-spec-first)
+4. [Choosing a mode](#4-choosing-a-mode)
+5. [Common mistakes](#common-mistakes)
+6. [Summary](#summary)
+
+## Getting started
+
+Nothing to install — every tool in this lab runs in a browser. You will
+need accounts for three prompt-first builders. All have a free tier that
+is enough for this lab.
+
+Create a `REFLECTION.md` in this folder now; you will write into it
+throughout.
+
+> **Tool names change.** The three used here are examples of a *category*,
+> not a prescription. If one has changed name, pricing or shut down, pick
+> another prompt-first builder and note which you used. The exercise is
+> about the category.
 
 ---
 
-Welcome to the Vibe Coding Lab! In this lab, you'll explore three powerful AI-driven development tools and experience the "vibe coding" philosophy first-hand. You'll build the same application using each tool, allowing you to compare their approaches and discover which style suits you best.
+## 1. Build it three times
+
+One brief, three tools. The repetition is the point: it separates what is
+true of the *approach* from what is true of one product.
+
+**The brief.** A to-do application. Add a task, mark it done, delete it,
+and the list survives a page refresh.
+
+### DIY 1: The same app, three ways
+
+1. Write your prompt **once**, before opening any tool, and save it in
+   `REFLECTION.md`. Use the same prompt for all three.
+2. Build the app in tool one. Record how long it took and how many
+   follow-up prompts you needed.
+3. Repeat in tool two.
+4. Repeat in tool three.
+5. Note the first thing each tool got *wrong*.
+
+**What you should have**
+
+Three working to-do apps, one shared prompt, and a table in
+`REFLECTION.md` recording time, number of follow-ups, and the first
+mistake for each tool.
+
+<details><summary>Hint</summary>
+
+Using the same prompt for all three is what makes this a comparison rather
+than three anecdotes. Resist improving the prompt between tools — if you
+must, record that you did and why.
+
+"Survives a page refresh" is the requirement that separates a demo from an
+app. Check it explicitly in all three; at least one will usually fail it
+until asked again.
+
+</details>
 
 ---
 
-## 🗂️ Agenda
-1. [🚀 Quick Start](#1--quick-start)  
-2. [🛠️ Tool 1: Google Antigravity](#2--tool-1-google-antigravity)  
-3. [⚡ Tool 2: Bolt.new](#3--tool-2-boltnew)  
-4. [🔥 Tool 3: Firebase Studio](#4--tool-3-firebase-studio)  
-5. [🎯 The Challenge: Build a To-Do App](#5--the-challenge-build-a-to-do-app)  
-6. [📝 Completion Checklist](#6--completion-checklist)  
-7. [🔧 Troubleshooting & Help](#7--troubleshooting--help)  
-8. [🤖 Vibe Coding Best Practices](#8--vibe-coding-best-practices)  
-9. [🎓 Academic Integrity](#9--academic-integrity)  
-10. [🔄 Alternative Tool: Cursor](#-alternative-tool-cursor)  
+## 2. Read what you shipped
 
----
+You now own three applications you did not write. This section is the
+whole reason the lab exists.
 
-## 1. 🚀 Quick Start
+### DIY 2: Find something you would not ship
 
-In this lab, you will:
+Pick **one** of the three and spend fifteen minutes in its source.
 
-1. **Sign up** for three vibe coding platforms.
-2. **Build the same application** (a To-Do list app) using each tool.
-3. **Compare** the experiences and document your observations.
-4. **Reflect** on the strengths and limitations of each approach.
-
-```mermaid
-graph LR
-    A[Sign Up for Tools] --> B[Google Antigravity]
-    A --> C[Bolt.new]
-    A --> D[Firebase Studio]
-    B --> E[Build To-Do App]
-    C --> E
-    D --> E
-    E --> F[Compare & Reflect]
-```
-
-### What is Vibe Coding?
-
-> "There's a new kind of coding I call 'vibe coding', where you fully give in to the vibes, embrace exponentials, and forget that the code even exists."  
-> — **Andrej Karpathy**, February 2025
-
-Vibe coding is the practice of instructing AI to write code via natural language, accepting the output without deep review, and iterating rapidly based on the "vibe" or high-level intent.
-
-### What happened next
-
-Karpathy coined the term in early 2025 as a description of a mode he was
-enjoying, not a recommendation for production. The industry adopted it
-anyway, and by 2026 there is data on what that costs:
-
-| | |
-|---|---|
-| US developers using AI coding tools daily | **92%** |
-| …who say they trust the output | **29%** |
-| …who always review it before committing | **48%** |
-| Major issues vs human-written code | **1.7×** |
-| AI-generated samples with an OWASP Top-10 vulnerability | **~45%** |
-| Sprint capacity spent on AI-traceable bugs by day 90 | **20–30%** |
-
-Two vocabulary terms came out of that experience, and both are useful:
-
-- **Comprehension debt** — the future cost of understanding, modifying and
-  debugging code a machine wrote and nobody read. Like technical debt, but
-  the thing you borrowed against is *understanding*.
-- **Haunted codebase** — a working system the team no longer understands.
-  It runs. Nobody is confident changing it.
-
-*(Treat the exact percentages as indicative — they come from industry
-surveys of varying rigour. The direction is not in dispute.)*
-
-### The counter-trend: spec-driven development
-
-The reaction to vibe coding is **spec-driven development (SDD)**: instead
-of prompting your way to code and hoping, you write a **specification**
-first, let the agent produce a plan and tasks from it, and only then
-implement. Tooling grew up around this fast — GitHub Spec Kit, AWS Kiro,
-and the skills/plan systems in agentic CLIs.
-
-    Vibe coding:        intent → code → hope
-    Spec-driven:        intent → spec → plan → tasks → code → check against spec
-
-The spec becomes the artefact you review, and it is far easier to review
-one page of intent than 800 lines of generated implementation.
-
-**It is not free.** A common objection from practitioners is that you can
-end up reviewing a pile of markdown instead of reviewing code — ceremony
-that feels like rigour without being it. The judgement is knowing which
-mode a task deserves.
-
-| | Vibe coding suits | Spec-driven suits |
-|---|---|---|
-| Stakes | Prototype, throwaway, demo | Production, shared, long-lived |
-| Requirements | Discovering them as you go | Known well enough to write down |
-| Cost of being wrong | Delete it and retry | Someone maintains this for years |
-| Review unit | The running app | The spec, then the tests |
-
-**Keep this tension in mind for the whole lab.** You are about to build
-the same app three times by vibe coding. Pay attention to what you would
-*not* be willing to ship, and why.
-
----
-
-## 2. 🛠️ Tool 1: Google Antigravity
-
-Google Antigravity is an **Agentic IDE** — you don't just write code; you manage "Agents" that plan, code, and test autonomously.
-
-### Setup Steps
-
-1. **Navigate to**: [https://antigravity.google](https://antigravity.google)
-2. **Sign in** with your Google account.
-3. **Accept** the terms and conditions for the Public Preview.
-4. **Explore** the interface — note the key features:
-   - Agent Manager panel (for delegating tasks)
-   - Artifacts view (where AI presents plans and test results)
-   - Mission Control interface
-
-```mermaid
-graph TD
-    A[Go to antigravity.google] --> B[Sign in with Google]
-    B --> C[Accept Terms]
-    C --> D[Explore Interface]
-    D --> E[Start New Project]
-```
-
-### Key Features to Note
-
-| Feature | Description |
-|---------|-------------|
-| Agent Manager | Delegate coding tasks to AI agents |
-| Mission Control | Oversee multi-agent workflows |
-| Artifacts View | Review AI-generated plans and code |
-| Gemini 3 Pro | Powered by Google's latest model |
-
-### ✅ Setup Verification
-
-- [ ] Successfully logged in
-- [ ] Can see the Agent Manager panel
-- [ ] Can create a new project
-
----
-
-## 3. ⚡ Tool 2: Bolt.new
-
-Bolt.new is a browser-based AI development environment that lets you build and deploy web apps using natural language — no installation required.
-
-### Setup Steps
-
-1. **Navigate to**: [https://bolt.new](https://bolt.new)
-2. **Sign in** with your GitHub or Google account.
-3. **Start building** — describe what you want to create.
-4. **Explore** the interface:
-   - Prompt editor with live preview
-   - Auto-generated code you can inspect
-   - One-click deploy options
-
-```mermaid
-graph LR
-    A[Go to bolt.new] --> B[Sign In]
-    B --> C[Describe Your App]
-    C --> D[Watch It Build]
-    D --> E[Deploy with One Click]
-```
-
-### Key Features to Note
-
-| Feature | Description |
-|---------|-------------|
-| Natural Language Editor | Describe app behavior in plain English |
-| Live Preview | Instant visual updates as you type |
-| Managed Runtime | No hosting or deployment worries |
-| Built-in Deploy | Ship to Netlify with minimal setup |
-
-### ✅ Setup Verification
-
-- [ ] Successfully signed in
-- [ ] Can see the live preview
-- [ ] Can deploy a generated app
-
----
-
-## 4. 🔥 Tool 3: Firebase Studio
-
-Firebase Studio is a **No-Code/Low-Code** powerhouse that translates prompts directly into full-stack web applications.
-
-### Setup Steps
-
-1. **Navigate to**: [https://firebase.google.com](https://firebase.google.com)
-2. **Sign in** with your Google account.
-3. **Go to the Firebase Console**: [https://console.firebase.google.com](https://console.firebase.google.com)
-4. **Explore Firebase Studio** (look for AI/Studio features):
-   - Prompt-based UI generation
-   - Data Connect with AI
-   - React/HTML code export
-
-```mermaid
-graph TD
-    A[Go to firebase.google.com] --> B[Sign in with Google]
-    B --> C[Open Firebase Console]
-    C --> D[Create New Project]
-    D --> E[Explore Studio Features]
-```
-
-### Key Features to Note
-
-| Feature | Description |
-|---------|-------------|
-| Data Connect with AI | AI understands your data schema |
-| Prompt-based UI | Generate UI from natural language |
-| Full-Stack Generation | Database, backend, and frontend in one go |
-| Exportable Code | Low-code outputs (React/HTML) |
-
-### ✅ Setup Verification
-
-- [ ] Successfully logged in
-- [ ] Created a new Firebase project
-- [ ] Can access AI/Studio features
-
----
-
-## 5. 🎯 The Challenge: Build a To-Do App
-
-Now that you've set up all three tools, it's time to build the **same application** using each one. This will allow you to compare the vibe coding experience across platforms.
-
-### The Application Requirements
-
-Build a simple **To-Do List Application** with the following features:
-
-1. **Add a task** with a title
-2. **Mark a task as complete**
-3. **Delete a task**
-4. **Display all tasks** in a list
-
-```mermaid
-graph LR
-    A[To-Do App] --> B[Add Task]
-    A --> C[Mark Complete]
-    A --> D[Delete Task]
-    A --> E[Display List]
-```
-
-### Your Prompts
-
-Use the following prompts (or similar) with each tool:
-
-**Initial Prompt:**
-> "Create a simple to-do list application. Users should be able to add tasks, mark them as complete, and delete them. Display all tasks in a clean list format."
-
-**Refinement Prompts** (use as needed):
-> "Add a checkbox next to each task to mark it complete"
-
-> "Add a delete button for each task"
-
-> "Make completed tasks appear with a strikethrough"
-
-> "Add a count of remaining tasks at the bottom"
-
----
-
-### Task 5.1: Build with Google Antigravity
-
-1. Create a new project in Antigravity.
-2. Use the Agent Manager to describe your to-do app.
-3. Let the AI generate the code.
-4. Review the Artifacts and approve/refine.
-5. Test the application.
-6. **Experiment!** Try adding extra features like due dates or priority levels.
-
----
-
-### Task 5.2: Build with Bolt.new
-
-1. Open Bolt.new in your browser and start a new app.
-2. Describe your to-do app in natural language.
-3. Watch the live preview update and review the generated code.
-4. Refine with additional prompts.
-5. Test the functionality.
-6. **Experiment!** Try enabling the built-in deploy and sharing the link.
-
----
-
-### Task 5.3: Build with Firebase Studio
-
-1. Create a new project in Firebase Studio.
-2. Use the prompt interface to describe your to-do app.
-3. Let the AI generate the UI and data structure.
-4. Refine and connect data.
-5. Test the application.
-6. **Experiment!** Try asking it to add user authentication or cloud sync.
-
-### Task 5.4: Read what you shipped
-
-You have three working applications you did not write. Pick **one** and
-spend 15 minutes finding out what is actually in it.
-
-1. Open the generated source. Find the file that handles **user input**
-   or **data storage**.
-2. Answer these in `REFLECTION.md`:
+1. Find the file that handles **user input** or **data storage**.
+2. Answer in `REFLECTION.md`:
    - How many dependencies did it add? Do you know what any of them do?
-   - Is user input validated anywhere before it is stored or displayed?
-   - If this app stored real people's data, what would worry you?
-   - Find **one** line you genuinely cannot explain. Paste it. Now ask
-     the AI to explain it — did the explanation match what you assumed?
-3. Ask your AI assistant directly: *"Review this code for security
-   vulnerabilities as a security engineer would."* Record what it finds.
+   - Is user input validated anywhere before being stored or displayed?
+   - If this held real people's data, what would worry you?
+3. Find **one line you genuinely cannot explain.** Paste it.
+4. Ask the assistant to explain that line. Did the explanation match what
+   you had assumed?
+5. Ask it directly: *"Review this code for security vulnerabilities as a
+   security engineer would."* Record what it finds.
 
-**Expected outcome:** you find at least one thing you would not have
-shipped. Roughly 45% of AI-generated code samples carry an OWASP Top-10
-vulnerability, so the base rate is on your side — and unvalidated input
-is the usual suspect.
+**What you should have**
 
-This is comprehension debt made concrete: the app works, you own it, and
-until this exercise you had no idea what was in it.
+At least one concrete thing you would not ship, the line you could not
+explain, and the security review's findings.
 
-### Task 5.5: The same app, spec-first
+<details><summary>Hint</summary>
 
-Now do it the other way, once, to feel the difference.
+Around 45% of AI-generated samples carry a common vulnerability class, so
+the base rate is on your side. Unvalidated input is the usual suspect —
+look for anything that goes from a form straight into storage or straight
+back onto the page.
 
-1. **Before prompting anything**, write a one-page spec in
-   `spec.md`: what the app does, what it explicitly does *not* do, the
-   data it stores, and three acceptance criteria you could test.
-2. Give the spec to an AI coding assistant and ask it to produce a
-   **plan** first — not code.
-3. Review the plan against your spec. Correct it.
-4. Only then let it implement.
+Step 4 is the real exercise. The gap between what you *assumed* a line did
+and what it *does* is comprehension debt, measured directly, on code you
+created an hour ago.
+
+</details>
+
+### DIY 3: Estimate the debt
+
+1. Pick the app you understand least.
+2. Write down what it would take to add one feature: **let a user edit an
+   existing task's text.**
+3. Do not build it. Estimate: which files would you need to understand
+   first, and how long would that take?
+4. Now answer honestly: is that estimate longer or shorter than writing
+   the whole app yourself would have been?
+
+**What you should have**
+
+An estimate with reasoning, and an honest comparison against building it
+by hand.
+
+<details><summary>Hint</summary>
+
+There is no correct answer and the honest one is often "shorter" — these
+tools genuinely save time. The exercise is to make the trade *visible*
+rather than to conclude it is bad.
+
+If your answer is "I would just ask the tool to add it", that is a
+legitimate strategy. Note what it depends on: that the tool still
+understands a codebase it wrote and you did not read.
+
+</details>
+
+---
+
+## 3. Build it once more, spec-first
+
+Now the other side of the argument, so your opinion is based on having
+done both.
+
+### DIY 4: Write the spec before the prompt
+
+1. In `spec.md`, **before touching any tool**, write one page:
+   - What the app does
+   - What it explicitly does **not** do
+   - The data it stores, and its shape
+   - Three acceptance criteria you could actually test
+2. Give the spec to an AI coding assistant and ask for a **plan** — not
+   code.
+3. Read the plan against your spec. Correct it where it drifted.
+4. Only now let it implement.
+5. Check the result against your three acceptance criteria.
+
+**What you should have**
+
+`spec.md`, the plan you reviewed and corrected, a working app, and a note
+of where the plan drifted from your spec.
+
+<details><summary>Hint</summary>
+
+Step 3 is the step everyone skips, and skipping it turns spec-driven
+development into vibe coding with extra paperwork. The plan is the
+cheapest place to catch a misunderstanding — cheaper than the code and far
+cheaper than the deployed app.
+
+If your spec has no "does not do" section, it is not finished. Bounding
+the work is most of the value.
+
+</details>
+
+### DIY 5: Compare, honestly
 
 Record in `REFLECTION.md`:
 
-```
+```text
 ## Vibe vs spec-driven
 
 Time, vibe coding: ......... [minutes]
 Time, spec-driven: ......... [minutes]
-Which produced code you'd defend? .......... [which, and why]
-Which would you use for a throwaway prototype? ...... [which]
-Which for the module project (60% of your grade)? ... [which]
-Where did writing the spec change what you built? ... [be specific]
+Which produced code you would defend? ....... [which, and why]
+Which for a throwaway prototype? ............ [which]
+Which for something assessed and demonstrated? [which]
+Where did writing the spec change what you built? [be specific]
 ```
 
-There is no expected answer. Spec-driven is slower and that cost is real;
-the question is what it buys and when the purchase is worth making.
+1. Fill every line.
+2. Add two sentences on which mode you will actually use for your own
+   project work, and why.
+
+**What you should have**
+
+A completed comparison with a stated preference and a reason that is not
+"it is the responsible choice".
+
+<details><summary>Hint</summary>
+
+Spec-driven being slower is not a criticism — it is the cost, and the
+question is what the cost buys. If it bought nothing on a to-do app, say
+so. That is a real finding, and it is the argument *for* vibe coding on
+small disposable work.
+
+The last line is the one worth thinking about: what did writing it down
+change about what you built? Usually something.
+
+</details>
 
 ---
 
-## 6. 📝 Completion Checklist
+## 4. Choosing a mode
 
-- [ ] Signed up for all three tools
-- [ ] Built a To-Do app with Google Antigravity
-- [ ] Built a To-Do app with Bolt.new
-- [ ] Built a To-Do app with Firebase Studio
-- [ ] Experimented with refining and iterating on each app
-- [ ] **Task 5.4** — read one generated app and found something you would
-      not ship
-- [ ] **Task 5.5** — built once spec-first and compared honestly
+### DIY 6: Write your own rule
 
----
+1. Complete this table in `REFLECTION.md` with **your own** examples:
 
-## 7. 🔧 Troubleshooting & Help
+   | Task | Mode I'd choose | Why |
+   |---|---|---|
+   | A weekend prototype | | |
+   | A feature in assessed work | | |
+   | Something a stranger maintains | | |
+   | Code handling other people's data | | |
 
-### Common Issues
+2. Add one row for a task you would give **no** assistant.
+3. Write two sentences on what would have to change for you to move a task
+   from one mode to the other.
 
-| Problem | Solution |
-|---------|----------|
-| Can't access Antigravity | May be region-restricted — try VPN or check availability |
-| Bolt.new sign-in issues | Try an incognito window or switch between GitHub/Google login |
-| Firebase console errors | Ensure you've enabled the correct APIs |
-| AI not understanding prompts | Be more specific; break down into smaller requests |
-| Generated code has bugs | Describe the bug to the AI and ask for a fix |
+**What you should have**
 
-### Getting Help
+A completed table with concrete tasks, including one you would not
+delegate, and a stated condition for switching modes.
 
-- **Office Hours**: Ask questions during scheduled office hours
-- **Moodle Forum**: Post questions for peer and instructor help
-- **Documentation**: Each tool has official docs — read them!
-- **Iterate**: If something doesn't work, try rephrasing your prompt
+<details><summary>Hint</summary>
 
----
+Useful axes for the last question: how reversible is it, how well can you
+test it, how long will it live, and who pays if it is wrong.
 
-## 8. 🤖 Vibe Coding Best Practices
+If every row says the same mode, you have not found your boundary. Push
+until you do — the boundary is the actual output of this lab.
 
-### The Vibe Coding Workflow
-
-```mermaid
-graph TD
-    A[1. Describe Goal] --> B[2. AI Generates Code]
-    B --> C[3. Execute & Observe]
-    C --> D{Works?}
-    D -->|No| E[4. Refine Prompt]
-    E --> B
-    D -->|Yes| F[5. Deploy/Submit]
-```
-
-### Do's and Don'ts
-
-**DO:**
-- Start with clear, high-level descriptions
-- Iterate in small steps
-- Test frequently
-- Document what works and what doesn't
-- Be specific when refining
-
-**DON'T:**
-- Accept code blindly for production use
-- Ignore security considerations
-- Skip testing because "it looks right"
-- Forget to understand what the code does
-- Use vibe coding for safety-critical applications
-
-### Effective Prompting Tips
-
-1. **Be Specific**: "Add a red delete button on the right side of each task" is better than "add delete"
-2. **Provide Context**: "This is for a mobile-first web app" helps the AI make appropriate choices
-3. **Describe Behaviour**: Focus on what the app should DO, not how to code it
-4. **Iterate Incrementally**: Add features one at a time rather than all at once
+</details>
 
 ---
 
-## 9. 🎓 Academic Integrity
+## Common mistakes
 
-### Remember
+- **Judging a generated app by whether it runs.** Running is the minimum,
+  not the evidence.
+- **Improving the prompt between tools**, which turns a comparison into
+  three separate anecdotes.
+- **Skipping the plan review** in the spec-first build, which removes the
+  only thing that made it different.
+- **Writing a spec for something you will delete on Sunday** — that is the
+  over-correction, and it is just as wrong.
+- Concluding that vibe coding is bad. It is excellent for disposable work;
+  the failure is vibe coding something you then **keep**.
 
-- **Vibe coding is about learning**, not just getting output
-- **Understand what you submit** — you may be asked to explain your application
-- **Document your process** — the journey is as important as the destination
-- AI tools are **learning aids**, not replacements for understanding
-- **Follow ATU's academic integrity policies** at all times
+## Summary
 
-### What You're Learning
-
-This lab teaches you to:
-- Evaluate and compare AI development tools
-- Think critically about AI-generated code
-- Understand the trade-offs of different development approaches
-- Develop skills in prompt engineering
-- Reflect on the future of software development
-
----
-
-## 🔄 Alternative Tool: Cursor
-
-If you run into access issues with any of the tools above, Cursor is an excellent alternative that's widely used in industry.
-
-### Cursor
-
-Cursor is an AI-powered code editor built on VS Code. It's used by professional developers and offers a more hands-on coding experience with AI assistance built in.
-
-**What makes it great:**
-- Full IDE experience with AI that understands your entire codebase
-- Access to GPT-4, Claude, and Gemini models
-- Multi-file editing and intelligent debugging
-- Industry-standard tool used by professional developers
-
-#### 🎓 FREE FOR STUDENTS: One Year of Cursor Pro!
-
-> **Eligible university students get one full year of Cursor Pro completely free** — that's a $240 value! This includes 500 fast premium requests per month and access to all premium AI models.
-
-**Setup Steps:**
-
-1. **Go to**: [https://cursor.com](https://cursor.com)
-2. **Click "Download"** and install Cursor for your operating system (Windows, Mac, or Linux).
-3. **Create an account** using your **university email address** (e.g., your @atu.ie email).
-4. **Verify your student status**:
-   - Go to: [https://cursor.com/students](https://cursor.com/students)
-   - Click **"Verify"** and enter your academic email
-   - Follow the verification steps (uses SheerID)
-5. **Once verified**, your free year of Pro access will be activated automatically.
-
-```mermaid
-graph TD
-    A[Download Cursor] --> B[Create Account with Uni Email]
-    B --> C[Go to cursor.com/students]
-    C --> D[Click Verify]
-    D --> E[Enter Academic Email]
-    E --> F[Free Pro Access Activated!]
-```
-
-**Try the To-Do App Challenge:**
-- Create a new folder for your project
-- Open Cursor and press `Cmd+K` (Mac) or `Ctrl+K` (Windows) to open the AI prompt
-- Type: *"Create a simple to-do list web app with HTML, CSS, and JavaScript"*
-- Use `Cmd+L` / `Ctrl+L` to chat with the AI about your code
-- Ask it to add features: *"Add local storage so tasks persist after refresh"*
-
----
-
-### Comparison: Bolt.new vs Cursor
-
-| Feature | Bolt.new | Cursor |
-|---------|----------|--------|
-| **Type** | Browser-based | Desktop IDE |
-| **Best For** | Quick prototypes, beginners | Serious development, learning |
-| **Setup Time** | Instant (just visit website) | 5-10 mins (download + verify) |
-| **Code Access** | View only (AI writes it) | Full control (you + AI together) |
-| **Cost** | Free tier available | **Free for 1 year (students)** |
-| **Deployment** | One-click Netlify | Manual (Vercel, Netlify, etc.) |
-
-**Recommendation:** Try both! Use Bolt.new for rapid prototyping, and Cursor when you want more control and a deeper understanding of the code.
-
----
-
-**Happy Vibe Coding! 🎵✨**
-
-> Remember: The goal isn't just to build apps — it's to understand how AI is changing the way we develop software.
+- Prompt-first tools genuinely produce working applications, fast.
+- The cost is **comprehension debt** — and you can measure it on your own
+  code within an hour of creating it.
+- Reading what you shipped reliably finds something you would not ship.
+- **Spec-driven** moves review from the implementation to the intent, and
+  charges you real time for it.
+- Choose **per task**: stakes, reversibility, lifespan, and who pays if it
+  is wrong.

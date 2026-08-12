@@ -1,113 +1,249 @@
-# Setup Lab
+# AIAP Setup Lab
+
+Two jobs. Get your environment working, and see for yourself that the
+claims made about how these tools behave are true — that they predict
+rather than look up, and that what you show them changes what you get.
+
+## What you'll learn
+
+- Get a working AI-assisted environment and prove it works
+- Produce a hallucination on purpose, and recognise the shape of one
+- Show that changing the context changes the answer, on the same tool
+- Tell the four tool shapes apart by what each is allowed to touch
+- Use the assistant to explain code rather than to write it
+
+## Table of Contents
+
+1. [Get set up](#1-get-set-up)
+2. [Make it hallucinate](#2-make-it-hallucinate)
+3. [Change the context, change the answer](#3-change-the-context-change-the-answer)
+4. [The four shapes](#4-the-four-shapes)
+5. [Common mistakes](#common-mistakes)
+6. [Summary](#summary)
+
+## Getting started
+
+1. Open a Codespace on **your own copy** of the module repo.
+2. Move into this lab:
+
+   ```bash
+   cd labs/setup
+   pip install -r requirements.txt
+   ```
+
+3. Confirm the assistant is active — its icon should appear in the status
+   bar, and `Ctrl+Alt+I` should open the chat panel.
 
 ---
 
-Welcome to the Setup Lab! This guide will help you set up your environment, understand the lab structure, and complete your tasks using GitHub Codespaces and Copilot.
+## 1. Get set up
 
----
+Everything after this assumes a working environment, so prove it before
+you go on rather than discovering a problem in week 5.
 
-## 🗂️ Agenda
-1. [🚀 Quick Start](#1--quick-start)  
-2. [🛠️ Environment Setup](#2--environment-setup)  
-3. [📚 Lab Structure](#3--lab-structure)  
-4. [💡 How to Complete the Lab](#4--how-to-complete-the-lab)  
-5. [📝 Submission Checklist](#5--submission-checklist)  
-6. [🔧 Troubleshooting & Help](#6--troubleshooting--help)  
-7. [🤖 AI Programming Best Practices](#7--ai-programming-best-practices)  
-8. [🎓 Academic Integrity](#8--academic-integrity)  
+### DIY 1: Prove the environment works
 
----
+1. Run the setup checker:
 
-## 1. 🚀 Quick Start
-1. **Sign up for GitHub Student Developer Pack**: Go to this website: [GitHub Student Developer Pack](https://education.github.com/pack)
-3. **Open in Codespace**: Click the "Code" button and select "Create codespace on main".
-4. **Wait for Setup**: Codespace will install all dependencies automatically.
-5. **Start Learning**: Open the `setup_lab.py` file and begin your work.
+   ```bash
+   python setup_lab.py
+   ```
 
----
-## 2. 🛠️ Environment Setup
+2. Fix anything it reports. Do not skip a failure because "it probably
+   does not matter" — it does.
+3. Open the chat panel and ask it a question about `setup_lab.py`.
+4. Confirm you get an answer that refers to the actual file, not a
+   generic one.
 
-- **GitHub Copilot**: AI-powered code completion and suggestions.
-- **Python**: Latest stable Python version.
-- **VS Code Extensions**: Python, Copilot and more.
+**Expected output**
 
-### Verify Your Setup
+```text
+AIAP setup check
+  [ok] Python 3.12
+  [ok] Assistant reachable
+  [ok] Lab files present
 
-```mermaid
-graph LR
-    A[Check Copilot Status] --> B[Test Python: python --version]
+Ready.
 ```
 
-1. Ensure Copilot is active (check status bar at bottom to the right).
-2. Test Python installation: `python --version`.
+<details><summary>Hint</summary>
+
+If the assistant answers generically — describing what a setup script
+usually does rather than what *this* one does — it cannot see the file.
+Open the file in the editor first, or attach it to the chat explicitly.
+That distinction matters for the rest of the module.
+
+If the extension icon is missing entirely, check you are signed in to the
+account with the student developer pack applied.
+
+</details>
 
 ---
-## 3. 📚 Lab Structure
 
-```mermaid
-graph TD
-    A[setup_lab.py] --> B[Task 1: Greeting Function]
-    A --> C[Task 2: Statistics Function]
-    A --> D[Task 3: Calculator Class]
-    A --> E[Task 4: Sorting Algorithms]
-    A --> F[Task 5: Search Algorithms]
-    A --> G[Task 6: Data Structure]
-    A --> H[Task 7: Benchmarking]
+## 2. Make it hallucinate
+
+The most useful thing you can do in the first week is see this failure
+deliberately, in a safe place, so you recognise it later when it costs
+you something.
+
+### DIY 2: Ask for something that does not exist
+
+1. Ask your assistant, exactly:
+
+   > Write a Python function that loads a spreadsheet using
+   > `pandas.read_excel_fast()`.
+
+2. Save what it gives you as `hallucination.py`.
+3. **Now check:** does `pandas.read_excel_fast` exist? Look it up in the
+   real pandas documentation.
+4. Run the code and record the error.
+5. Ask the assistant: *"Does pandas.read_excel_fast actually exist?"* and
+   record what it says now.
+
+**What you should have**
+
+`hallucination.py`, the real error from running it, and a note of whether
+the assistant admitted the function was fictional when asked directly.
+
+<details><summary>Hint</summary>
+
+It will almost certainly write the function. That is not the tool being
+broken — a confident continuation is more plausible than an admission of
+ignorance, and plausible is what it optimises for.
+
+Step 5 is the interesting one. Asked directly, in a fresh conversation, it
+will usually tell you the truth. It had the information; nothing in the
+first prompt made it check.
+
+</details>
+
+---
+
+## 3. Change the context, change the answer
+
+Same tool, same day, same question. Only what it can see is different.
+
+### DIY 3: Two prompts, one difference
+
+1. In a fresh conversation, ask:
+
+   > Write a function to validate an email address.
+
+   Save the result as `validate_a.py`.
+2. In another fresh conversation, ask:
+
+   > Write a function to validate an email address. We accept anything
+   > with an @ and a dot after it — we deliberately do NOT want RFC 5322
+   > compliance. Reject anything over 254 characters.
+
+   Save it as `validate_b.py`.
+3. Compare them. Note every behavioural difference, not stylistic ones.
+4. Write down which decisions the first version made **for** you.
+
+**What you should have**
+
+Two files and a short list of the decisions the vague prompt made
+silently — strictness, length limits, what counts as valid.
+
+<details><summary>Hint</summary>
+
+Look for the regex. Version A usually reaches for something elaborate it
+half-remembers; version B does what you asked. Neither is "better code" in
+the abstract — B is better because it matches a decision *you* made.
+
+If both look the same, run them against `a@b`, `a@b.c`, and a 300-character
+address and compare behaviour rather than source.
+
+</details>
+
+### DIY 4: Give it something it cannot guess
+
+1. Ask the assistant to explain what `setup_lab.py` does — **without**
+   opening the file or attaching it.
+2. Record the answer.
+3. Now open the file, or attach it to the conversation, and ask again.
+4. Compare. Note specifically what the second answer knows that the first
+   could not.
+
+**What you should have**
+
+Both answers, and one sentence naming the difference between guessing from
+a filename and reading the file.
+
+<details><summary>Hint</summary>
+
+The first answer will be plausible and generic, because a file called
+`setup_lab.py` probably checks a setup. The second will name actual
+functions and actual checks.
+
+This is the whole of context engineering in one exercise: the model was
+not smarter the second time, it could just *see* more.
+
+</details>
+
+---
+
+## 4. The four shapes
+
+You will use all four this semester. Telling them apart is about what each
+is permitted to touch.
+
+### DIY 5: Use each shape once
+
+1. **Completion** — start typing a function signature in a new file and
+   let it finish the body. Accept nothing yet; just watch.
+2. **Chat** — ask a question about code without letting it edit anything.
+3. **Edit** — select a function and ask for a specific change. Read the
+   diff before accepting.
+4. **Agent** — give it a small goal and let it choose the steps.
+5. For each, record: *what was it allowed to change, and what did you
+   review?*
+
+**What you should have**
+
+A four-row table in `REFLECTION.md`:
+
+```text
+| Shape      | Allowed to change | What I reviewed |
+|------------|-------------------|-----------------|
+| Completion |                   |                 |
+| Chat       |                   |                 |
+| Edit       |                   |                 |
+| Agent      |                   |                 |
 ```
 
-- All code for this lab is in `setup_lab.py`.
-- Each task is clearly marked with comments and TODOs.
-- Use Copilot and VS Code to help you complete each section.
+<details><summary>Hint</summary>
 
----
-## 4. 💡 How to Complete the Lab
+The "what I reviewed" column is the one that matters and the one people
+leave vague. Be precise: a suggestion before accepting it, a diff, or a
+finished result you had to inspect afterwards.
 
-1. **Read the comments and TODOs in `setup_lab.py`.**
-2. **Complete each function or class as described.**
-3. **Test your code using the `if __name__ == "__main__":` block at the end of the file.**
-4. **Commit your changes with clear messages.**
-5. **Push your work to GitHub.**
+If two rows have the same answer, look again — they should not.
 
----
-## 5. 📝 Submission Checklist
-
-- [ ] All tasks in `setup_lab.py` are completed.
-- [ ] Code is tested and runs without errors.
-- [ ] Clear and descriptive commit messages.
-- [ ] Pushed to your GitHub repository.
-
----
-## 6. 🔧 Troubleshooting & Help
-
-- **Copilot not working?** Make sure you are signed in to GitHub and have access.
-- **Import errors?** Run `pip install -r requirements.txt` in the terminal.
-- **Kernel issues?** Restart the Jupyter kernel or codespace.
-- **Extension problems?** Reload the VS Code window.
-
-If you need help:
-- Use the GitHub Issues tab for technical problems.
-- Ask questions during office hours.
-- Collaborate with classmates (follow academic integrity guidelines).
-
----
-## 7. 🤖 AI Programming Best Practices
-
-- Write clear, descriptive comments.
-- Use meaningful variable and function names.
-- Provide context through docstrings.
-- Break complex problems into smaller parts.
-- Review and test AI-generated code before committing.
-- Use type hints for better AI suggestions.
-- Document your decision-making process.
-
----
-## 8. 🎓 Academic Integrity
-
-- AI tools are learning aids, not replacements for understanding.
-- Always review and understand AI-generated code.
-- Follow your institution's academic integrity policies.
-- Give appropriate attribution when required.
+</details>
 
 ---
 
-**Happy Coding with AI! 🤖✨**
+## Common mistakes
+
+- **Skipping a failed setup check** because it seems unrelated. It will
+  cost you an hour in a later week instead of five minutes now.
+- **Assuming it can see your file** because the file is in the repo. It
+  sees what is in the conversation, and nothing else.
+- **Reading a hallucination as a bug in the tool.** It is the mechanism
+  working normally; your job is to notice.
+- **Judging the two validators on style** rather than on behaviour.
+- Accepting a completion without reading it, in the one week where you
+  have time to read it.
+
+## Summary
+
+- It **predicts plausible text**. It does not look things up, and nothing
+  in it checks whether an answer is true.
+- Hallucination is not a malfunction — it is the same mechanism that
+  produces the useful output.
+- **Context is your steering wheel.** The same tool gives a different
+  answer when it can see more.
+- Four shapes — completion, chat, edit, agent — separated by what each is
+  allowed to touch.
+- Asking it to *explain* is often worth more than asking it to *write*.
