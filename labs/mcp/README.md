@@ -54,6 +54,35 @@ sequenceDiagram
 - **tools/list**: Server tells client what tools are available
 - **tools/call**: Client invokes a specific tool with parameters
 
+> ### ⚠️ This diagram is already history
+>
+> The sequence above is the **stateful** model MCP used from launch until
+> mid-2026, and it is what the SDK still does for you over stdio — so the
+> code in this lab is correct and runs.
+>
+> But the [2026-07-28 specification](https://blog.modelcontextprotocol.io/posts/2026-07-28/)
+> **removed the `initialize`/`initialized` handshake and the
+> `Mcp-Session-Id` header entirely.** Every request now stands alone and
+> carries the protocol version, client identity and capabilities in its
+> `_meta`.
+>
+> **Why they did it** is the part worth understanding, and it has nothing
+> to do with AI. A handshake means the server must remember *which client
+> you are* between requests. That is fine on one machine and miserable
+> behind a load balancer: every box needs shared session storage, and you
+> cannot just add servers. Going stateless means a plain round-robin load
+> balancer works and MCP scales like any ordinary HTTP service.
+>
+> **What replaced sessions:** if a tool genuinely needs state, it now
+> *mints an explicit handle and returns it*, and the model passes that
+> handle back as a normal argument. State became visible data instead of
+> invisible transport magic.
+>
+> You will see both models in the wild for a while — the old HTTP+SSE
+> transport is deprecated with a **year-long offramp**, not deleted. Being
+> able to tell which one a server speaks is a genuinely useful skill this
+> year.
+
 ### Learning Objectives
 By the end of this lab, you will be able to:
 - Understand the MCP architecture and JSON-RPC protocol
@@ -157,6 +186,13 @@ Watch the colored terminal output carefully. You'll see:
    - Client calls tools with `tools/call`
    - Server executes and returns results
    - Note the request/response pattern
+
+> **Watch step 1 closely — you are looking at a deprecated exchange.** The
+> SDK still performs this handshake over stdio, but the 2026-07-28 spec
+> removed it from the protocol. Ask yourself as it scrolls past: *what in
+> this exchange does the server have to remember afterwards?* That answer
+> is exactly what made MCP hard to load-balance, and exactly what the new
+> spec deleted.
 
 #### Exercise 1: Add a Power Tool
 Modify `part1/mcp_server.py` to add a new tool called `power` that calculates x^y.

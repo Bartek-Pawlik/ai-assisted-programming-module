@@ -47,6 +47,62 @@ graph LR
 
 Vibe coding is the practice of instructing AI to write code via natural language, accepting the output without deep review, and iterating rapidly based on the "vibe" or high-level intent.
 
+### What happened next
+
+Karpathy coined the term in early 2025 as a description of a mode he was
+enjoying, not a recommendation for production. The industry adopted it
+anyway, and by 2026 there is data on what that costs:
+
+| | |
+|---|---|
+| US developers using AI coding tools daily | **92%** |
+| …who say they trust the output | **29%** |
+| …who always review it before committing | **48%** |
+| Major issues vs human-written code | **1.7×** |
+| AI-generated samples with an OWASP Top-10 vulnerability | **~45%** |
+| Sprint capacity spent on AI-traceable bugs by day 90 | **20–30%** |
+
+Two vocabulary terms came out of that experience, and both are useful:
+
+- **Comprehension debt** — the future cost of understanding, modifying and
+  debugging code a machine wrote and nobody read. Like technical debt, but
+  the thing you borrowed against is *understanding*.
+- **Haunted codebase** — a working system the team no longer understands.
+  It runs. Nobody is confident changing it.
+
+*(Treat the exact percentages as indicative — they come from industry
+surveys of varying rigour. The direction is not in dispute.)*
+
+### The counter-trend: spec-driven development
+
+The reaction to vibe coding is **spec-driven development (SDD)**: instead
+of prompting your way to code and hoping, you write a **specification**
+first, let the agent produce a plan and tasks from it, and only then
+implement. Tooling grew up around this fast — GitHub Spec Kit, AWS Kiro,
+and the skills/plan systems in agentic CLIs.
+
+    Vibe coding:        intent → code → hope
+    Spec-driven:        intent → spec → plan → tasks → code → check against spec
+
+The spec becomes the artefact you review, and it is far easier to review
+one page of intent than 800 lines of generated implementation.
+
+**It is not free.** A common objection from practitioners is that you can
+end up reviewing a pile of markdown instead of reviewing code — ceremony
+that feels like rigour without being it. The judgement is knowing which
+mode a task deserves.
+
+| | Vibe coding suits | Spec-driven suits |
+|---|---|---|
+| Stakes | Prototype, throwaway, demo | Production, shared, long-lived |
+| Requirements | Discovering them as you go | Known well enough to write down |
+| Cost of being wrong | Delete it and retry | Someone maintains this for years |
+| Review unit | The running app | The spec, then the tests |
+
+**Keep this tension in mind for the whole lab.** You are about to build
+the same app three times by vibe coding. Pay attention to what you would
+*not* be willing to ship, and why.
+
 ---
 
 ## 2. 🛠️ Tool 1: Google Antigravity
@@ -236,6 +292,58 @@ Use the following prompts (or similar) with each tool:
 5. Test the application.
 6. **Experiment!** Try asking it to add user authentication or cloud sync.
 
+### Task 5.4: Read what you shipped
+
+You have three working applications you did not write. Pick **one** and
+spend 15 minutes finding out what is actually in it.
+
+1. Open the generated source. Find the file that handles **user input**
+   or **data storage**.
+2. Answer these in `REFLECTION.md`:
+   - How many dependencies did it add? Do you know what any of them do?
+   - Is user input validated anywhere before it is stored or displayed?
+   - If this app stored real people's data, what would worry you?
+   - Find **one** line you genuinely cannot explain. Paste it. Now ask
+     the AI to explain it — did the explanation match what you assumed?
+3. Ask your AI assistant directly: *"Review this code for security
+   vulnerabilities as a security engineer would."* Record what it finds.
+
+**Expected outcome:** you find at least one thing you would not have
+shipped. Roughly 45% of AI-generated code samples carry an OWASP Top-10
+vulnerability, so the base rate is on your side — and unvalidated input
+is the usual suspect.
+
+This is comprehension debt made concrete: the app works, you own it, and
+until this exercise you had no idea what was in it.
+
+### Task 5.5: The same app, spec-first
+
+Now do it the other way, once, to feel the difference.
+
+1. **Before prompting anything**, write a one-page spec in
+   `spec.md`: what the app does, what it explicitly does *not* do, the
+   data it stores, and three acceptance criteria you could test.
+2. Give the spec to an AI coding assistant and ask it to produce a
+   **plan** first — not code.
+3. Review the plan against your spec. Correct it.
+4. Only then let it implement.
+
+Record in `REFLECTION.md`:
+
+```
+## Vibe vs spec-driven
+
+Time, vibe coding: ......... [minutes]
+Time, spec-driven: ......... [minutes]
+Which produced code you'd defend? .......... [which, and why]
+Which would you use for a throwaway prototype? ...... [which]
+Which for the module project (60% of your grade)? ... [which]
+Where did writing the spec change what you built? ... [be specific]
+```
+
+There is no expected answer. Spec-driven is slower and that cost is real;
+the question is what it buys and when the purchase is worth making.
+
 ---
 
 ## 6. 📝 Completion Checklist
@@ -245,6 +353,9 @@ Use the following prompts (or similar) with each tool:
 - [ ] Built a To-Do app with Bolt.new
 - [ ] Built a To-Do app with Firebase Studio
 - [ ] Experimented with refining and iterating on each app
+- [ ] **Task 5.4** — read one generated app and found something you would
+      not ship
+- [ ] **Task 5.5** — built once spec-first and compared honestly
 
 ---
 

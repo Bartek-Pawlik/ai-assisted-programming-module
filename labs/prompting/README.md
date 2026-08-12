@@ -104,6 +104,44 @@ Notes:
 
 ---
 
+## 🧩 From Prompt Engineering to Context Engineering
+
+SPEC is about **how you ask**. That mattered enormously in 2023, when
+models needed careful coaxing to produce anything useful.
+
+It matters less now — and that is not a criticism of SPEC, it is what
+progress looks like. Models got much better at inferring intent from a
+sloppy request. What they still cannot do is invent information they were
+never given.
+
+So the centre of gravity moved. The phrase you will hear this year is
+**context engineering**: not *how you ask*, but **what you put in front of
+the model before you ask**.
+
+| | Prompt engineering | Context engineering |
+|---|---|---|
+| The question | How do I phrase this? | What does it need to see? |
+| You tune | Wording, structure, examples | Files, schemas, errors, docs, prior code |
+| Fails when | The request is ambiguous | The model is missing something it cannot guess |
+| Optimises | Human → model | Agent → model |
+
+**The practical test.** Before rewording a prompt for the third time, ask:
+*is this answer wrong because I asked badly, or because it doesn't know
+something?* If it is the second, no amount of rewording will fix it —
+paste the schema, the error, the failing test, or the file it needs.
+
+**Both still matter, and they compose.** A precise SPEC prompt over the
+wrong context is confidently wrong. Good context with a vague ask is
+merely slow. This lab drills the prompt half because it is the half you
+can practise deliberately; keep asking the context question throughout.
+
+> **More is not better.** Pasting a 4,000-line file to ask about one
+> function makes answers *worse*, not better — the relevant detail
+> competes with everything else. Context engineering is about what to
+> include **and what to leave out**.
+
+---
+
 ## 📝 Complete Example: SPEC in Action
 
 Let's see the SPEC framework applied to a real problem:

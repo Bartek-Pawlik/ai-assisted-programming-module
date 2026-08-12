@@ -16,6 +16,49 @@ By the end of this lab, you will be able to:
 - ✅ Integrate retrieval with LLM generation
 - ✅ Create a complete working RAG application
 - ✅ Understand the difference between standard LLMs and RAG-enhanced LLMs
+- ✅ **Decide when retrieval is the wrong tool** and long context is better
+
+---
+
+## 🤔 First: is RAG even the right answer?
+
+You will hear "RAG is dead" this year. It isn't — but the reason people
+say it is worth understanding *before* you build one, because it changes
+what this lab is for.
+
+When RAG became popular, model context windows held a few thousand tokens.
+Retrieval was the only way to work with a document larger than the window.
+Today's windows hold hundreds of thousands to millions of tokens, so for a
+lot of problems you can simply **put the whole thing in the prompt** — no
+chunking, no embeddings, no vector database, no pipeline to maintain.
+
+So the honest 2026 position is not "always retrieve" or "never retrieve":
+
+| Situation | Reach for |
+|---|---|
+| A handful of documents, conversational Q&A | **Long context** — just paste it |
+| Thousands of documents, or a corpus that won't fit | **Retrieval** |
+| You must cite exactly which source said it | **Retrieval** |
+| The data changes constantly | **Retrieval** (or live search) |
+| Cost matters and the corpus is large | **Retrieval** — the crossover is roughly a couple of thousand pages |
+
+**Long context is not free either.** Stuffing the window has documented
+failure modes: models attend less reliably to material in the *middle* of
+a very long context ("lost in the middle"), and adding more marginally
+relevant text can dilute the relevant part and make answers worse. More
+tokens is not more understanding.
+
+**What most serious systems do now is hybrid:** retrieve a bounded,
+generous set of candidates, then let a long-context model reason over all
+of them at once. That is the shape worth recognising — and you cannot
+build it, or judge when to skip it, without having built the retrieval
+half by hand. Which is what you are about to do.
+
+> **Coding tools took a different route.** Your coding assistant mostly
+> does **agentic retrieval**: it greps and reads files on demand rather
+> than consulting a vector database of your repo. Same problem —
+> "find me the relevant context" — solved with search instead of
+> embeddings. Worth noticing which of the two any tool you meet is doing.
 
 ---
 
@@ -709,6 +752,44 @@ Query: "What is quantum computing?" (NOT in our documents)
 
 **Observation**: [Did RAG prevent hallucination?]
 ```
+
+## Experiment 4: Would long context have done the job?
+
+You built a retrieval pipeline. Now find out whether you needed one.
+
+The five documents in `data/` total only a few thousand words — small
+enough to paste into a modern context window whole. So do exactly that:
+skip retrieval entirely, put **all five documents** in the prompt, and ask
+the same questions you asked your RAG system.
+
+1. Concatenate everything in `data/` into one string.
+2. Send it as context with a question, no retrieval step.
+3. Compare against your RAG answer for the same question.
+
+Then answer honestly in `results.md`:
+
+```
+## Long context vs RAG
+
+Question asked: [your question]
+
+- RAG answer:          [response]
+- Whole-corpus answer: [response]
+
+Which was better? ................ [RAG / long context / no difference]
+Roughly how many tokens did each send? ........ [estimate]
+At what corpus size would your answer flip? ... [your reasoning]
+```
+
+**The expected result is that long context wins on this corpus** — it is
+tiny, and retrieval can only lose information a full read would have had.
+That is the point. Retrieval earns its keep at scale, on cost, on freshness
+and on citation — not automatically.
+
+> **The engineering judgement being tested here** is not "can you build a
+> RAG pipeline". It is "can you tell when you shouldn't have". Building
+> infrastructure a problem doesn't need is a more common and more
+> expensive mistake than the reverse.
 
 ---
 

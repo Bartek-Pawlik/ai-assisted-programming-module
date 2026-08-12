@@ -27,8 +27,16 @@ Atlantic Technological University
 
 <!-- Speaker notes: ~2:00. The hook. Ask for hands: "who used an AI tool
 to write code in the last week?" Nearly every hand goes up. Then the
-second question, which is the real one, and far fewer hands stay up. The
-gap between those two shows is the module. Do NOT resolve it here. -->
+second question, and far fewer hands stay up.
+
+Do NOT resolve it here — it is answered deliberately three slides later
+("So — must you understand every line?"), after the industry data has
+made the honest answer defensible. Resolving it now costs the payoff.
+
+The misconception to expect: the room reads the second question as an
+accusation and assumes the expected answer is "you should be able to".
+The real answer is no, almost nobody can, and the interesting question is
+what replaced it. Let them sit in the discomfort for three slides. -->
 
 ## Two questions
 
@@ -56,10 +64,91 @@ point, not a flaw. -->
 
 <div class="callout">
 
-**The uncomfortable part.** Code you cannot explain is code you cannot
-maintain, debug, or defend. The assistant is fast; you are accountable.
+**The uncomfortable part.** You are accountable for code you did not
+write. The assistant is fast; your name is on the commit.
 
 </div>
+
+---
+
+<!-- Speaker notes: ~5:00. THE stats slide — expect photographs, so pause.
+Read the second and third numbers together and let the contradiction land
+before saying anything: they don't trust it, and they ship it anyway.
+
+The misconception to name: students assume professionals have solved this
+and there is a correct process they are about to be taught. There isn't.
+The industry is running an uncontrolled experiment and these are the
+early results.
+
+Provenance caveat, say it out loud: these come from 2026 industry surveys
+of varying quality that recycle each other. Trust the DIRECTION, not the
+decimal point. That scepticism is itself part of the module. -->
+
+## Where this actually is, in 2026
+
+| | |
+|---|---|
+| US developers using AI coding tools daily | **92%** |
+| …who trust the code it produces | **29%** |
+| …who always review it before committing | **48%** |
+| Major issues vs human-written code | **1.7×** |
+| AI samples with an OWASP Top-10 vulnerability | **~45%** |
+
+<span class="kicker">// they don't trust it — and they ship it anyway</span>
+
+---
+
+<!-- Speaker notes: ~8:00. This resolves the opening question honestly,
+and it is the intellectual spine of the hour. Do NOT let them leave with
+"so reading code doesn't matter".
+
+The misconception: students hear "nobody reads every line" as permission
+to read none of it. The actual shift is that the UNIT of review moved —
+from the line to the behaviour — and the guarantee moved from your eyes
+to your tests. If you have no tests, you have not moved up a level; you
+have just stopped checking.
+
+Callback to the two questions at the start. -->
+
+## So — must you understand every line?
+
+* **No.** Almost nobody does, and pretending otherwise is dishonest
+
+* But the review didn't disappear — it **moved**
+
+- From *reading every line* → to *tests, types, and CI that must pass*
+- From *"looks right"* → to *"prove it behaves right"*
+
+<div class="callout">
+
+**The trade only works if the verification is real.** Skip the tests and
+you have not moved up a level — you have just stopped checking.
+
+</div>
+
+---
+
+<!-- Speaker notes: ~11:00. Vocabulary slide. These are current terms
+students will meet online and in interviews this year, and knowing them
+is genuinely useful social capital — say that.
+
+"Comprehension debt" is the one worth dwelling on: it is the technical-debt
+argument applied to understanding rather than to code, and it reframes
+speed as borrowing. Ask the room who has already inherited a haunted
+codebase from their own past self. Most hands go up, AI or no AI. -->
+
+## The words you'll hear this year
+
+- **Vibe coding** — prompt it, run it, ship it, barely read it
+- **Comprehension debt** — the future cost of understanding code a
+  machine wrote and nobody read
+- **Haunted codebase** — a working system the team no longer understands
+- **Context engineering** — the shift from *how you ask* to *what you
+  put in front of the model*
+- **Spec-driven development** — the backlash: write the spec, let the
+  agent implement it
+
+<span class="kicker">// half of these did not exist two years ago</span>
 
 ---
 
@@ -280,6 +369,9 @@ Leave time for questions. -->
 - **20% + 20% + 60%** — two MCQs and a project
 - The project brief lands **next week**; start early
 - Set up GitHub and the Student Developer Pack **before** next week
+
+**The one idea to keep:** you don't have to read every line — but
+something has to check it, and if that something isn't a test, it's you.
 
 **Next week:** what AI-assisted programming actually is — and the first
 lab.

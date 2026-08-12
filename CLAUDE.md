@@ -114,6 +114,48 @@ converted; they render as marker rows on the site instead of broken links.
 build fails if a week is in both places, deliberately, because a converted
 deck hidden behind a "pending" row is the same failure as a missing one.
 
+### What a converted deck must carry (2026 refresh)
+
+The PowerPoints are from 2025 and several are materially out of date. A
+conversion is **not** a transcription — the lab READMEs were refreshed in
+August 2026 and each deck must land in step with its lab. Specifically:
+
+- **Week 3 (Prompting)** — keep the SPEC drills, then teach
+  **context engineering**: the shift from *how you ask* to *what you put
+  in front of the model*. The deck's job is the diagnostic question — "is
+  this answer wrong because I asked badly, or because it doesn't know
+  something?" — because rewording cannot fix missing information. Note
+  that more context is not better: a huge irrelevant paste makes answers
+  worse.
+- **Week 4 (RAG)** — teach the **decision** before the pipeline. Long
+  context beats retrieval on small corpora; retrieval wins on scale, cost,
+  freshness and citation, with the crossover around a couple of thousand
+  pages. Cover the failure modes of long context (lost-in-the-middle,
+  dilution) so "just paste everything" is not the takeaway either. The
+  hybrid — bounded retrieval, then long-context reasoning over the result
+  — is the shape most real systems use.
+- **Week 5 (MCP)** — the 2026-07-28 spec removed the
+  `initialize`/`initialized` handshake and `Mcp-Session-Id`, deprecated
+  HTTP+SSE on a year-long offramp, and added header-based routing plus
+  Multi Round-Trip Requests. Teach *why*: a handshake forces the server to
+  remember who you are, which is fine on one machine and miserable behind
+  a load balancer. State became an explicit handle a tool mints and the
+  model passes back.
+- **Week 11 (Vibe Coding)** — run vibe coding **against**
+  spec-driven development rather than demonstrating one. Carry the cost
+  data (see below) and the two terms students will meet everywhere:
+  **comprehension debt** and **haunted codebases**.
+- **Every deck** — the assessment is in-person, so decks may be blunt
+  about the limits of AI-generated code. See `module/module-overview.md`
+  under "Currency" for the module's stated position.
+
+**On the statistics.** Week 1 and the vibe-coding lab quote 2026 industry
+figures (92% daily use / 29% trust / 48% always review / 1.7× defects /
+~45% OWASP). These come from surveys of varying rigour that recycle each
+other. They are taught as **direction, not decimal points**, and the
+speaker notes say so out loud. Do not add a statistic to a deck without
+that caveat attached, and do not sharpen these into false precision.
+
 ## Conventions (guaranteed repo-wide)
 
 - Folder/file names: kebab-case, no spaces.
