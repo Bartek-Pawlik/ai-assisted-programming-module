@@ -109,7 +109,9 @@ STYLE = """<style>
   .row-list li { border-bottom: 1px solid var(--rule); padding: 14px 4px; display: flex;
                  justify-content: space-between; align-items: baseline; gap: 16px; }
   .row-list li:first-child { border-top: 1px solid var(--rule); }
-  .row-list .t { font-family: var(--mono); font-weight: 600; font-size: 19px; }
+  .row-list .wk { font-family: var(--mono); font-size: 13.5px; color: var(--muted);
+                  flex: none; width: 64px; }
+  .row-list .t { font-family: var(--mono); font-weight: 600; font-size: 19px; flex: 1; }
   .row-list .t a { color: var(--ink); text-decoration: none; }
   .row-list .t a:hover { color: var(--blue); }
   .open { font-family: var(--mono); font-size: 14px; color: var(--blue);
@@ -175,6 +177,29 @@ def page(title: str, kicker_html: str, body_html: str, needs_mermaid: bool,
             f"</div>\n{hljs}{mermaid}</body>\n</html>\n")
 
 
+def scheduled_labs() -> list[tuple[str, str]]:
+    """(week number, lab slug) for every teaching week, in teaching order.
+
+    Lab folders carry no week number (labs are addressed by topic), so on
+    its own this script can only list them alphabetically. The lecture index
+    already knows which week teaches which lab; borrow that mapping so the
+    labs page reads in the same order as the decks. Non-teaching weeks (the
+    MCQs, reading week) have no lab and are skipped.
+    """
+    import build_index as bi
+    out = []
+    for folder in sorted(p for p in bi.WEEKS.iterdir() if p.is_dir()):
+        name = folder.name
+        if name.split("-", 2)[-1] in bi.MCQ_LABELS or "reading-week" in name:
+            continue
+        m = bi.WEEK_NO_RE.match(name)
+        week_no = m.group(1).lstrip("0") if m else ""
+        lab = bi.lab_slug(name)
+        if lab:
+            out.append((week_no, lab))
+    return out
+
+
 def main() -> None:
     out_root = Path(sys.argv[1] if len(sys.argv) > 1 else "build") / "labs"
     out_root.mkdir(parents=True, exist_ok=True)
@@ -213,23 +238,39 @@ def main() -> None:
                  needs_hljs='language-python' in body),
             encoding="utf-8", newline="\n")
 
-    rows = "".join(
-        f'<li><span class="t"><a href="{slug}/">{html.escape(title)}</a></span>'
-        f'<a class="open" href="{slug}/">open</a></li>\n'
-        for slug, title in labs)
+    # Teaching order, like the lecture index; anything not in the schedule
+    # (optional extra material such as baas) goes under its own heading.
+    titles = dict(labs)
+    scheduled = scheduled_labs()
+    in_schedule = {slug for _, slug in scheduled}
+    extra = [slug for slug, _ in labs if slug not in in_schedule]
+
+    def row(slug: str, label: str) -> str:
+        return (f'<li><span class="wk">{label}</span>'
+                f'<span class="t"><a href="{slug}/">{html.escape(titles[slug])}</a></span>'
+                f'<a class="open" href="{slug}/">open</a></li>\n')
+
+    rows = "".join(row(slug, f"week {n}") for n, slug in scheduled)
+    optional = ""
+    if extra:
+        optional = ("<h2>Optional</h2>\n"
+                    "<p>Extra material outside the schedule. Not assessed.</p>\n"
+                    '<ul class="row-list">\n'
+                    + "".join(row(slug, "extra") for slug in extra)
+                    + "</ul>\n")
     index_body = (f"<h1>Labs</h1>\n"
-                  f"<p>The module's lab exercises, one page per lab — read-only "
-                  f"previews of the instructions, always the current version. To "
-                  f"complete a lab you work in your own copy of the repo: "
-                  f'<a href="{REPO_URL}/generate">Use this template</a>, then open '
-                  f"a Codespace on it.</p>\n"
+                  f"<p>The module's lab exercises in teaching order, one page per "
+                  f"lab — read-only previews of the instructions, always the "
+                  f"current version. To complete a lab you work in your own copy "
+                  f'of the repo: <a href="{REPO_URL}/generate">Use this template</a>, '
+                  f"then open a Codespace on it.</p>\n"
                   f"<p><strong>Before your first lab</strong>, sign up for the "
                   f'<a href="https://education.github.com/pack">GitHub Student '
                   f"Developer Pack</a>. It is free for verified students and gives "
                   f"you the Copilot Student plan — the editor assistant and the "
                   f"terminal agent these labs use — and Pro-level Codespaces. "
                   f"Verification can take a few days, so do it early.</p>\n"
-                  f"<ul class=\"row-list\">\n{rows}</ul>\n"
+                  f"<ul class=\"row-list\">\n{rows}</ul>\n{optional}"
                   f'<p class="kicker"><a href="../">back to the lecture decks</a></p>')
     (out_root / "index.html").write_text(
         page("AIAP Labs", "ai-assisted programming", index_body, False),
