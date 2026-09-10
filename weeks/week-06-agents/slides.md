@@ -201,7 +201,7 @@ whether it got there — and you will accept whatever looks finished.
 ---
 
 <!-- Speaker notes: ~0:22. PREDICT beat 2, and the most useful thirty
-seconds of the hour for their project work.
+seconds of the hour for their own agent work.
 
 The wrong answer to expect is "the detailed one, obviously" — students
 transfer the SPEC lesson wholesale and assume more specification is always

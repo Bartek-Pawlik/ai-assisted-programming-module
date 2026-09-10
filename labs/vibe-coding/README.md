@@ -194,7 +194,7 @@ Where did writing the spec change what you built? [be specific]
 
 1. Fill every line.
 2. Add two sentences on which mode you will actually use for your own
-   project work, and why.
+   work, and why.
 
 **What you should have**
 

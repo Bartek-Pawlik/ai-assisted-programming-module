@@ -327,14 +327,14 @@ The bottom row is the sharpest: who maintains this? If the answer is
 ---
 
 <!-- Speaker notes: ~0:38. PREDICT beat 3, and the one that lands closest
-to home — their own 60% project.
+to home — a large piece of their own work, built over weeks.
 
 The wrong answer to expect is a single mode for the whole project. The
 useful answer is BOTH, at different stages: explore by vibe coding to find
 out what you are building, then specify the parts you are keeping. Mode is
 per-task, not per-project. -->
 
-## Predict: a large assessed project, built over ten weeks
+## Predict: a large project, built over ten weeks
 
 * Vibe coding — speed matters, deadlines are real
 * Spec-driven throughout — the stakes are high
@@ -347,7 +347,7 @@ per-task, not per-project. -->
 project, and switching deliberately is the mark of someone who understands
 both.
 
-Practical instruction for their project: prototype freely, then before you
+Practical instruction for any real project: prototype freely, then before you
 commit to an architecture, write the page. -->
 
 ## Both — and switching on purpose

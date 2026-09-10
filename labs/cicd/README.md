@@ -2,7 +2,7 @@
 
 Two halves. Build a pipeline that checks code which behaves the same every
 time, then build one that checks something that answers differently on
-every run — because your project contains both.
+every run — because any app with an AI feature in it contains both.
 
 ## What you'll learn
 

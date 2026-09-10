@@ -51,8 +51,8 @@ TITLE_RE = re.compile(r'^title:\s*"?([^"\n]+?)"?\s*$', re.MULTILINE)
 WEEK_NO_RE = re.compile(r"week-(\d+)")
 
 MCQ_LABELS = {
-    "mcq1": "MCQ 1 &middot; held during the lab slot &middot; 20% of the module",
-    "mcq2": "MCQ 2 &middot; held during the lab slot &middot; 20% of the module",
+    "mcq1": "MCQ 1 &middot; held during the lab slot &middot; 32% of the module",
+    "mcq2": "MCQ 2 &middot; held during the lab slot &middot; 32% of the module",
 }
 READING_LABEL = "reading week &middot; October bank-holiday week &middot; no lecture or lab"
 
@@ -160,9 +160,9 @@ def page_head(title: str) -> str:
     return (f'<!doctype html>\n<html lang="en">\n<head>\n'
             f'<meta charset="utf-8">\n'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-            f'<meta name="description" content="Lectures, labs and the project '
-            f'brief for the AI-Assisted Programming module, Atlantic '
-            f'Technological University.">\n'
+            f'<meta name="description" content="Lectures and labs for the '
+            f'AI-Assisted Programming module, Atlantic Technological '
+            f'University.">\n'
             f'<title>{title}</title>\n'
             f'<link rel="icon" href="{FAVICON}">\n{STYLE}\n</head>\n<body>\n')
 
@@ -172,7 +172,6 @@ MAIN_HEADER = """<header>
   <p class="standfirst">One lecture deck per teaching week — slides and lab
   open right in your browser, and every deck has a PDF beside it if you want
   to take it with you. Also here: <a href="labs/">all the labs</a> &middot;
-  <a href="project/">the project brief</a> &middot;
   <a href="practice/">MCQ practice</a>.</p>
 </header>
 <main>

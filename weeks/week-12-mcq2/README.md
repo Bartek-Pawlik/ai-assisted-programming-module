@@ -1,13 +1,13 @@
 # Week 12 — MCQ 2
 
-**Worth 20% of the module.** Held in person during the lab slot.
+**Worth 32% of the module.** Held in person during the lab slot.
 
 No lecture and no lab this week. This is the last week of the module.
 
 ## What it covers
 
-Weeks 8–11: CLI coding agents, backend-as-a-service, CI/CD, and vibe
-coding — the lectures and the labs both.
+Weeks 8–11: security of AI-generated code, CLI coding agents, CI/CD, and
+vibe coding — the lectures and the labs both.
 
 ## How to prepare
 
@@ -17,11 +17,6 @@ coding — the lectures and the labs both.
   come from.
 - Use the [practice app](https://danielcregg.is-a.dev/ai-assisted-programming/practice/)
   in exam mode.
-
-## Also due this week
-
-The **project (60%)** is due at the end of this week. See
-[the brief](../../project/brief.md) — start it early, not now.
 
 ---
 

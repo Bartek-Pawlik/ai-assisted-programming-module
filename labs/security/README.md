@@ -249,7 +249,7 @@ a secret you must now rotate.
 ## 5. Prompt injection in your own app
 
 Everything above is about code the assistant wrote *for* you. This section
-is about the AI feature *inside* your project — the one the brief requires.
+is about an AI feature *inside* an app you build.
 
 If your app takes text from a user and puts it in front of a model, that
 text can contain instructions. `Ignore your previous instructions and…` is

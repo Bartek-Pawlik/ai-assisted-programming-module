@@ -173,8 +173,8 @@ content begins. -->
 <!-- Speaker notes: ~0:07. Schedule. The number that matters is 12 weeks,
 not 13 — this changed from previous years. Reading week is the October
 bank-holiday week and sits between weeks 6 and 7, right before MCQ 1. Say
-explicitly that reading week is for revision, not a holiday from the
-project. -->
+explicitly that reading week is for revision, not a holiday: MCQ 1 is
+the week straight after it. -->
 
 ## Duration and contact time
 
@@ -227,24 +227,24 @@ the one that actually drives the assessment design — flag it. -->
 ---
 
 <!-- Speaker notes: ~0:16. Assessment. THE slide of the hour — expect
-photographs, pause here. The weighting changed this year: MCQs are 20%
-each (down from 33%) and the project is 60%. Say the number twice. The
-misconception to head off: "the project is at the end so I start it at the
-end". It is 60% and it is due in week 12; people who start in week 10
-fail it. -->
+photographs, pause here. The shape changed this year: there is no project.
+Two in-person MCQs at 32% each, and nine small practical assessments at 4%
+each, one per lab. The misconception to head off: "4% is nothing, I'll skip
+the odd one". Nine of them are 36% of the module, and a skipped one counts
+as zero — it is not dropped from the total. -->
 
 ## Assessment
 
 | Component | Weight | When |
 |---|---|---|
-| MCQ 1 | **20%** | Week 7, in the lab |
-| MCQ 2 | **20%** | Week 12, in the lab |
-| **Project** | **60%** | Due end of week 12 |
+| MCQ 1 | **32%** | Week 7, in the lab |
+| MCQ 2 | **32%** | Week 12, in the lab |
+| Practical Assessments | **9 × 4%** | One per lab, open all that week |
 
 <div class="callout">
 
-**The project is 60%.** The brief is published in week 2. Start it early —
-not in week 10.
+**Nine small assessments are 36% of the module.** A missed one counts as
+zero, and each closes at the end of its week.
 
 </div>
 
@@ -269,22 +269,23 @@ week's material to a tool like NotebookLM and ask it to generate questions.
 
 ---
 
-<!-- Speaker notes: ~0:23. The project. Two hard requirements: it must
-incorporate some AI technology, and it must follow the brief. Language is
-their choice — say this clearly, people ask every year. The interesting
-constraint is the defence: they present it, so they must understand it.
-That is what makes a 60% project safe to hand to a cohort with AI tools. -->
+<!-- Speaker notes: ~0:23. The practical assessments. One short Moodle
+question per lab, open Monday to Sunday of that lab's week, one attempt,
+submitted automatically when the week closes. AI tools are allowed, as in
+the labs. The misconception to head off: "if AI is allowed, I can paste the
+question in". Each question is built so the question alone is not enough —
+it asks about the lab code in front of them, what it actually does when
+run, or what is true right now. Doing the lab is the preparation. -->
 
-## The project — 60%
+## The practical assessments
 
-- An application in **a language of your choice**
-- Must incorporate **some AI technology** (image generation, an LLM
-  feature, retrieval, a agentic workflow…)
-- You **may** use AI tools to help build it — that is the point of the
-  module
-- You **will** present and defend it
+- **One per lab**, on Moodle, worth **4%** each
+- Open **all week** — do it when it suits you, not only in the lab
+- You **may** use AI tools, as you do in the labs
+- But the question alone is not enough: each asks about **the lab code in
+  front of you** and what it actually does
 
-<span class="kicker">// full brief published in week 2</span>
+<span class="kicker">// the first one opens with the first lab</span>
 
 ---
 
@@ -320,7 +321,7 @@ in week 4 onward. -->
 | **GitHub** | Where your work lives |
 | **Codespaces** | A full dev environment in the browser |
 | **GitHub Copilot** | AI assistance inside the editor |
-| **CLI coding agents** | Covered from week 8 |
+| **CLI coding agents** | Covered in week 9 |
 
 <span class="kicker">// nothing to install — Codespaces runs in a browser</span>
 
@@ -354,8 +355,8 @@ correction and their copy may not. -->
 
 ## Where everything lives
 
-- **The module site** — every lecture, every lab, the project brief and
-  MCQ practice, in a browser
+- **The module site** — every lecture, every lab and the MCQ practice, in
+  a browser
 - **Your own copy** — click *Use this template* to get a private
   repository for your lab work
 - The site is always current. If a lab is corrected, it is corrected there
@@ -373,8 +374,8 @@ Leave time for questions. -->
 ## Summary
 
 - **12 weeks**, 1 hour lecture + 2 hour lab, no lab this week
-- **20% + 20% + 60%** — two MCQs and a project
-- The project brief lands **next week**; start early
+- **32% + 32% + 9 × 4%** — two MCQs and nine practical assessments
+- The first practical assessment opens **next week**, with the first lab
 - Set up GitHub and the Student Developer Pack **before** next week
 
 **The one idea to keep:** you don't have to read every line — but

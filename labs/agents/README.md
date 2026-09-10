@@ -2,16 +2,16 @@
 
 An assistant that answers questions is a different tool from one that
 edits your files, which is different again from one that runs commands on
-its own. This lab walks up that ladder of autonomy — in the editor first,
-then in the terminal — and asks you to decide where you want to stand on
-it.
+its own. This lab walks up that ladder of autonomy in the editor, and asks
+you to decide where you want to stand on it. An agent with your whole
+terminal is a step further again, and has [a lab of its own](../cli-agents/).
 
 ## What you'll learn
 
 - Tell the three editor modes apart by what each is allowed to touch:
   answer only, edit files, act on its own
-- Get useful work out of a terminal agent, and know when the terminal
-  beats the editor
+- Write an agent request as an outcome with a definition of done, not a
+  list of steps
 - Judge how much autonomy a task deserves, rather than defaulting to the
   most or the least
 - Review an agent's work when it changed several files at once
@@ -23,11 +23,10 @@ it.
 1. [Ask mode: it answers, you type](#1-ask-mode-it-answers-you-type)
 2. [Edit mode: it changes your files](#2-edit-mode-it-changes-your-files)
 3. [Agent mode: it decides the steps](#3-agent-mode-it-decides-the-steps)
-4. [Terminal agents](#4-terminal-agents)
-5. [Choosing a mode](#5-choosing-a-mode)
-6. [Extensions](#6-extensions)
-7. [Common mistakes](#common-mistakes)
-8. [Summary](#summary)
+4. [Choosing a mode](#4-choosing-a-mode)
+5. [Extensions](#5-extensions)
+6. [Common mistakes](#common-mistakes)
+7. [Summary](#summary)
 
 ## Getting started
 
@@ -41,11 +40,6 @@ it.
 
 3. Confirm the editor assistant is active — you should see its icon in the
    status bar, and `Ctrl+Alt+I` should open its chat panel.
-4. For sections 4 onwards you also need the terminal agents:
-
-   ```bash
-   bash verify_setup.sh
-   ```
 
 Each section has a folder beside this README (`part1_ask_mode/`,
 `part2_edit_mode/`, …) holding the code you work on and the detailed
@@ -169,50 +163,11 @@ Write it down.
 
 </details>
 
----
+### DIY 4: Find the edge of your comfort
 
-## 4. Terminal agents
-
-The same idea, outside the editor. A terminal agent has your shell: it
-reads files, runs commands, installs things, and can work across a whole
-repository rather than the file you have open.
-
-That is more reach and correspondingly more risk. The trade-off is the
-point of this section.
-
-### DIY 4: Do a real task in the terminal
-
-Work through `part6_copilot_cli/` and `part7_gemini_cli/`.
-
-1. Install and authenticate both CLIs (`verify_setup.sh` checks them).
-2. Pick one **genuine** small task in this repo — a script that needs a
-   flag, a README that needs a section.
-3. Do it with the first CLI. Record the prompt you used.
-4. Undo it (`git checkout -- .`) and do the same task with the second.
-5. Note where they differed: what each asked permission for, what each
-   did silently.
-
-**What you should have**
-
-The same task completed twice, both prompts recorded, and a short note on
-what each tool did *without asking you*.
-
-<details><summary>Hint</summary>
-
-Step 5 is the one that matters. Watch specifically for: did it read files
-you did not name? Did it run anything? Did it install something? Did it
-tell you before or after?
-
-Keep the task small. A large task makes the comparison about capability;
-a small one makes it about behaviour, which is what you are measuring.
-
-</details>
-
-### DIY 5: Find the edge of your comfort
-
-1. Give a terminal agent a task deliberately at the edge of what you would
-   trust it with — touching several files, or something you would find
-   tedious to review.
+1. Give the agent a task deliberately at the edge of what you would trust
+   it with — touching several files, or something you would find tedious
+   to review.
 2. **Before running it**, write down what you would need to see to accept
    the result.
 3. Run it. Review against your own criteria from step 2.
@@ -236,23 +191,22 @@ checkout` is your undo.
 
 ---
 
-## 5. Choosing a mode
+## 4. Choosing a mode
 
-By now you have used four levels of autonomy on real tasks. The skill this
+By now you have used three levels of autonomy on real tasks. The skill this
 lab is actually building is picking one deliberately.
 
-### DIY 6: Write your own rule
+### DIY 5: Write your own rule
 
 1. Fill in the table below for yourself, in `REFLECTION.md`.
-2. For each row, give a concrete task from this lab or your own project.
+2. For each row, give a concrete task from this lab or your own work.
 3. Add one row of your own for a task you would give **no** assistant.
 
    | Mode | When I'd use it | Example task |
    |---|---|---|
    | Ask | | |
    | Edit | | |
-   | Agent (editor) | | |
-   | Agent (terminal) | | |
+   | Agent | | |
    | None | | |
 
 4. Write two sentences on what would have to change for you to move a task
@@ -276,7 +230,7 @@ and how much does being wrong cost.
 
 ---
 
-## 6. Extensions
+## 5. Extensions
 
 Optional, and genuinely optional — the sections above are the two-hour
 path. These are worth doing at home if agents interest you.
@@ -285,11 +239,9 @@ path. These are worth doing at home if agents interest you.
   repository and opens a pull request, rather than working beside you.
 - **`part5_google_jules/`** — a second asynchronous agent, useful mainly
   as a comparison against the first.
-- **`part8_cli_comparison/`** — a structured head-to-head of the two
-  terminal agents, with scenario templates.
 
-The interesting question in all three: when the agent works while you are
-not watching, what does review even mean?
+The interesting question in both: when the agent works while you are not
+watching, what does review even mean?
 
 ---
 
@@ -316,8 +268,8 @@ not watching, what does review even mean?
   review effort for reach.
 - The unit of review changes as you climb: a suggestion, then a diff,
   then a result. Know which one you are looking at.
-- **Terminal agents** have more reach than editor agents — a whole
-  repository and a shell — so the same task carries different risk.
+- In agent mode, say what **done** means before it starts — otherwise
+  you will accept whatever looks finished.
 - Pick the level deliberately per task. Reversibility, testability, and
   the cost of being wrong are the axes that matter.
 - The honest output of this lab is knowing where **your** comfort ends,

@@ -5,7 +5,7 @@ Two levels, because this module's labs cannot all be verified to the same
 depth and pretending otherwise would be the real failure:
 
   1. SYNTAX -- every .py under labs/ is byte-compiled. No dependencies, no
-     network, no keys. Runs for all nine labs, always.
+     network, no keys. Runs for every lab, always.
 
   2. TESTS -- where a lab ships tests, pytest runs them. Three labs need
      live API access (see NEEDS_KEY) and cannot pass in CI without secrets,
@@ -40,9 +40,10 @@ NEEDS_KEY = {
     "baas": "Firestore project credentials",
 }
 
-# Test files that are SCAFFOLDING, not tests: the lab hands the student a
-# failing placeholder and the exercise is to replace it. Their expected state
-# is RED, so a normal pytest run would report the lab broken forever.
+# Test files whose expected state is RED. Two kinds: SCAFFOLDING the student
+# replaces (prompting), and a real test that fails because the lab hands the
+# student a planted bug to fix (cli-agents, where an agent is pointed at it).
+# Either way a normal pytest run would report the lab broken forever.
 #
 # The check is inverted instead, which turns a nuisance into a useful gate:
 # if a placeholder starts PASSING, someone has committed a worked solution
@@ -51,6 +52,7 @@ NEEDS_KEY = {
 # boundary is worth watching automatically.
 PLACEHOLDER_TESTS = {
     "prompting": ["lab/tests/test_extract_domain.py"],
+    "cli-agents": ["sample-app/test_stats.py"],
 }
 
 TEST_GLOBS = ("test_*.py", "*_test.py")
@@ -122,7 +124,11 @@ def _missing_dependency(output: str) -> str | None:
 def run_tests(lab: Path) -> tuple[str, str]:
     """Run a lab's real tests. Returns (status, summary) where status is
     'pass', 'fail' or 'deps'."""
-    r = _pytest(lab, ["."])
+    # Placeholders are judged on their own by check_placeholders, and they
+    # are meant to be red -- so they stay out of this run, or a lab holding
+    # both kinds of test would always look broken.
+    ignore = ["--ignore=" + rel for rel in PLACEHOLDER_TESTS.get(lab.name, [])]
+    r = _pytest(lab, [".", *ignore])
     out = (r.stdout or "") + (r.stderr or "")
     tail = [ln for ln in out.strip().split("\n") if ln.strip()]
     summary = tail[-1] if tail else "(no output)"

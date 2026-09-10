@@ -14,7 +14,8 @@ transition: fade
 
 Two halves that are really one idea: automated checks for code that
 behaves the same every time, and automated checks for code that does not.
-The second half is the one nobody teaches and the one their project needs. -->
+The second half is the one nobody teaches, and the one any app with an
+AI feature needs. -->
 
 <!-- _class: lead -->
 
@@ -96,7 +97,7 @@ you remembered. -->
 ---
 
 <!-- Speaker notes: ~0:09. What to put in it, in value order. This is the
-practical slide for their project.
+practical slide for anything they build.
 
 The ordering is the teaching: linting is cheap and catches least; tests
 cost most to write and catch most. Secret scanning is free and catches the
@@ -200,11 +201,11 @@ that never ran.
 <!-- Speaker notes: ~0:22. The turn into evals. This is where the hour
 changes gear.
 
-Set it up with the concrete problem: their project has an AI feature.
+Set it up with the concrete problem: an app with an AI feature in it.
 Every testing instinct they have assumes determinism. Same input, same
 output, assertEqual. That assumption is now false. -->
 
-## The turn: your project has an AI feature
+## The turn: an app with an AI feature
 
 * Same input. **Different output.** Every time
 
@@ -320,7 +321,7 @@ order affects the verdict. Both are measurable, both are real. -->
 ---
 
 <!-- Speaker notes: ~0:37. PREDICT beat 3, and the one that most changes
-their behaviour on the project.
+how they work on anything with an AI feature.
 
 The wrong answer to expect is "it got better — I improved the prompt and
 the examples I checked all improved". That is exactly the trap: people
@@ -362,7 +363,7 @@ engineering.
 
 ---
 
-<!-- Speaker notes: ~0:42. Practical shape for their project. Keep it
+<!-- Speaker notes: ~0:42. Practical shape for a real app. Keep it
 small and achievable — 20 cases in a JSON file is a real eval suite and
 takes an afternoon.
 

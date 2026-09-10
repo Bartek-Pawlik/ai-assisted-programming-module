@@ -1,14 +1,13 @@
 # AI-Assisted Programming
 
 Everything for the **AI-Assisted Programming** module (semester 1) at
-Atlantic Technological University: the lectures, the labs, the project
-brief, and an MCQ practice app.
+Atlantic Technological University: the lectures, the labs, and an MCQ
+practice app.
 
 ### Start here → **[danielcregg.is-a.dev/ai-assisted-programming](https://danielcregg.is-a.dev/ai-assisted-programming/)**
 
-That's the whole module in one page — every lecture, every lab, the
-project brief and the MCQ practice, all readable in the browser with
-nothing to install.
+That's the whole module in one page — every lecture, every lab and the
+MCQ practice, all readable in the browser with nothing to install.
 
 **Doing the labs?** You need your own copy: click **Use this template →
 Create a new repository** (green button, top-right). Name it whatever you
@@ -17,8 +16,9 @@ repo choose **Code → Codespaces → Create codespace**: Python, Node and the
 `gh` CLI are already set up, nothing to install. Pick a lab folder under
 `labs/` and follow its README. Details in **[labs/README.md](labs/README.md)**.
 
-**Doing the project?** It's 60% of the module. The brief is
-**[project/brief.md](project/brief.md)** — read it in week 2, not week 10.
+**How it's assessed:** two in-person MCQs (32% each) and nine short
+**Practical Assessments** on Moodle (4% each), one for each lab. Each is
+open for its lab's week — do it whenever suits you that week.
 
 **Practising for the MCQs?** Use the
 [practice app](https://danielcregg.is-a.dev/ai-assisted-programming/practice/)
@@ -55,19 +55,19 @@ name, so any week can be lifted into another course unchanged —
 | 5 | MCP | [slides](weeks/week-05-mcp/slides.md) | [lab](labs/mcp/) |
 | 6 | Coding Agents | [slides](weeks/week-06-agents/slides.md) | [lab](labs/agents/) |
 | — | Reading week | [details](weeks/week-06b-reading-week/README.md) | — |
-| 7 | **MCQ 1** (20%) | [details](weeks/week-07-mcq1/README.md) | — |
+| 7 | **MCQ 1** (32%) | [details](weeks/week-07-mcq1/README.md) | — |
 | 8 | Security of AI-Generated Code | [slides](weeks/week-08-security/slides.md) | [lab](labs/security/) |
-| 9 | BaaS | [slides](weeks/week-09-baas/slides.md) | [lab](labs/baas/) |
+| 9 | CLI Coding Agents | [slides](weeks/week-09-cli-agents/slides.md) | [lab](labs/cli-agents/) |
 | 10 | CI/CD & Evals | [slides](weeks/week-10-cicd/slides.md) | [lab](labs/cicd/) |
 | 11 | Vibe Coding & Spec-Driven | [slides](weeks/week-11-vibe-coding/slides.md) | [lab](labs/vibe-coding/) |
-| 12 | **MCQ 2** (20%) | [details](weeks/week-12-mcq2/README.md) | — |
+| 12 | **MCQ 2** (32%) | [details](weeks/week-12-mcq2/README.md) | — |
 
 **Scheduling rule:** reading week always falls on the week of the Irish
 October bank holiday, with 6 teaching weeks before it and 6 after.
 
-**Assessment:** MCQ 1 (20%), MCQ 2 (20%), and the
-[project](project/brief.md) (60%). The MCQs are held in person during lab
-slots.
+**Assessment:** MCQ 1 (32%) and MCQ 2 (32%), held in person during lab
+slots, and nine Practical Assessments (4% each) on Moodle — one for each
+lab, open for that lab's week.
 
 ## Labs
 
@@ -80,16 +80,22 @@ published on the
 which always shows the current instructions — so if a lab is corrected
 mid-semester, read it there. GitHub Classroom is retired.
 
-Three labs need a free API key of your own (RAG, MCP, BaaS). Each says
-which, and how to get one, in its README. **Never commit a key** — put it
+Two labs need a free API key of your own (RAG, MCP), and the CLI agents
+lab needs you to sign in to a coding agent with your GitHub or Google
+account. Each README says what, and how. **Never commit a key** — put it
 in a `.env`, which is gitignored.
 
-## The project
+A tenth folder, **[labs/baas](labs/baas/)**, is optional extra material:
+a React frontend and a FastAPI backend on a hosted database. It is not in
+the schedule and not assessed.
 
-60% of the module, due at the end of week 12.
-**[Read the brief](project/brief.md).** You build an application in a
-language of your choice that incorporates some AI technology, using AI
-tools to help you — and you present and defend it.
+## Practical Assessments
+
+Nine, one for each lab, each worth 4% and each open for its lab's week on
+Moodle. You may use AI tools for them, as you do in the labs. They are
+built so that pasting a question into an assistant is not enough on its
+own: each one asks about the lab code in front of you, what it actually
+does when you run it, or what is true right now.
 
 ## MCQ practice
 

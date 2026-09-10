@@ -1,0 +1,19 @@
+# Commands an agent might want to run in this project.
+#
+# BEFORE running the checker, write ALLOW, ASK or DENY beside each one in
+# your notes -- what you think team-policy.json decides. Then run:
+#
+#     python policy_check.py team-policy.json --file commands.txt
+#
+# Lines starting with # are ignored.
+
+git status
+git push
+git push --force origin main
+git -C . push origin main
+npm test -- --coverage
+rm -rf build
+python -c "import shutil; shutil.rmtree('src')"
+pytest -q && git push
+cat .env
+git clean -fdx

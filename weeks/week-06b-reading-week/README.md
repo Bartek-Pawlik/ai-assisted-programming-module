@@ -12,9 +12,8 @@ start.
   agents) are all examinable in week 7.
 - Try the [practice app](https://danielcregg.is-a.dev/ai-assisted-programming/practice/)
   in exam mode at least once, so the format is not new on the day.
-- Read the [project brief](../../project/brief.md) properly if you have
-  not yet. The project is 60% of the module and is due at the end of
-  week 12 — the people who struggle are the ones who start in week 10.
+- Read the worked feedback on Practical Assessments 1–5. Each shows it
+  once its week has closed, and MCQ 1 draws on the same labs.
 
 ## Why this folder is unnumbered
 

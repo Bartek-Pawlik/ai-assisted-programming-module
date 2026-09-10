@@ -32,8 +32,10 @@ to write a lab solution. Here you may write code, debug, refactor,
 explain, and pair on the project. There is no exercise you must decline.
 
 The integrity load sits on assessment design instead, which is where it
-belongs: two **in-person** MCQs worth 20% each, and a 60% project the
-student must **present and defend**. Neither rewards code nobody
+belongs: two **in-person** MCQs worth 32% each, and nine short practical
+assessments on Moodle (4% each, one per lab) built so that the question
+alone is not enough — each asks about the lab code in front of the
+student and what it actually does. Neither rewards code nobody
 understands.
 
 **So the useful thing you can do is make sure they understand it.** Not by
@@ -44,7 +46,7 @@ withholding — by teaching while you help:
 - Prefer the smallest change that works, and name what it changed.
 - When they paste an error, explain what it *means* before fixing it.
 - Offer to quiz them on what you just wrote together. The MCQs are drawn
-  from lecture and lab material, and the project is defended out loud.
+  from lecture and lab material.
 - If they ask for a whole feature, build it — then walk them through it.
 
 **Where the content is.** Lectures: `weeks/week-NN-<topic>/slides.md`
@@ -57,10 +59,12 @@ https://danielcregg.is-a.dev/ai-assisted-programming/.
 **Their work is theirs.** Edit the files they are working in. Leave decks,
 scripts, workflows and the practice bank alone.
 
-**Keys.** Three labs (`rag`, `mcp`, `baas`) need the student's own free
-API key. Put it in a `.env` (gitignored) and read it from the environment
-— never a literal in code, never a committed config file. If you see a key
-in a file that is about to be committed, say so loudly.
+**Keys.** Two scheduled labs (`rag`, `mcp`) and the optional `baas` lab
+need the student's own free API key. Put it in a `.env` (gitignored) and
+read it from the environment — never a literal in code, never a committed
+config file. If you see a key in a file that is about to be committed, say
+so loudly. The `cli-agents` lab signs in to a coding agent instead; that
+sign-in lives in the agent's own configuration, never in the repo.
 
 ## Map
 
@@ -68,9 +72,11 @@ in a file that is about to be committed, say so loudly.
   Week folders hold the lecture only; labs live under `labs/`.
 - `labs/<topic>/` — THE canonical labs: `README.md` (the instructions
   students follow) plus starter code. Students copy the repo from the
-  template and work here; a devcontainer provides Python 3.12, Node 20 and
+  template and work here; a devcontainer provides Python 3.12, Node 22 and
   the `gh` CLI in one image (heavier than a single-language image, because
-  `labs/baas` is a FastAPI backend WITH a React/TypeScript frontend).
+  `labs/baas` is a FastAPI backend WITH a React/TypeScript frontend, and
+  `labs/cli-agents` installs npm-distributed coding agents that need Node
+  22 or newer).
   The repo is a TEMPLATE, not a fork source: a fork of a public repo
   cannot be made private, which would publish every student's work and
   list the class on the fork network. Workflows are guarded with
@@ -90,9 +96,11 @@ in a file that is about to be committed, say so loudly.
   and reading-week rows from these folder names. Deleting the README
   deletes the row. MCQ question content lives in Moodle only — never
   commit it here.
-- `project/` — the 60% project brief, rubric and AI-usage template. This
-  is canonical; the `aiap-project-template` org repo is only a starter
-  that links back here.
+- `project/` — the former project brief, rubric and AI-usage template.
+  The project is **not assessed** from 2026–27: two MCQs at 32% each and
+  nine practical assessments at 4% each replaced it. The README and the
+  site no longer link here; some decks still mention it, and the folder
+  stays until the module owner decides whether to delete it.
 - `practice/` — the MCQ practice web app (`index.html`, self-contained
   vanilla JS) plus its bank (`bank/<topic>.json`). Bank questions are
   PRACTICE questions authored from the decks and labs — never the real
@@ -138,6 +146,13 @@ statistics, and several were materially wrong by 2026.
   remember who you are, which is fine on one machine and miserable behind
   a load balancer. State became an explicit handle a tool mints and the
   model passes back.
+- **Week 9 (CLI Coding Agents)** — teach the **configuration model**, not
+  a tour of tools: standing instructions (`AGENTS.md`), built-in and
+  custom slash commands, and allow/ask/deny permissions, where deny wins
+  and anything unlisted is asked. Tool names, plans and matching rules
+  change every few months, so the deck teaches the columns and dates the
+  cells. The hook is the July 2025 Gemini CLI incident: a failed `mkdir`
+  nobody checked, then moves that overwrote the files one by one.
 - **Week 11 (Vibe Coding)** — run vibe coding **against**
   spec-driven development rather than demonstrating one. Carry the cost
   data (see below) and the two terms students will meet everywhere:
@@ -329,9 +344,10 @@ Nine run on every push. Before any push, all must pass:
   `NEEDS_KEY` names the three labs (rag, mcp, baas) that cannot be
   verified beyond syntax without live credentials, and it prints that
   limit on every run rather than letting a green tick imply otherwise.
-  `PLACEHOLDER_TESTS` names test files that are student scaffolding and
-  are *expected to fail*; if one starts passing, a worked solution has
-  reached the public repo and the gate says so.
+  `PLACEHOLDER_TESTS` names test files that are *expected to fail* —
+  student scaffolding (`prompting`), or a real test over a planted bug
+  (`cli-agents`, where an agent is pointed at it). If one starts passing,
+  a worked solution has reached the public repo and the gate says so.
 - `check_links.py` matters more here than in OOC: the lab READMEs run
   10k–30k characters with their own tables of contents, and they arrived
   by migration from nine separate Classroom repos.

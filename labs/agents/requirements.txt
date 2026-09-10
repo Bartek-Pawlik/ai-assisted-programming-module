@@ -1,7 +1,4 @@
-# Parts 1-5 run in the editor (GitHub Copilot); parts 6-8 are terminal
-# agents installed with npm, not pip:
-#   npm install -g @github/copilot
-#   npm install -g @google/gemini-cli
+# Every part of this lab runs in the editor (GitHub Copilot).
 
 # Running and covering the sample code (parts 1-3)
 pytest>=7.4.0

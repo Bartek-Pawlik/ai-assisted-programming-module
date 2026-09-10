@@ -12,11 +12,12 @@ and the ones taught in week 11 will not be the ones a graduate uses in
 supply it with the right context, and how to evaluate what comes back.
 
 So the shape is: **talk to it well** (prompting) → **give it the right
-context** (RAG, MCP) → **let it act** (agents, CLI agents) → **ship what
-it helps you build** (BaaS, CI/CD) → **know when to trust the vibe**
-(vibe coding).
+context** (RAG, MCP) → **let it act** (agents) → **check what it
+produced** (security) → **configure it before you trust it** (CLI agents)
+→ **ship what it helps you build** (CI/CD) → **know when to trust the
+vibe** (vibe coding).
 
-## Currency — reviewed August 2026
+## Currency — reviewed September 2026
 
 This module's material was first written in 2025. That is a long time in
 this field, so the content carries an explicit position on where things
@@ -41,10 +42,17 @@ now stand rather than quietly ageing:
   a stateless core. Week 5 teaches both models and why the change happened.
 - **Spec-driven development is the counter-trend to vibe coding**, and
   week 11 now runs them against each other rather than demonstrating one.
-- **Security of AI-generated code** enters through week 11's lab, where
-  students audit an app they vibe-coded. Around 45% of AI-generated
-  samples carry an OWASP Top-10 vulnerability, so the exercise reliably
-  finds something.
+- **Security of AI-generated code** has a week of its own. Around 45% of
+  AI-generated samples carry an OWASP Top-10 vulnerability, and
+  slopsquatting — registering the package names models hallucinate — is
+  an attack with no pre-AI equivalent. Week 11's lab still audits an app
+  the students vibe-coded, and still reliably finds something.
+- **Coding agents moved into the terminal.** An agent with a shell is
+  decided less by the prompt than by its configuration: standing
+  instructions (`AGENTS.md`, now an open format most agents read), custom
+  commands, and allow/ask/deny permission policies. Week 9 teaches that
+  configuration model rather than a tour of tools, because the tools
+  change every few months and the model does not.
 
 Percentages here come from 2026 industry surveys of varying rigour. They
 are taught as indicative of direction, and that caveat is taught with
@@ -59,17 +67,19 @@ them.
 | 3 | Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../labs/prompting/) |
 | 4 | RAG &amp; Retrieval Strategy | Chunking, embeddings, vector search, grounded answers — and when long context beats retrieval outright | [rag](../labs/rag/) |
 | 5 | MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../labs/mcp/) |
-| 6 | Coding Agents | The ladder of autonomy: ask → edit → act, in the editor and in the terminal; what review means at each rung | [agents](../labs/agents/) |
+| 6 | Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../labs/agents/) |
 | — | *Reading week* | October bank-holiday week — revision for MCQ 1 | — |
-| 7 | **MCQ 1 (20%)** | Assessment on weeks 1–6, lectures and labs | — |
+| 7 | **MCQ 1 (32%)** | Assessment on weeks 1–6, lectures and labs | — |
 | 8 | Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../labs/security/) |
-| 9 | BaaS | Backend-as-a-service: Firestore, auth, and an API an AI-built frontend can call | [baas](../labs/baas/) |
+| 9 | CLI Coding Agents | Agents in the terminal, configured before they are trusted: standing instructions (`AGENTS.md`), built-in and custom slash commands, allow/ask/deny permission policies, and running an agent from a script | [cli-agents](../labs/cli-agents/) |
 | 10 | CI/CD | Pipelines with GitHub Actions, and putting AI inside them (review, triage) | [cicd](../labs/cicd/) |
 | 11 | Vibe Coding &amp; Spec-Driven Development | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../labs/vibe-coding/) |
-| 12 | **MCQ 2 (20%)** | Assessment on weeks 8–11, lectures and labs | — |
+| 12 | **MCQ 2 (32%)** | Assessment on weeks 8–11, lectures and labs | — |
 
-The **[project](../project/brief.md)** (60%) runs across the whole
-semester and is due at the end of week 12.
+Nine **Practical Assessments** (4% each) make up the remaining 36%: one
+for each lab in weeks 2–6 and 8–11, on Moodle, each open for its lab's
+week. **[labs/baas](../labs/baas/)** stays in the repo as optional extra
+material, outside the schedule and not assessed.
 
 ## Calendar
 
@@ -90,4 +100,6 @@ year to year.
 4. **Explore** emerging trends in AI-assisted programming.
 
 Outcome 3 is why the assessment looks the way it does: the MCQs are sat in
-person, and the project is presented and defended.
+person, and each practical assessment asks about the code in front of the
+student — what it actually does, what is true right now — rather than
+anything an assistant can answer from the question alone.

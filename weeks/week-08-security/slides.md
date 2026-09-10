@@ -304,8 +304,8 @@ A secret printed once into a build log is a secret you now have to
 
 ---
 
-<!-- Speaker notes: ~0:34. PREDICT beat 3, and this one is about their
-OWN project rather than about tooling. Read the poisoned document out
+<!-- Speaker notes: ~0:34. PREDICT beat 3, and this one is about an app
+of their OWN rather than about tooling. Read the poisoned document out
 loud in a deadpan voice — it gets a laugh and the laugh helps it stick.
 
 The wrong answer to expect is "nothing happens, it's just text in a file

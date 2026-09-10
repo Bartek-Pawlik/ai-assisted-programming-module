@@ -1,6 +1,6 @@
 # Week 7 — MCQ 1
 
-**Worth 20% of the module.** Held in person during the lab slot.
+**Worth 32% of the module.** Held in person during the lab slot.
 
 No lecture and no lab this week.
 
