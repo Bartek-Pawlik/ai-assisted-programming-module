@@ -46,10 +46,10 @@ fi
 # one deck never blocks the rest from updating.
 #
 # Lab instructions are nested more deeply here than in the sibling OOC repo:
-# several labs split their instructions across part folders
-# (labs/cli-coding-agents/part1/README.md), and some carry sibling guides in
-# SHOUTY_CASE (TROUBLESHOOTING.md, QUICKSTART.md, LAB_GUIDE.md). All of those
-# are instructions and should refresh; nothing below matches lab source code.
+# some labs split their instructions across part folders
+# (labs/agents/part1_ask_mode/README.md), and some carry sibling guides in
+# SHOUTY_CASE (TROUBLESHOOTING.md). All of those are instructions and should
+# refresh; nothing below matches lab source code.
 #
 # Student worksheets (labs/prompting/lab/prompts/*.md, REFLECTION.md) do match
 # the SHOUTY_CASE arm in one case, but that is safe: a file the student has
@@ -57,7 +57,7 @@ fi
 # is still a blank template either way.
 mapfile -t PATHS < <(
   git ls-tree -r --name-only "upstream/$BRANCH" | grep -E \
-    '^(README\.md|labs/README\.md|project/.*\.md|weeks/.*|labs/[^/]+/README\.md|labs/[^/]+/[A-Z_]+\.md|labs/[^/]+/[^/]+/README\.md)$' || true
+    '^(README\.md|labs/README\.md|weeks/.*|labs/[^/]+/README\.md|labs/[^/]+/[A-Z_]+\.md|labs/[^/]+/[^/]+/README\.md)$' || true
 )
 
 # Baseline = the content as you last received it: the commit recorded by the

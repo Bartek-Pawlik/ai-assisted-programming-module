@@ -59,10 +59,12 @@ https://danielcregg.is-a.dev/ai-assisted-programming/.
 **Their work is theirs.** Edit the files they are working in. Leave decks,
 scripts, workflows and the practice bank alone.
 
-**Keys.** One scheduled lab (`rag`, for its generation half) and the
+**Keys.** One scheduled lab (`rag`, for its generation half: a free Gemini
+key by default, or any OpenAI-compatible endpoint via `.env`) and the
 optional `baas` lab need the student's own API key. Put it in a `.env`
 (gitignored) and read it from the environment — never a literal in code,
-never a committed config file. If you see a key in a file that is about to
+never a committed config file. Nothing in the module may cost a student
+money. If you see a key in a file that is about to
 be committed, say so loudly. `mcp` needs no key (its weather server uses
 `wttr.in`), and the `cli-agents` lab signs in to a coding agent instead;
 that sign-in lives in the agent's own configuration, never in the repo.
@@ -97,11 +99,6 @@ that sign-in lives in the agent's own configuration, never in the repo.
   and reading-week rows from these folder names. Deleting the README
   deletes the row. MCQ question content lives in Moodle only — never
   commit it here.
-- `project/` — the former project brief, rubric and AI-usage template.
-  The project is **not assessed** from 2026–27: two MCQs at 32% each and
-  nine practical assessments at 4% each replaced it. The README and the
-  site no longer link here; some decks still mention it, and the folder
-  stays until the module owner decides whether to delete it.
 - `practice/` — the MCQ practice web app (`index.html`, self-contained
   vanilla JS) plus its bank (`bank/<topic>.json`). Bank questions are
   PRACTICE questions authored from the decks and labs — never the real

@@ -41,11 +41,14 @@ expensive mistake than the reverse.
    ```
 
 4. Sections 3 to 5 send the retrieved text to a hosted model, and that
-   needs an **API key** — an Anthropic key, read from `ANTHROPIC_API_KEY`.
-   Copy `.env.example` to `.env` in this folder and put the key there.
-   **Never commit it** — `.env` is gitignored and the repo's safety audit
-   will reject it. Sections 1 and 2 (chunking, embeddings, retrieval) need
-   no key at all, so you can start without one.
+   needs an **API key**. The default is the Gemini API's free tier: create
+   a key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+   (a Google account is all it takes), copy `.env.example` to `.env` in
+   this folder, and put the key in `LLM_API_KEY`. **Never commit it** —
+   `.env` is gitignored and the repo's safety audit will reject it.
+   Sections 1 and 2 (chunking, embeddings, retrieval) need no key at all,
+   so you can start without one. Any OpenAI-compatible provider works:
+   change the base URL and model name in `.env`, nothing in the code.
 
 `data/` holds five short documents about programming topics. They are the
 whole corpus, and their size becomes the point in section 5.

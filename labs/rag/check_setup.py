@@ -18,7 +18,7 @@ HERE = Path(__file__).parent
 PACKAGES = {  # import name -> the name pip knows it by
     "sentence_transformers": "sentence-transformers",
     "chromadb": "chromadb",
-    "anthropic": "anthropic",
+    "openai": "openai",
     "dotenv": "python-dotenv",
 }
 DOCS = ["introduction_to_programming.txt", "data_structures_basics.txt",
@@ -59,11 +59,12 @@ def main() -> int:
         load_dotenv(HERE / ".env")
     except ImportError:
         pass
-    has_key = bool(os.environ.get("ANTHROPIC_API_KEY"))
-    line(has_key, "ANTHROPIC_API_KEY",
-         "set" if has_key else
+    has_key = bool(os.environ.get("LLM_API_KEY"))
+    model = os.environ.get("LLM_MODEL", "gemini-3.5-flash-lite")
+    line(has_key, "LLM_API_KEY",
+         f"set (model: {model})" if has_key else
          "not set — fine for sections 1 and 2; sections 3 to 5 need one. "
-         "Get a key at console.anthropic.com, then: cp .env.example .env")
+         "Free at https://aistudio.google.com/apikey, then: cp .env.example .env")
 
     print()
     print("Ready." if good else "Something above needs fixing before you start.")

@@ -37,7 +37,7 @@ after half an hour idle). The free allowance is generous, not infinite.
 |---|---|---|---|
 | 2 | [setup](setup/) | Your environment, verified | |
 | 3 | [prompting](prompting/) | SPEC prompts, personas, chain-of-thought, few-shot, context engineering | |
-| 4 | [rag](rag/) | A retrieval pipeline — and when not to build one | an API key, for the generation half |
+| 4 | [rag](rag/) | A retrieval pipeline — and when not to build one | a free API key, for the generation half |
 | 5 | [mcp](mcp/) | An MCP server and client, then your own | |
 | 6 | [agents](agents/) | The ladder of autonomy: ask → edit → act | |
 | 8 | [security](security/) | Break it, then find the break: injection, slopsquatting, prompt injection | |
@@ -56,8 +56,8 @@ assessed, and it needs a free Firestore project.
 ## Labs that need a key or a sign-in
 
 The RAG lab's generation half calls a hosted model and needs an API key;
-its README says which and where to get one. The optional BaaS lab needs
-Firestore credentials. Nothing else needs a key: the MCP lab's weather
+the default is the Gemini API's free tier, and its README says where to
+get one. The optional BaaS lab needs Firestore credentials. Nothing else needs a key: the MCP lab's weather
 server uses a free service without one, and the security lab runs
 offline by design. The CLI agents lab needs you to sign in to a coding
 agent with your GitHub or Google account — a sign-in, never a key in a

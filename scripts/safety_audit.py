@@ -110,7 +110,7 @@ CONTEXT_RADIUS = 40  # chars of context kept either side of a match in output
 TOP_LEVEL_ALLOW_RE = re.compile(
     r"^(\.github/|\.gitignore$|\.gitattributes$|README\.md$|CLAUDE\.md$|docs/"
     r"|module/|scripts/|weeks/|themes/|\.vscode/|\.devcontainer/|labs/"
-    r"|practice/|project/|package\.json$|package-lock\.json$)")
+    r"|practice/|package\.json$|package-lock\.json$)")
 
 
 def git_ls_files(*pathspecs: str) -> list[str]:

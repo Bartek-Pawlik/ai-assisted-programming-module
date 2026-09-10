@@ -11,10 +11,9 @@ In this part, you will:
 Estimated time: 10 minutes
 """
 
-from anthropic import Anthropic
 import chromadb
 from sentence_transformers import SentenceTransformer
-from part4_generation import rag_query, initialize_llm
+from part4_generation import rag_query, initialize_llm, llm_settings
 import os
 from dotenv import load_dotenv
 
@@ -22,27 +21,28 @@ from dotenv import load_dotenv
 def query_without_rag(question, llm_client, max_tokens=300):
     """
     Query the LLM without RAG (no context provided).
-    
+
     Args:
         question: User's question
-        llm_client: Anthropic client
+        llm_client: OpenAI client (from initialize_llm)
         max_tokens: Maximum response tokens
-        
+
     Returns:
         LLM response text
     """
     try:
-        message = llm_client.messages.create(
-            model="claude-haiku-4-5-20251001",
+        _, _, model = llm_settings()
+        response = llm_client.chat.completions.create(
+            model=model,
             max_tokens=max_tokens,
             messages=[
                 {
-                    "role": "user", 
+                    "role": "user",
                     "content": f"You are a computer science teaching assistant. Answer this question briefly: {question}"
                 }
             ]
         )
-        return message.content[0].text
+        return response.choices[0].message.content
     except Exception as e:
         return f"Error: {e}"
 
@@ -187,17 +187,16 @@ def main():
         return
     
     load_dotenv()
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    
+    api_key = os.getenv("LLM_API_KEY")
+
     if not api_key:
-        print("⚠️  No ANTHROPIC_API_KEY found in .env file")
-        print("Some experiments require an API key to run.")
+        print("⚠️  No LLM_API_KEY found in .env file")
+        print("Some experiments need a hosted model to run.")
         print()
-        print("To get an API key:")
-        print("1. Go to https://console.anthropic.com/")
-        print("2. Create an account (free tier available)")
-        print("3. Generate an API key")
-        print("4. Create a .env file with: ANTHROPIC_API_KEY=your-key-here")
+        print("To get a free key:")
+        print("1. Go to https://aistudio.google.com/apikey and create an API key")
+        print("2. Copy .env.example to .env in this folder")
+        print("3. Put the key in LLM_API_KEY (leave the base URL and model as they are)")
         print()
         response = input("Continue with limited experiments? (y/n): ")
         if response.lower() != 'y':

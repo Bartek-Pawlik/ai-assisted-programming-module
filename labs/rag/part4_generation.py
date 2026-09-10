@@ -3,7 +3,7 @@ Part 4: Generation Integration
 Atlantic Technological University - RAG Lab
 
 In this part, you will:
-1. Connect to an LLM API (Anthropic Claude)
+1. Connect to a hosted model through an OpenAI-compatible API
 2. Build RAG prompt templates
 3. Create a complete RAG pipeline
 4. Add source citation tracking
@@ -12,33 +12,48 @@ Estimated time: 30 minutes
 """
 
 import os
-from anthropic import Anthropic
+from openai import OpenAI
 from dotenv import load_dotenv
 import chromadb
 from sentence_transformers import SentenceTransformer
 
+# The generation half talks to a hosted model through the OpenAI-compatible
+# API that most providers now offer, so the provider is a setting, not code.
+# .env supplies three values (see .env.example): the key, the base URL and
+# the model name. The defaults point at the Gemini API's free tier.
+DEFAULT_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+DEFAULT_MODEL = "gemini-3.5-flash-lite"
+
+
+def llm_settings():
+    """Return (api_key, base_url, model) from .env, with the defaults above."""
+    load_dotenv()
+    return (os.getenv("LLM_API_KEY"),
+            os.getenv("LLM_BASE_URL", DEFAULT_BASE_URL),
+            os.getenv("LLM_MODEL", DEFAULT_MODEL))
+
 
 def initialize_llm():
     """
-    Initialize the Anthropic Claude client.
-    
+    Initialize the client for the hosted model.
+
     Returns:
-        Anthropic client object
+        OpenAI client object, or None when no key is set
     """
     # TODO: Exercise 4.1
-    # 1. Load environment variables from .env file using load_dotenv()
-    # 2. Get the ANTHROPIC_API_KEY from environment using os.getenv()
-    # 3. Create and return an Anthropic client
-    #
-    # If no API key is set, this will use a mock mode for testing
+    # 1. Get the key, base URL and model name from llm_settings()
+    # 2. If there is no key, return None -- the rest of the lab then runs
+    #    retrieval only and skips generation
+    # 3. Create and return an OpenAI client pointed at that base URL
     #
     # Usage:
-    # load_dotenv()
-    # api_key = os.getenv("ANTHROPIC_API_KEY")
-    # client = Anthropic(api_key=api_key)
+    # api_key, base_url, model = llm_settings()
+    # if not api_key:
+    #     return None
+    # client = OpenAI(api_key=api_key, base_url=base_url)
     #
-    # GitHub Copilot Prompt: "Initialize Anthropic client with API key from environment"
-    
+    # GitHub Copilot Prompt: "Create an OpenAI client with a custom base_url from environment settings"
+
     # YOUR CODE HERE
     pass  # Remove this line when you add your code
 
@@ -100,27 +115,28 @@ def call_llm(client, prompt, max_tokens=500):
     Call the LLM API with the given prompt.
     
     Args:
-        client: Anthropic client
+        client: OpenAI client (from initialize_llm)
         prompt: The formatted prompt
         max_tokens: Maximum tokens in response
-        
+
     Returns:
         Generated response text
     """
     # TODO: Part of Exercise 4.3
-    # Call the Anthropic API to generate a response
+    # Call the chat completions API to generate a response
     #
     # Usage:
-    # message = client.messages.create(
-    #     model="claude-haiku-4-5-20251001",
+    # _, _, model = llm_settings()
+    # response = client.chat.completions.create(
+    #     model=model,
     #     max_tokens=max_tokens,
     #     messages=[
     #         {"role": "user", "content": prompt}
     #     ]
     # )
-    # return message.content[0].text
+    # return response.choices[0].message.content
     #
-    # GitHub Copilot Prompt: "Call Anthropic Claude API with a prompt"
+    # GitHub Copilot Prompt: "Call an OpenAI-compatible chat completions API with a prompt"
     
     # YOUR CODE HERE
     pass  # Remove this line when you add your code
@@ -134,7 +150,7 @@ def rag_query(question, collection, embedding_model, llm_client, top_k=3):
         question: User's question
         collection: ChromaDB collection
         embedding_model: SentenceTransformer model
-        llm_client: Anthropic client
+        llm_client: OpenAI client, or None to retrieve without generating
         top_k: Number of chunks to retrieve
         
     Returns:
@@ -195,8 +211,8 @@ def test_rag_system():
     llm_client = initialize_llm()
     
     if llm_client is None:
-        print("  ⚠️  No API key found - using mock mode for demonstration")
-        print("  💡 To use real LLM: Create .env file with ANTHROPIC_API_KEY")
+        print("  ⚠️  No LLM_API_KEY in .env - retrieval will run, generation is skipped")
+        print("  💡 Copy .env.example to .env and add a free key (the README says where)")
         print()
         # Continue anyway for testing retrieval
     
