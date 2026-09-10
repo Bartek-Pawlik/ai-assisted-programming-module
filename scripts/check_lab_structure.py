@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Enforce the lab README formula (see CLAUDE.md, "Lab formula").
+"""Enforce the lab README formula (see AGENTS.md, "Lab formula").
 
 These labs arrived by migration from nine separate GitHub Classroom repos
 written by different hands at different times, so they disagreed about

@@ -50,6 +50,6 @@ package-lock.json
 content-review-findings.md
 
 # personal working notes: course ids, private material locations, open
-# decisions. Loads alongside CLAUDE.md for local AI sessions; must never
+# decisions. Loads alongside AGENTS.md for local AI sessions; must never
 # reach a copy of this repo.
 CLAUDE.local.md

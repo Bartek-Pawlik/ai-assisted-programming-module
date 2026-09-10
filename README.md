@@ -114,12 +114,14 @@ database), sits outside the schedule and is not assessed.
   `current-week` runs every Monday and rewrites the banner above this
   schedule. Both are guarded to run only in this repository, never in a
   student's copy.
-- **Conventions and editing rules** live in [`CLAUDE.md`](CLAUDE.md).
-  Local preview: `npm install`, then `npm run preview`.
+- **Conventions and editing rules** live in [`AGENTS.md`](AGENTS.md)
+  (`CLAUDE.md` imports it). Local preview: `npm install`, then
+  `npm run preview`.
 
 </details>
 
 ## For AI tools
 
-Read [`CLAUDE.md`](CLAUDE.md) first — it defines the conventions this repo
-guarantees, and how to behave depending on whose copy you are in.
+Read [`AGENTS.md`](AGENTS.md) first — it defines the conventions this repo
+guarantees, and how to behave depending on whose copy you are in. (`CLAUDE.md`
+imports it, so Claude Code reads the same file.)

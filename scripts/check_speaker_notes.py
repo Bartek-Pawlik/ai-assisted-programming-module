@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Speaker notes exist for an AI first. Check they are written that way.
 
-The convention (see CLAUDE.md, "Speaker notes are primarily FOR AN AI"):
+The convention (see AGENTS.md, "Speaker notes are primarily FOR AN AI"):
 notes are read mainly by an assistant helping a student who is stuck on a
 slide, and only incidentally by a presenter. The presenter's half -- pacing
 and tempo -- is a by-product.
@@ -134,7 +134,7 @@ def main() -> int:
         print(line)
     if findings:
         print(f"\n{len(findings)} speaker-note problem(s). Notes are read "
-              f"mainly by an assistant helping a student — see CLAUDE.md.",
+              f"mainly by an assistant helping a student — see AGENTS.md.",
               file=sys.stderr)
         return 1
 

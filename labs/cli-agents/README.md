@@ -212,8 +212,9 @@ A rule that says what to do *instead* works better than a bare ban: "if a
 test looks wrong, stop and explain why" gives the agent somewhere to go.
 
 You may find it loaded more than your file. Copilot also reads
-instruction files from the root of the repository — this module's
-`CLAUDE.md` among them — and combines them all with no order of priority.
+instruction files from the root of the repository — this module ships an
+`AGENTS.md` and a `CLAUDE.md` among them — and combines them all with no
+order of priority.
 In Gemini, `/memory show` prints everything it loaded; if it ignores your
 settings file, trust the folder, because settings in an untrusted folder
 are ignored.
