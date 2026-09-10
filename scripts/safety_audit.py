@@ -14,9 +14,9 @@ Checks:
      extensions, and no .pptx at all: lecture decks are Marp markdown here,
      so a tracked PowerPoint means a conversion was skipped.
   2. env files -- `.env.example` is the ONLY env file that may be tracked.
-     Two labs (rag, baas) need live API access and students supply their
-     own keys, so a real .env reaching a public repo is this module's
-     single most likely credential leak.
+     One lab (rag) needs a live API key that students supply themselves,
+     so a real .env reaching a public repo is this module's single most
+     likely credential leak.
   3. credential shapes -- API keys and tokens by provider prefix, private
      key headers, and service-account JSON. This check does not exist in
      the OOC repo; it exists here because these labs genuinely handle

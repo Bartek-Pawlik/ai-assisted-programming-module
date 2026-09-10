@@ -78,8 +78,7 @@ them.
 
 Nine **Practical Assessments** (4% each) make up the remaining 36%: one
 for each lab in weeks 2–6 and 8–11, on Moodle, each open for its lab's
-week. **[labs/baas](../labs/baas/)** stays in the repo as optional extra
-material, outside the schedule and not assessed.
+week.
 
 ## Calendar
 

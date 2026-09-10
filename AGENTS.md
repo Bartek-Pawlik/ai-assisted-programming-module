@@ -61,9 +61,9 @@ https://danielcregg.is-a.dev/ai-assisted-programming/.
 **Their work is theirs.** Edit the files they are working in. Leave decks,
 scripts, workflows and the practice bank alone.
 
-**Keys.** One scheduled lab (`rag`, for its generation half: a free Gemini
-key by default, or any OpenAI-compatible endpoint via `.env`) and the
-optional `baas` lab need the student's own API key. Put it in a `.env`
+**Keys.** One lab (`rag`, for its generation half: a free Gemini key by
+default, or any OpenAI-compatible endpoint via `.env`) needs the student's
+own API key. Put it in a `.env`
 (gitignored) and read it from the environment — never a literal in code,
 never a committed config file. Nothing in the module may cost a student
 money. If you see a key in a file that is about to
@@ -78,10 +78,8 @@ that sign-in lives in the agent's own configuration, never in the repo.
 - `labs/<topic>/` — THE canonical labs: `README.md` (the instructions
   students follow) plus starter code. Students copy the repo from the
   template and work here; a devcontainer provides Python 3.12, Node 22 and
-  the `gh` CLI in one image (heavier than a single-language image, because
-  `labs/baas` is a FastAPI backend WITH a React/TypeScript frontend, and
-  `labs/cli-agents` installs npm-distributed coding agents that need Node
-  22 or newer).
+  the `gh` CLI in one image (Node because `labs/cli-agents` installs
+  npm-distributed coding agents that need Node 22 or newer).
   The repo is a TEMPLATE, not a fork source: a fork of a public repo
   cannot be made private, which would publish every student's work and
   list the class on the fork network. Workflows are guarded with
@@ -359,9 +357,9 @@ Nine run on every push. Before any push, all must pass:
   is the point** — a fence is either verified or explicitly declared
   unverifiable, and nothing is silently unchecked.
 - `verify_labs.py` compiles every lab `.py` and runs pytest where it can.
-  `NEEDS_KEY` names the two labs (rag, baas) that cannot be verified
-  beyond syntax without live credentials, and it prints that limit on
-  every run rather than letting a green tick imply otherwise.
+  `NEEDS_KEY` names the one lab (rag) that cannot be verified beyond
+  syntax without live credentials, and it prints that limit on every run
+  rather than letting a green tick imply otherwise.
   `PLACEHOLDER_TESTS` names test files that are *expected to fail* —
   student scaffolding (`prompting`), or a real test over a planted bug
   (`cli-agents`, where an agent is pointed at it). If one starts passing,

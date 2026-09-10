@@ -20,14 +20,9 @@ __pycache__/
 venv/
 env/
 
-# Frontend build output. The BaaS lab (labs/baas/frontend) is a real Vite +
-# React app, so it produces dist/ and its own node_modules.
-dist/
-.vite/
-
-# API keys. Two labs (rag, baas) need live services, and students supply
-# their own keys. .env.example ships and is the ONLY env file that may ever
-# be tracked -- safety_audit.py rejects any other.
+# API keys. One lab (rag) needs a live-service key, which students supply
+# themselves. .env.example ships and is the ONLY env file that may ever be
+# tracked -- safety_audit.py rejects any other.
 .env
 .env.*
 !.env.example

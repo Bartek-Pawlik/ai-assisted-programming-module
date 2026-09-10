@@ -87,9 +87,7 @@ only.
 | 12 | **MCQ 2** (32%) | [details](weeks/week-12-mcq2/README.md) | — |
 
 Reading week is always the week of the Irish October bank holiday, with
-six teaching weeks either side. An optional tenth lab,
-[labs/baas](labs/baas/) (a FastAPI backend and React frontend on a hosted
-database), sits outside the schedule and is not assessed.
+six teaching weeks either side.
 
 ## Module info
 
@@ -103,9 +101,9 @@ database), sits outside the schedule and is not assessed.
   except the module introduction is self-contained and names no lecturer
   or institution, so any week can be lifted into another course
   unchanged; `scripts/check_deck_portability.py` enforces that.
-- **Labs** are plain Python (plus one TypeScript frontend) under
-  `labs/<topic>/`, addressed by topic rather than week number so that a
-  reshuffled schedule never breaks a student's instructions.
+- **Labs** are plain Python under `labs/<topic>/`, addressed by topic
+  rather than week number so that a reshuffled schedule never breaks a
+  student's instructions.
 - **Two GitHub Actions workflows.** `marp` runs on every push to `main`:
   it runs the nine gates (safety audit, links, snippets, lab code, practice
   bank, lab and deck structure, speaker notes, site index), renders every

@@ -1,8 +1,7 @@
 # Labs
 
-Nine labs in the schedule, one folder each, plus one optional folder.
-Every folder has a `README.md` with the instructions and the code you
-work in.
+Nine labs, one folder each. Every folder has a `README.md` with the
+instructions and the code you work in.
 
 ## Before you start
 
@@ -46,18 +45,14 @@ after half an hour idle). The free allowance is generous, not infinite.
 | 11 | [vibe-coding](vibe-coding/) | The same app three ways — then spec-first | |
 
 There is no lab in weeks 1, 7 or 12 (week 1 is the introduction; 7 and 12
-are the MCQs). Each scheduled lab has a short Practical Assessment on
-Moodle, worth 4% and open for that lab's week.
-
-**Optional:** [baas](baas/) — a FastAPI backend and React frontend on a
-hosted database. It is extra material, outside the schedule and not
-assessed, and it needs a free Firestore project.
+are the MCQs). Each lab has a short Practical Assessment on Moodle, worth
+4% and open for that lab's week.
 
 ## Labs that need a key or a sign-in
 
 The RAG lab's generation half calls a hosted model and needs an API key;
 the default is the Gemini API's free tier, and its README says where to
-get one. The optional BaaS lab needs Firestore credentials. Nothing else needs a key: the MCP lab's weather
+get one. Nothing else needs a key: the MCP lab's weather
 server uses a free service without one, and the security lab runs
 offline by design. The CLI agents lab needs you to sign in to a coding
 agent with your GitHub or Google account — a sign-in, never a key in a

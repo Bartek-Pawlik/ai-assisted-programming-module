@@ -239,7 +239,8 @@ def main() -> None:
             encoding="utf-8", newline="\n")
 
     # Teaching order, like the lecture index; anything not in the schedule
-    # (optional extra material such as baas) goes under its own heading.
+    # (optional extra material, should there ever be any) goes under its own
+    # heading rather than being listed as if it were taught.
     titles = dict(labs)
     scheduled = scheduled_labs()
     in_schedule = {slug for _, slug in scheduled}

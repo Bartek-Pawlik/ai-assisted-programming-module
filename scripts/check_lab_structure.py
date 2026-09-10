@@ -38,8 +38,8 @@ LABS = Path("labs")
 # Labs rewritten to the formula and now enforced. ADD TO THIS as each lab is
 # reworked -- never remove an entry to make a failure go away.
 CONFORMING = {
-    "agents", "baas", "cicd", "cli-agents", "mcp", "prompting", "rag",
-    "security", "setup", "vibe-coding",
+    "agents", "cicd", "cli-agents", "mcp", "prompting", "rag", "security",
+    "setup", "vibe-coding",
 }
 
 REQUIRED_SECTIONS = ("What you'll learn", "Table of Contents",

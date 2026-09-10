@@ -1,8 +1,7 @@
 {
   "name": "AIAP Labs",
-  // Python base rather than a lean single-language image, because this
-  // module's labs are not one language: rag/mcp/agents/cicd are Python,
-  // baas is a FastAPI backend WITH a React/TypeScript frontend, and
+  // Python base rather than a lean single-language image, because the labs
+  // are not one language: rag/mcp/agents/security/cicd are Python, and
   // cli-agents installs terminal coding agents from npm, which need Node 22
   // or newer. One image covers every lab; per-lab devcontainers would
   // fragment the student's single copy.
@@ -11,20 +10,11 @@
     "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  // The only lab that serves HTTP is baas (backend + frontend). Codespaces
-  // forwards a port the moment something listens on it either way; naming
-  // them here labels them in the Ports panel so the two tabs are telling.
-  "forwardPorts": [8000, 5173],
-  "portsAttributes": {
-    "8000": { "label": "FastAPI backend (baas)" },
-    "5173": { "label": "Vite frontend (baas)" }
-  },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "dbaeumer.vscode-eslint",
         "GitHub.copilot",
         "GitHub.copilot-chat",
         "marp-team.marp-vscode"
