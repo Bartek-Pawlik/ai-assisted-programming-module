@@ -4,11 +4,21 @@ Nine labs in the schedule, one folder each, plus one optional folder.
 Every folder has a `README.md` with the instructions and the code you
 work in.
 
+## Before you start
+
+Sign up for the **[GitHub Student Developer Pack](https://education.github.com/pack)**
+if you have not already. It is free for verified students, and it gives
+you the **Copilot Student plan** — the editor assistant and the terminal
+agent these labs use — and Pro-level Codespaces. Verification can take a
+few days, so do it before the first lab rather than during it.
+
+Use your real name on your GitHub account. You will be sending links to it
+all semester, and it is the account an employer will look at.
+
 ## Getting your own copy
 
 1. On the module repo, click **Use this template → Create a new
-   repository**. Name it anything; **you may make it Private** — it's your
-   work.
+   repository**. Name it anything; **make it Private** — it's your work.
 2. On *your* repo: **Code → Codespaces → Create codespace**.
 3. The devcontainer gives you Python 3.12, Node 22 and the `gh` CLI. There
    is nothing to install.
@@ -18,17 +28,20 @@ Don't *Fork*. A fork of a public repo can never be made private, so your
 work would be world-readable, and the fork network would publish a list of
 everyone taking the module.
 
+Stop your Codespace when you finish for the day (it also stops itself
+after half an hour idle). The free allowance is generous, not infinite.
+
 ## The labs
 
-| Week | Lab | What you build | Needs a key |
+| Week | Lab | What you build | Needs |
 |---|---|---|---|
 | 2 | [setup](setup/) | Your environment, verified | |
 | 3 | [prompting](prompting/) | SPEC prompts, personas, chain-of-thought, few-shot, context engineering | |
-| 4 | [rag](rag/) | A retrieval pipeline — and when not to build one | yes |
-| 5 | [mcp](mcp/) | An MCP server and client, then your own | yes |
+| 4 | [rag](rag/) | A retrieval pipeline — and when not to build one | an API key, for the generation half |
+| 5 | [mcp](mcp/) | An MCP server and client, then your own | |
 | 6 | [agents](agents/) | The ladder of autonomy: ask → edit → act | |
 | 8 | [security](security/) | Break it, then find the break: injection, slopsquatting, prompt injection | |
-| 9 | [cli-agents](cli-agents/) | A terminal coding agent, configured: instructions, commands, permissions | sign-in |
+| 9 | [cli-agents](cli-agents/) | A terminal coding agent, configured: instructions, commands, permissions | a sign-in (GitHub or Google) |
 | 10 | [cicd](cicd/) | A GitHub Actions pipeline with AI in it | |
 | 11 | [vibe-coding](vibe-coding/) | The same app three ways — then spec-first | |
 
@@ -40,12 +53,15 @@ Moodle, worth 4% and open for that lab's week.
 hosted database. It is extra material, outside the schedule and not
 assessed, and it needs a free Firestore project.
 
-## Labs that need an API key
+## Labs that need a key or a sign-in
 
-Two scheduled labs need an API key (rag, mcp), and so does the optional
-baas lab. Each README says exactly which key and how to get one — all have
-a free tier. The cli-agents lab needs a sign-in instead (GitHub or
-Google), never a key in a file.
+The RAG lab's generation half calls a hosted model and needs an API key;
+its README says which and where to get one. The optional BaaS lab needs
+Firestore credentials. Nothing else needs a key: the MCP lab's weather
+server uses a free service without one, and the security lab runs
+offline by design. The CLI agents lab needs you to sign in to a coding
+agent with your GitHub or Google account — a sign-in, never a key in a
+file.
 
 **Never commit a key.** Put it in a `.env` file in the lab folder; `.env`
 is gitignored, and the repo's safety audit will reject one if it ever gets

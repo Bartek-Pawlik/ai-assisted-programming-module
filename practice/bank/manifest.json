@@ -1,5 +1,13 @@
 {
   "topics": [
-    { "slug": "prompting", "title": "Prompting" }
+    { "slug": "overview", "title": "Overview & Setup" },
+    { "slug": "prompting", "title": "Prompting" },
+    { "slug": "rag", "title": "RAG & Retrieval" },
+    { "slug": "mcp", "title": "MCP" },
+    { "slug": "agents", "title": "Coding Agents" },
+    { "slug": "security", "title": "Security" },
+    { "slug": "cli-agents", "title": "CLI Coding Agents" },
+    { "slug": "cicd", "title": "CI/CD & Evals" },
+    { "slug": "vibe-coding", "title": "Vibe Coding & Specs" }
   ]
 }

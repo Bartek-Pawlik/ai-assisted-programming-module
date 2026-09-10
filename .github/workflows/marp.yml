@@ -42,7 +42,8 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22, to match the devcontainer for the same reason as Python above.
+          node-version: 22
 
       - name: Install gate dependencies
         run: |
@@ -91,7 +92,6 @@ jobs:
           # build_index.py is the sixth gate: it fails if a teaching week has
           # no deck and no PENDING_DECKS entry, or no matching lab.
           python scripts/build_index.py build
-          # also renders project/*.md to build/project/*.html
           python scripts/build_lab_pages.py build
           mkdir -p build/practice
           cp -R practice/. build/practice/

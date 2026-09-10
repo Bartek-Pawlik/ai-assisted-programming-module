@@ -7,7 +7,7 @@ depth and pretending otherwise would be the real failure:
   1. SYNTAX -- every .py under labs/ is byte-compiled. No dependencies, no
      network, no keys. Runs for every lab, always.
 
-  2. TESTS -- where a lab ships tests, pytest runs them. Three labs need
+  2. TESTS -- where a lab ships tests, pytest runs them. Two labs need
      live API access (see NEEDS_KEY) and cannot pass in CI without secrets,
      so their tests are reported as SKIPPED rather than quietly dropped.
 
@@ -35,8 +35,7 @@ LABS = Path("labs")
 # them without secrets. Their syntax is still checked. Keep this list SHORT
 # and justified -- it is a list of things this gate does not guarantee.
 NEEDS_KEY = {
-    "rag": "embeddings API key",
-    "mcp": "weather API key",
+    "rag": "an LLM API key for the generation half",
     "baas": "Firestore project credentials",
 }
 

@@ -33,7 +33,7 @@ def query_without_rag(question, llm_client, max_tokens=300):
     """
     try:
         message = llm_client.messages.create(
-            model="claude-3-5-sonnet-20241022",
+            model="claude-haiku-4-5-20251001",
             max_tokens=max_tokens,
             messages=[
                 {

@@ -1,96 +1,74 @@
-"""
-Setup Verification Script
-Atlantic Technological University - RAG Lab
+"""Confirm this lab can run before you start it.
 
-Run this script to verify your environment is correctly configured.
-"""
+    python check_setup.py
 
+Checks Python, the packages from requirements.txt, the five documents in
+data/, and whether a key for the generation half (sections 3 to 5) is set.
+The embedding model needs no key. Prints one line per check and exits
+non-zero if anything essential is missing. It never prints a key.
+"""
+from __future__ import annotations
+
+import importlib
+import os
 import sys
+from pathlib import Path
+
+HERE = Path(__file__).parent
+PACKAGES = {  # import name -> the name pip knows it by
+    "sentence_transformers": "sentence-transformers",
+    "chromadb": "chromadb",
+    "anthropic": "anthropic",
+    "dotenv": "python-dotenv",
+}
+DOCS = ["introduction_to_programming.txt", "data_structures_basics.txt",
+        "algorithms_overview.txt", "database_fundamentals.txt",
+        "web_development_intro.txt"]
 
 
-def check_python_version():
-    """Check if Python version is 3.11 or higher."""
-    version = sys.version_info
-    if version.major >= 3 and version.minor >= 11:
-        print(f"✅ Python {version.major}.{version.minor}.{version.micro} detected")
-        return True
-    else:
-        print(f"❌ Python {version.major}.{version.minor} detected. Please use Python 3.11+")
-        return False
+def line(ok: bool, label: str, detail: str = "") -> bool:
+    print(f"  [{'ok' if ok else '  '}] {label}{'  — ' + detail if detail else ''}")
+    return ok
 
 
-def check_dependencies():
-    """Check if required packages are installed."""
-    required_packages = [
-        "sentence_transformers",
-        "chromadb",
-        "anthropic",
-        "dotenv"
-    ]
-    
-    all_installed = True
-    for package in required_packages:
+def main() -> int:
+    print("RAG lab setup check\n")
+    good = True
+
+    v = sys.version_info
+    good &= line(v >= (3, 10), f"Python {v.major}.{v.minor}",
+                 "" if v >= (3, 10) else "3.10 or newer required")
+
+    for module, dist in PACKAGES.items():
         try:
-            __import__(package)
-            print(f"✅ {package} installed")
+            importlib.import_module(module)
+            present = True
         except ImportError:
-            print(f"❌ {package} NOT installed")
-            all_installed = False
-    
-    return all_installed
+            present = False
+        good &= line(present, dist, "" if present else "pip install -r requirements.txt")
 
+    for name in DOCS:
+        present = (HERE / "data" / name).is_file()
+        good &= line(present, f"data/{name}", "" if present else "missing")
 
-def check_data_files():
-    """Check if sample data files exist."""
-    import os
-    
-    data_files = [
-        "introduction_to_programming.txt",
-        "data_structures_basics.txt",
-        "algorithms_overview.txt",
-        "database_fundamentals.txt",
-        "web_development_intro.txt"
-    ]
-    
-    all_exist = True
-    for filename in data_files:
-        filepath = os.path.join("data", filename)
-        if os.path.exists(filepath):
-            print(f"✅ {filename} found")
-        else:
-            print(f"❌ {filename} NOT found")
-            all_exist = False
-    
-    return all_exist
+    # Reported, not required: sections 1 and 2 (chunking, embeddings,
+    # retrieval) run without any key. Sections 3 to 5 send the retrieved
+    # text to a hosted model, and that is what the key is for.
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(HERE / ".env")
+    except ImportError:
+        pass
+    has_key = bool(os.environ.get("ANTHROPIC_API_KEY"))
+    line(has_key, "ANTHROPIC_API_KEY",
+         "set" if has_key else
+         "not set — fine for sections 1 and 2; sections 3 to 5 need one. "
+         "Get a key at console.anthropic.com, then: cp .env.example .env")
 
-
-def main():
-    """Run all setup checks."""
-    print("=" * 60)
-    print("RAG Lab - Environment Setup Checker")
-    print("=" * 60)
     print()
-    
-    print("🔍 Checking Python version...")
-    python_ok = check_python_version()
-    print()
-    
-    print("📦 Checking dependencies...")
-    deps_ok = check_dependencies()
-    print()
-    
-    print("📄 Checking data files...")
-    data_ok = check_data_files()
-    print()
-    
-    print("=" * 60)
-    if python_ok and deps_ok and data_ok:
-        print("🎉 All checks passed! You're ready to start the lab!")
-    else:
-        print("⚠️  Some checks failed. Please review the errors above.")
-        print("\n💡 To install dependencies, run: pip install -r requirements.txt")
-    print("=" * 60)
+    print("Ready." if good else "Something above needs fixing before you start.")
+    return 0 if good else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -59,12 +59,13 @@ https://danielcregg.is-a.dev/ai-assisted-programming/.
 **Their work is theirs.** Edit the files they are working in. Leave decks,
 scripts, workflows and the practice bank alone.
 
-**Keys.** Two scheduled labs (`rag`, `mcp`) and the optional `baas` lab
-need the student's own free API key. Put it in a `.env` (gitignored) and
-read it from the environment — never a literal in code, never a committed
-config file. If you see a key in a file that is about to be committed, say
-so loudly. The `cli-agents` lab signs in to a coding agent instead; that
-sign-in lives in the agent's own configuration, never in the repo.
+**Keys.** One scheduled lab (`rag`, for its generation half) and the
+optional `baas` lab need the student's own API key. Put it in a `.env`
+(gitignored) and read it from the environment — never a literal in code,
+never a committed config file. If you see a key in a file that is about to
+be committed, say so loudly. `mcp` needs no key (its weather server uses
+`wttr.in`), and the `cli-agents` lab signs in to a coding agent instead;
+that sign-in lives in the agent's own configuration, never in the repo.
 
 ## Map
 
@@ -341,9 +342,9 @@ Nine run on every push. Before any push, all must pass:
   is the point** — a fence is either verified or explicitly declared
   unverifiable, and nothing is silently unchecked.
 - `verify_labs.py` compiles every lab `.py` and runs pytest where it can.
-  `NEEDS_KEY` names the three labs (rag, mcp, baas) that cannot be
-  verified beyond syntax without live credentials, and it prints that
-  limit on every run rather than letting a green tick imply otherwise.
+  `NEEDS_KEY` names the two labs (rag, baas) that cannot be verified
+  beyond syntax without live credentials, and it prints that limit on
+  every run rather than letting a green tick imply otherwise.
   `PLACEHOLDER_TESTS` names test files that are *expected to fail* —
   student scaffolding (`prompting`), or a real test over a planted bug
   (`cli-agents`, where an agent is pointed at it). If one starts passing,

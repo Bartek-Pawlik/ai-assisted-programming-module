@@ -33,15 +33,19 @@ expensive mistake than the reverse.
    pip install -r requirements.txt
    ```
 
-3. This lab needs a **free embeddings API key**. `check_setup.py` says
-   which and where to get one:
+3. Check the install. The embedding model downloads on first use (about
+   90 MB) and needs no key:
 
    ```bash
    python check_setup.py
    ```
 
-4. Put the key in a `.env` file in this folder. **Never commit it** —
-   `.env` is gitignored and the repo's safety audit will reject it.
+4. Sections 3 to 5 send the retrieved text to a hosted model, and that
+   needs an **API key** — an Anthropic key, read from `ANTHROPIC_API_KEY`.
+   Copy `.env.example` to `.env` in this folder and put the key there.
+   **Never commit it** — `.env` is gitignored and the repo's safety audit
+   will reject it. Sections 1 and 2 (chunking, embeddings, retrieval) need
+   no key at all, so you can start without one.
 
 `data/` holds five short documents about programming topics. They are the
 whole corpus, and their size becomes the point in section 5.

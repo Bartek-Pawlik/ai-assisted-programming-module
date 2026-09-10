@@ -11,6 +11,14 @@
     "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
+  // The only lab that serves HTTP is baas (backend + frontend). Codespaces
+  // forwards a port the moment something listens on it either way; naming
+  // them here labels them in the Ports panel so the two tabs are telling.
+  "forwardPorts": [8000, 5173],
+  "portsAttributes": {
+    "8000": { "label": "FastAPI backend (baas)" },
+    "5173": { "label": "Vite frontend (baas)" }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -26,7 +34,11 @@
       }
     }
   },
-  "postCreateCommand": "python --version && node --version",
+  // Each lab installs its own requirements (the README's first step), so
+  // creating the container stays fast and a heavy lab such as rag does not
+  // slow down every other week. pytest is the one thing every lab's tests
+  // assume, so it is installed once here.
+  "postCreateCommand": "python -m pip install --quiet --upgrade pip pytest && python --version && node --version",
   // Refresh the lectures and lab instructions from the module repo each time
   // the workspace is opened. Content only -- it never touches your own code,
   // and it exits quietly (never non-zero) so it can't stop the Codespace

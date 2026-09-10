@@ -6,39 +6,62 @@ practice app.
 
 ### Start here → **[danielcregg.is-a.dev/ai-assisted-programming](https://danielcregg.is-a.dev/ai-assisted-programming/)**
 
-That's the whole module in one page — every lecture, every lab and the
-MCQ practice, all readable in the browser with nothing to install.
+The whole module in one page — every lecture, every lab and the MCQ
+practice, readable in the browser with nothing to install.
 
-**Doing the labs?** You need your own copy: click **Use this template →
-Create a new repository** (green button, top-right). Name it whatever you
-like and **you may set it to Private** — it's your work. Then on *your*
-repo choose **Code → Codespaces → Create codespace**: Python, Node and the
-`gh` CLI are already set up, nothing to install. Pick a lab folder under
-`labs/` and follow its README. Details in **[labs/README.md](labs/README.md)**.
+## Before the first lab
 
-**How it's assessed:** two in-person MCQs (32% each) and nine short
-**Practical Assessments** on Moodle (4% each), one for each lab. Each is
-open for its lab's week — do it whenever suits you that week.
+1. **A GitHub account under your real name.** You will be sending links
+   to it all semester, and it is the account an employer will look at.
+2. **The [GitHub Student Developer Pack](https://education.github.com/pack)**
+   — free for verified students. It gives you the Copilot Student plan
+   (the editor assistant and the terminal coding agent this module uses)
+   and Pro-level Codespaces. Verification can take a few days, so apply
+   early.
+3. **Moodle enrolment.** The group password is given out in the first
+   lecture, not published.
 
-**Practising for the MCQs?** Use the
-[practice app](https://danielcregg.is-a.dev/ai-assisted-programming/practice/)
-on the live site.
+## Doing the labs
 
-<details>
-<summary>How the repo is put together (for maintainers)</summary>
+You work in **your own copy** of this repo:
 
-Lectures are **Marp markdown** (`weeks/*/slides.md`) — edit the markdown,
-push, and CI re-renders the HTML slides and a PDF, then publishes the site
-straight from the workflow. Labs are plain Python (plus one TypeScript
-frontend) under `labs/<topic>/`, each with its instructions in a README.
-Conventions and editing rules live in [`CLAUDE.md`](CLAUDE.md).
+1. Click **Use this template → Create a new repository** (green button,
+   top-right). Name it anything; **make it Private** — it's your work.
+   Don't *Fork*: a fork of a public repo can never be made private.
+2. On *your* repo: **Code → Codespaces → Create codespace**. Python 3.12,
+   Node 22 and the `gh` CLI are already there.
+3. Open this week's lab folder under `labs/` and follow its README.
 
-All ten teaching decks are written. Every deck except the module
-introduction is self-contained and carries no lecturer or institution
-name, so any week can be lifted into another course unchanged —
-`scripts/check_deck_portability.py` enforces that.
+Details — including how to pull corrections into your copy mid-semester —
+in **[labs/README.md](labs/README.md)**. Read-only lab pages are also on
+the [site](https://danielcregg.is-a.dev/ai-assisted-programming/labs/),
+always the current version.
 
-</details>
+One scheduled lab (RAG) needs an API key of your own, and the CLI agents
+lab needs you to sign in to a coding agent with your GitHub or Google
+account. Each README says what, and how. **Never commit a key** — put it
+in a `.env`, which is gitignored and rejected by the repo's safety audit.
+
+## Assessment
+
+| Component | Weight | When |
+|---|---|---|
+| MCQ 1 | 32% | Week 7, in person, during the lab slot |
+| MCQ 2 | 32% | Week 12, in person, during the lab slot |
+| Practical Assessments 1–9 | 4% each | One per lab, on Moodle, open for that lab's week |
+
+The **Practical Assessments** are short Moodle questions, one for each
+lab, open from the Monday to the Sunday of the lab's week — do each
+whenever suits you that week. You may use AI tools for them, as you do in
+the labs. They are built so that pasting the question into an assistant is
+not enough on its own: each asks about the lab code in front of you, what
+it actually does when you run it, or what is true right now. A missed one
+counts as zero.
+
+The **MCQs** are drawn from the lectures *and* the labs. Practise with the
+[MCQ practice app](https://danielcregg.is-a.dev/ai-assisted-programming/practice/):
+self-test quizzes on every topic, with your progress kept in your browser
+only.
 
 ## Module schedule
 
@@ -62,52 +85,38 @@ name, so any week can be lifted into another course unchanged —
 | 11 | Vibe Coding & Spec-Driven | [slides](weeks/week-11-vibe-coding/slides.md) | [lab](labs/vibe-coding/) |
 | 12 | **MCQ 2** (32%) | [details](weeks/week-12-mcq2/README.md) | — |
 
-**Scheduling rule:** reading week always falls on the week of the Irish
-October bank holiday, with 6 teaching weeks before it and 6 after.
-
-**Assessment:** MCQ 1 (32%) and MCQ 2 (32%), held in person during lab
-slots, and nine Practical Assessments (4% each) on Moodle — one for each
-lab, open for that lab's week.
-
-## Labs
-
-All labs live in this repository — **[labs/](labs/README.md)** — one
-folder per lab with the instructions (README) and its starter code.
-Students: **Use this template** to make your own copy, open a Codespace on
-it, pick a lab folder, and follow its README. Read-only lab pages are also
-published on the
-[live site](https://danielcregg.is-a.dev/ai-assisted-programming/labs/),
-which always shows the current instructions — so if a lab is corrected
-mid-semester, read it there. GitHub Classroom is retired.
-
-Two labs need a free API key of your own (RAG, MCP), and the CLI agents
-lab needs you to sign in to a coding agent with your GitHub or Google
-account. Each README says what, and how. **Never commit a key** — put it
-in a `.env`, which is gitignored.
-
-A tenth folder, **[labs/baas](labs/baas/)**, is optional extra material:
-a React frontend and a FastAPI backend on a hosted database. It is not in
-the schedule and not assessed.
-
-## Practical Assessments
-
-Nine, one for each lab, each worth 4% and each open for its lab's week on
-Moodle. You may use AI tools for them, as you do in the labs. They are
-built so that pasting a question into an assistant is not enough on its
-own: each one asks about the lab code in front of you, what it actually
-does when you run it, or what is true right now.
-
-## MCQ practice
-
-Self-test quizzes generated from the module's own content:
-**[MCQ practice](https://danielcregg.is-a.dev/ai-assisted-programming/practice/)**.
-Per-topic progress is stored in your browser only. The practice bank
-(`practice/bank/`) is authored for this purpose and is separate from any
-assessment material.
+Reading week is always the week of the Irish October bank holiday, with
+six teaching weeks either side. An optional tenth lab,
+[labs/baas](labs/baas/) (a FastAPI backend and React frontend on a hosted
+database), sits outside the schedule and is not assessed.
 
 ## Module info
 
 - [Module overview — weekly topics and what each week covers](module/module-overview.md)
+
+<details>
+<summary>How the repo is put together (for maintainers)</summary>
+
+- **Lectures** are Marp markdown, one deck per teaching week in
+  `weeks/week-NN-<topic>/slides.md`. All ten are written. Every deck
+  except the module introduction is self-contained and names no lecturer
+  or institution, so any week can be lifted into another course
+  unchanged; `scripts/check_deck_portability.py` enforces that.
+- **Labs** are plain Python (plus one TypeScript frontend) under
+  `labs/<topic>/`, addressed by topic rather than week number so that a
+  reshuffled schedule never breaks a student's instructions.
+- **Two GitHub Actions workflows.** `marp` runs on every push to `main`:
+  it runs the nine gates (safety audit, links, snippets, lab code, practice
+  bank, lab and deck structure, speaker notes, site index), renders every
+  deck to HTML and PDF, builds the lab pages and the practice app, and
+  publishes the site straight to GitHub Pages — nothing is committed back.
+  `current-week` runs every Monday and rewrites the banner above this
+  schedule. Both are guarded to run only in this repository, never in a
+  student's copy.
+- **Conventions and editing rules** live in [`CLAUDE.md`](CLAUDE.md).
+  Local preview: `npm install`, then `npm run preview`.
+
+</details>
 
 ## For AI tools
 

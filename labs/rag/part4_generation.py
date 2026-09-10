@@ -112,7 +112,7 @@ def call_llm(client, prompt, max_tokens=500):
     #
     # Usage:
     # message = client.messages.create(
-    #     model="claude-3-5-sonnet-20241022",
+    #     model="claude-haiku-4-5-20251001",
     #     max_tokens=max_tokens,
     #     messages=[
     #         {"role": "user", "content": prompt}

@@ -25,9 +25,9 @@ env/
 dist/
 .vite/
 
-# API keys. Three labs (rag, mcp, baas) need live services, and students
-# supply their own free-tier keys. .env.example ships and is the ONLY env file
-# that may ever be tracked -- safety_audit.py rejects any other.
+# API keys. Two labs (rag, baas) need live services, and students supply
+# their own keys. .env.example ships and is the ONLY env file that may ever
+# be tracked -- safety_audit.py rejects any other.
 .env
 .env.*
 !.env.example

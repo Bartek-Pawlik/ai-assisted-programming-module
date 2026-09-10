@@ -36,8 +36,8 @@ The SDK version is **pinned deliberately** — this protocol changed
 substantially in 2026 and an unpinned install would give you a different
 one from the traces printed below. See `requirements.txt`.
 
-Part 2 needs a **free weather API key**. Put it in `.env` in this folder;
-`.env` is gitignored and the safety audit will reject it if it is staged.
+Part 2's weather server fetches live data from `wttr.in`, which needs no
+key. Nothing in this lab needs an API key or a `.env` file.
 
 ---
 
