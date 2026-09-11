@@ -29,9 +29,13 @@
   // slow down every other week. pytest is the one thing every lab's tests
   // assume, so it is installed once here.
   "postCreateCommand": "python -m pip install --quiet --upgrade pip pytest && python --version && node --version",
-  // Refresh the lectures and lab instructions from the module repo each time
-  // the workspace is opened. Content only -- it never touches your own code,
-  // and it exits quietly (never non-zero) so it can't stop the Codespace
-  // starting if you are offline. In the module's own repo it does nothing.
-  "postAttachCommand": "bash scripts/update-course-content.sh --quiet || true"
+  // Each time the workspace is opened: first take any commit the nightly
+  // course-sync workflow pushed to your repo overnight (fast-forward only, so
+  // it can never merge, rebase or touch your own work; if it cannot fast-
+  // forward it simply does nothing), then refresh the lectures and lab
+  // instructions from the module repo. Content only -- it never touches
+  // your own code -- and it exits quietly (never non-zero) so it can't stop
+  // the Codespace starting if you are offline. In the module's own repo the
+  // sync does nothing.
+  "postAttachCommand": "(git pull --ff-only --quiet origin main || true) && bash scripts/update-course-content.sh --quiet || true"
 }

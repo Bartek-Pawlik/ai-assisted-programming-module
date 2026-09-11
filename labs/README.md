@@ -90,3 +90,8 @@ wrong. To pull corrections into your own copy:
 It only ever touches lab instructions, lectures and the README. It never
 touches code you wrote, and if you've edited a file it keeps your version
 and tells you.
+
+The same update also runs **in your repo on GitHub every night**, so you
+may see a commit called *update course content* appear that you did not
+make. That is expected. If `git push` is ever rejected because of it, run
+`git pull` first, then push again.

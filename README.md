@@ -109,21 +109,25 @@ own. They recur through the labs, so you meet each one more than once:
 <summary>How the repo is put together (for maintainers)</summary>
 
 - **Lectures** are Marp markdown, one deck per teaching week in
-  `weeks/week-NN-<topic>/slides.md`. All ten are written. Every deck
-  except the module introduction is self-contained and names no lecturer
-  or institution, so any week can be lifted into another course
-  unchanged; `scripts/check_deck_portability.py` enforces that.
+  `weeks/week-NN-<topic>/slides.md`. All ten are written. Every deck is
+  self-contained and names no lecturer or institution, so any week can be
+  lifted into another course unchanged; the introduction may state its
+  own schedule and link its own site. `scripts/check_deck_portability.py`
+  enforces that.
 - **Labs** are plain Python under `labs/<topic>/`, addressed by topic
   rather than week number so that a reshuffled schedule never breaks a
   student's instructions.
-- **Two GitHub Actions workflows.** `marp` runs on every push to `main`:
+- **Three GitHub Actions workflows.** `marp` runs on every push to `main`:
   it runs the nine gates (safety audit, links, snippets, lab code, practice
   bank, lab and deck structure, speaker notes, site index), renders every
   deck to HTML and PDF, builds the lab pages and the practice app, and
   publishes the site straight to GitHub Pages — nothing is committed back.
   `current-week` runs every Monday and rewrites the banner above this
   schedule. Both are guarded to run only in this repository, never in a
-  student's copy.
+  student's copy. `course-sync` is the inverse: it runs only in a
+  student's copy, nightly, and commits any changed lectures, lab
+  instructions and READMEs from this repo into theirs (never their code,
+  never a course file they edited). It needs this repository to be public.
 - **Conventions and editing rules** live in [`AGENTS.md`](AGENTS.md)
   (`CLAUDE.md` imports it). Local preview: `npm install`, then
   `npm run preview`.
