@@ -47,6 +47,13 @@ now stand rather than quietly ageing:
   slopsquatting — registering the package names models hallucinate — is
   an attack with no pre-AI equivalent. Week 11's lab still audits an app
   the students vibe-coded, and still reliably finds something.
+- **Licensing and confidentiality are taught in week 1**, before the
+  first tool is installed. A licence follows the code, not the typist, so
+  generated code is treated as code of unknown origin; and what goes into
+  a hosted assistant leaves the machine, so credentials, personal data and
+  code the student has no right to share never go into a prompt. The law
+  on training data is taught as unsettled, and the habits as independent
+  of how it comes out.
 - **Coding agents moved into the terminal.** An agent with a shell is
   decided less by the prompt than by its configuration: standing
   instructions (`AGENTS.md`, now an open format most agents read), custom
@@ -65,7 +72,7 @@ them.
 | 1 | Module Introduction | How the module runs, assessment, tooling setup | — |
 | 2 | AIAP Overview | What AI-assisted programming is; the landscape and its limits | [setup](../labs/setup/) |
 | 3 | Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../labs/prompting/) |
-| 4 | RAG &amp; Retrieval Strategy | Chunking, embeddings, vector search, grounded answers — and when long context beats retrieval outright | [rag](../labs/rag/) |
+| 4 | Retrieval &amp; Grounding | Chunking, embeddings, vector search, grounded answers — when long context beats retrieval outright, and how an assistant finds its way round a codebase | [rag](../labs/rag/) |
 | 5 | MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../labs/mcp/) |
 | 6 | Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../labs/agents/) |
 | — | *Reading week* | October bank-holiday week — revision for MCQ 1 | — |
@@ -86,6 +93,11 @@ The semester is derived, not stored: reading week is the week of the Irish
 October bank holiday (the last Monday of October), week 1 begins six weeks
 before it, and six teaching weeks sit each side. Nothing needs editing
 year to year.
+
+The everyday uses — explaining code you did not write, debugging from a
+failure, writing tests, reviewing a change you did not watch — are not
+weeks of their own. Each recurs in several labs; the README maps them to
+the exercises.
 
 ## Learning outcomes
 

@@ -75,7 +75,7 @@ only.
 | 1 | Module Introduction | [slides](weeks/week-01-introduction/slides.md) | _no lab in week 1_ |
 | 2 | AIAP Overview | [slides](weeks/week-02-overview/slides.md) | [lab](labs/setup/) |
 | 3 | Prompting & Context Engineering | [slides](weeks/week-03-prompting/slides.md) | [lab](labs/prompting/) |
-| 4 | RAG & Retrieval Strategy | [slides](weeks/week-04-rag/slides.md) | [lab](labs/rag/) |
+| 4 | Retrieval & Grounding | [slides](weeks/week-04-rag/slides.md) | [lab](labs/rag/) |
 | 5 | MCP | [slides](weeks/week-05-mcp/slides.md) | [lab](labs/mcp/) |
 | 6 | Coding Agents | [slides](weeks/week-06-agents/slides.md) | [lab](labs/agents/) |
 | — | Reading week | [details](weeks/week-06b-reading-week/README.md) | — |
@@ -88,6 +88,18 @@ only.
 
 Reading week is always the week of the Irish October bank holiday, with
 six teaching weeks either side.
+
+### The everyday uses, and where you practise them
+
+Four things you will do with an assistant most days are not weeks of their
+own. They recur through the labs, so you meet each one more than once:
+
+| You want to… | Practised in |
+|---|---|
+| **Explain** code you did not write | [setup DIY 4](labs/setup/README.md#diy-4-give-it-something-it-cannot-guess), [agents DIY 1](labs/agents/README.md#diy-1-understand-code-you-did-not-write) |
+| **Debug** from an error or a failing test | [prompting DIY 6](labs/prompting/README.md#diy-6-chain-of-thought-on-a-real-bug), [cli-agents DIY 8](labs/cli-agents/README.md#diy-8-a-script-that-explains-a-failure) |
+| **Write tests**, before or after the code | [prompting DIY 8](labs/prompting/README.md#diy-8-tests-first), [cicd DIY 1](labs/cicd/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](labs/cicd/README.md#diy-5-climb-the-assertion-ladder) |
+| **Review** a change you did not watch being made | [agents DIY 2](labs/agents/README.md#diy-2-refactor-with-the-diff-open), [cicd DIY 3](labs/cicd/README.md#diy-3-a-review-step-that-cannot-lie), [vibe-coding DIY 2](labs/vibe-coding/README.md#diy-2-find-something-you-would-not-ship) |
 
 ## Module info
 

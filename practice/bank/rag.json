@@ -1,6 +1,6 @@
 {
   "topic": "rag",
-  "title": "RAG & Retrieval",
+  "title": "Retrieval & Grounding",
   "questions": [
     {
       "id": "rag-001",

@@ -2,7 +2,7 @@
   "topics": [
     { "slug": "overview", "title": "Overview & Setup" },
     { "slug": "prompting", "title": "Prompting" },
-    { "slug": "rag", "title": "RAG & Retrieval" },
+    { "slug": "rag", "title": "Retrieval & Grounding" },
     { "slug": "mcp", "title": "MCP" },
     { "slug": "agents", "title": "Coding Agents" },
     { "slug": "security", "title": "Security" },
