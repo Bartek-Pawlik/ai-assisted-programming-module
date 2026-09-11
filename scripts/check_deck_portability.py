@@ -64,22 +64,42 @@ SCHEDULE = {
 FRONTMATTER_WEEK = re.compile(r"(?m)^week:\s*\d+\s*$")
 
 
+def flatten(text: str) -> str:
+    """Make hard-wrapped prose matchable without moving a single offset.
+
+    Decks are wrapped at ~72 columns, so "the module" or "week 3" can sit
+    across a line break, and a per-line search misses it (this gate did,
+    once). A newline inside a paragraph becomes a space, same length; a
+    blank line becomes NUL characters, which the patterns' whitespace
+    classes do not match, so nothing can join two paragraphs. Line numbers
+    are still taken from the original text because nothing has moved.
+    """
+    text = re.sub(r"\n\n+", lambda m: "\x00" * len(m.group(0)), text)
+    return text.replace("\n", " ")
+
+
+def blank(match: re.Match) -> str:
+    """Replace a match with spaces of the same length, keeping offsets."""
+    return " " * len(match.group(0))
+
+
 def check(deck: Path, identity_only: bool = False) -> list[str]:
     text = deck.read_text(encoding="utf-8")
-    text = FRONTMATTER_WEEK.sub("", text, count=1)
+    text = FRONTMATTER_WEEK.sub(blank, text, count=1)
     patterns = IDENTITY if identity_only else {**IDENTITY, **SCHEDULE}
-
-    findings = []
-    for lineno, line in enumerate(text.split("\n"), start=1):
+    if identity_only:
         # The introduction may link to its own site and repo; the link is
         # the thing another lecturer swaps, so it is not a portability fault.
-        scan = URL_RE.sub("", line) if identity_only else line
-        for label, pattern in patterns.items():
-            m = pattern.search(scan)
-            if m:
-                findings.append(
-                    f"{deck.as_posix()}:{lineno}: {label} -> {m.group(0)!r}")
-    return findings
+        text = URL_RE.sub(blank, text)
+    flat = flatten(text)
+
+    findings = []
+    for label, pattern in patterns.items():
+        for m in pattern.finditer(flat):
+            lineno = text.count("\n", 0, m.start()) + 1
+            hit = " ".join(m.group(0).split())
+            findings.append((lineno, f"{deck.as_posix()}:{lineno}: {label} -> {hit!r}"))
+    return [finding for _, finding in sorted(findings)]
 
 
 def main() -> int:
