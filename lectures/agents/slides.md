@@ -1,6 +1,5 @@
 ---
 title: Coding Agents
-week: 6
 topic: agents
 type: lecture
 source: authored

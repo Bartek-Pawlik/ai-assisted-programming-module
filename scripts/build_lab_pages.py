@@ -178,26 +178,17 @@ def page(title: str, kicker_html: str, body_html: str, needs_mermaid: bool,
 
 
 def scheduled_labs() -> list[tuple[str, str]]:
-    """(week number, lab slug) for every teaching week, in teaching order.
+    """(week number, lab slug) for every scheduled lab, in teaching order.
 
     Lab folders carry no week number (labs are addressed by topic), so on
-    its own this script can only list them alphabetically. The lecture index
-    already knows which week teaches which lab; borrow that mapping so the
-    labs page reads in the same order as the decks. Non-teaching weeks (the
-    MCQs, reading week) have no lab and are skipped.
+    its own this script can only list them alphabetically. The schedule
+    (module/schedule.json, via scripts/schedule.py) knows which week teaches
+    which lab; read it so the labs page reads in the same order as the decks.
     """
-    import build_index as bi
-    out = []
-    for folder in sorted(p for p in bi.WEEKS.iterdir() if p.is_dir()):
-        name = folder.name
-        if name.split("-", 2)[-1] in bi.MCQ_LABELS or "reading-week" in name:
-            continue
-        m = bi.WEEK_NO_RE.match(name)
-        week_no = m.group(1).lstrip("0") if m else ""
-        lab = bi.lab_slug(name)
-        if lab:
-            out.append((week_no, lab))
-    return out
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from schedule import load
+    return [(r.week, r.lab) for r in load().rows if r.lab]
 
 
 def main() -> None:

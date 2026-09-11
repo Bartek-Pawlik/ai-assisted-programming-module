@@ -1,6 +1,5 @@
 ---
 title: What AI-Assisted Programming Actually Is
-week: 2
 topic: overview
 type: lecture
 source: authored

@@ -1,6 +1,5 @@
 ---
 title: Prompting and Context Engineering
-week: 3
 topic: prompting
 type: lecture
 source: authored

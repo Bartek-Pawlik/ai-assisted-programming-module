@@ -1,59 +1,60 @@
 #!/usr/bin/env python3
-"""Generate the GitHub Pages landing page(s) for the lecture decks.
+"""Generate the GitHub Pages landing page from module/schedule.json.
 
-Main page (OUTPUT_DIR/index.html): scans weeks/ in folder order and emits
-one timeline row per week — lecture weeks get title + slides/lab buttons
-(downloads live in the repo, linked once from the intro), MCQ weeks and
-reading week render as "// comment" marker rows.
+One timeline row per row of the schedule, in schedule order: lecture rows
+get title + slides/lab/pdf buttons, MCQ rows and the reading week render as
+"// comment" marker rows. Titles come from each deck's frontmatter; the
+order, the week numbers and the calendar come from the schedule
+(scripts/schedule.py). Nothing here is derived from folder names.
+
+Also written to OUTPUT_DIR:
+  schedule.json           the schedule as the site publishes it: absolute
+                          URLs and the resolved start date. The Moodle
+                          course page reads this file (see
+                          module/moodle-schedule-loader.html).
+  <old-folder>/index.html one-line redirect pages for the deck URLs from
+                          before folders lost their week numbers, so links
+                          made then still resolve (OLD_FOLDERS).
 
 The page carries the visual identity of themes/aiap.css ("the lecture as
 source code"): paper background, editor-gutter rail, "week N" labels set
 like line numbers, mono headings ending in a coloured semicolon.
 
 A few lines of inline JS highlight the current teaching week like an
-editor's current line — same derived calendar as
-scripts/update_current_week.py (reading week = the week of the last
-Monday of October, week 1 six weeks earlier), computed in the browser so
-it stays correct without a rebuild. `?date=YYYY-MM-DD` previews any date.
+editor's current line, with the schedule's own rule (reading week = the
+week of the last Monday of October; week 1 that many rows earlier) or its
+explicit startDate baked in, computed in the browser so it stays correct
+without a rebuild. `?date=YYYY-MM-DD` previews any date.
 
 Usage:
     python scripts/build_index.py [OUTPUT_DIR]     # default: build
 """
 import html
+import json
 import re
 import sys
 from pathlib import Path
 
-WEEKS = Path("weeks")
-LABS = Path("labs")
-# Teaching weeks that deliberately ship no lab. Anything else missing a lab
-# fails the build (see lab_slug).
-NO_LAB_WEEKS = {"week-01-introduction"}
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from schedule import LECTURES, Row, Schedule, load  # noqa: E402
 
-# Weeks whose lab folder is NOT the topic slug. Keep this as close to empty as
-# possible -- every entry is a place where the derived layout stops being
-# derived, and therefore a place a rename can silently break. The one entry
-# here exists because week 2 lectures the module overview but its lab is the
-# environment setup, and neither name describes the other.
-LAB_OVERRIDES = {"week-02-overview": "setup"}
-
-# Weeks whose deck has not been converted from PowerPoint yet. Decks are
-# converted week by week ahead of teaching; until then the week renders as a
-# marker row rather than a broken link, and the build stays green.
-#
-# THIS LIST MUST SHRINK TO EMPTY. Delete a week from it the moment its
-# slides.md lands -- a week left here after conversion silently hides a deck
-# that exists, which is the same class of failure as a week with no deck at
-# all rendering as if it were fine.
-PENDING_DECKS: set[str] = set()   # every deck is written; keep it empty
+# Deck folders from before the schedule became the single source of truth,
+# when they carried the week number. Each gets a redirect stub on the site so
+# a link made then still resolves. Delete an entry once nothing links to it.
+OLD_FOLDERS = {
+    "week-01-introduction": "introduction",
+    "week-02-overview": "overview",
+    "week-03-prompting": "prompting",
+    "week-04-rag": "rag",
+    "week-05-mcp": "mcp",
+    "week-06-agents": "agents",
+    "week-08-security": "security",
+    "week-09-cli-agents": "cli-agents",
+    "week-10-cicd": "cicd",
+    "week-11-vibe-coding": "vibe-coding",
+}
 
 TITLE_RE = re.compile(r'^title:\s*"?([^"\n]+?)"?\s*$', re.MULTILINE)
-WEEK_NO_RE = re.compile(r"week-(\d+)")
-
-MCQ_LABELS = {
-    "mcq1": "MCQ 1 &middot; held during the lab slot &middot; 32% of the module",
-    "mcq2": "MCQ 2 &middot; held during the lab slot &middot; 32% of the module",
-}
 READING_LABEL = "reading week &middot; October bank-holiday week &middot; no lecture or lab"
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
@@ -166,6 +167,7 @@ def page_head(title: str) -> str:
             f'<title>{title}</title>\n'
             f'<link rel="icon" href="{FAVICON}">\n{STYLE}\n</head>\n<body>\n')
 
+
 MAIN_HEADER = """<header>
   <p class="kicker">Atlantic Technological University &middot; Semester 1</p>
   <h1>AI-Assisted Programming</h1>
@@ -181,36 +183,36 @@ MAIN_HEADER = """<header>
 MAIN_FOOT = """</ol>
 </main>
 <footer>
-  <p class="comment">rebuilt automatically from the module's markdown sources</p>
+  <p class="comment">rebuilt automatically from the module's markdown sources and module/schedule.json</p>
   <p class="comment">Atlantic Technological University</p>
 </footer>
 <script>
-// Highlight the current teaching week — same derived calendar as the README
-// banner (scripts/update_current_week.py): reading week is the week of the
-// Irish October bank holiday (last Monday of October); week 1 begins six
-// weeks earlier; 6 teaching weeks each side. ?date=YYYY-MM-DD to preview.
+// Highlight the current teaching week — the same calendar as the README
+// banner and the Moodle course page (scripts/schedule.py): rows are
+// consecutive weeks from week 1, and week 1 is READING rows before the
+// Irish October bank holiday (last Monday of October) unless the schedule
+// fixes a START date. ?date=YYYY-MM-DD to preview.
 (function () {
+  var READING = __READING__, ROWS = __ROWS__, START = '__START__';
   var q = new URLSearchParams(location.search).get('date');
   var now = q ? new Date(q + 'T12:00:00') : new Date();
   if (isNaN(now)) now = new Date();
   var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var monday = new Date(today);
   monday.setDate(today.getDate() - (today.getDay() + 6) % 7);
-  var oct31 = new Date(today.getFullYear(), 9, 31);
-  var reading = new Date(oct31);
-  reading.setDate(31 - (oct31.getDay() + 6) % 7);
-  var week1 = new Date(reading);
-  week1.setDate(reading.getDate() - 42);
-  var index = Math.round((monday - week1) / 6048e5); // whole weeks; rounding absorbs DST
-  if (index < 0 || index > 12) return;
-  var row;
-  if (index === 6) {
-    row = document.querySelector('.row[data-reading]');
+  var week1;
+  if (START) {
+    week1 = new Date(START + 'T00:00:00');
   } else {
-    var n = index < 6 ? index + 1 : index;
-    var num = document.querySelector('.num[data-week="' + n + '"]');
-    row = num && num.closest('.row');
+    var oct31 = new Date(today.getFullYear(), 9, 31);
+    var reading = new Date(oct31);
+    reading.setDate(31 - (oct31.getDay() + 6) % 7);
+    week1 = new Date(reading);
+    week1.setDate(reading.getDate() - 7 * READING);
   }
+  var index = Math.round((monday - week1) / 6048e5); // whole weeks; rounding absorbs DST
+  if (index < 0 || index >= ROWS) return;
+  var row = document.querySelector('.row[data-index="' + index + '"]');
   if (!row) return;
   row.classList.add('current');
   row.setAttribute('aria-current', 'true');
@@ -227,54 +229,29 @@ MAIN_FOOT = """</ol>
 </html>
 """
 
-def lab_slug(folder: str) -> str | None:
-    """Week folder -> its lab folder, e.g. week-04-rag -> labs/rag.
 
-    Labs are addressed by TOPIC, never by week number: week numbers move
-    between years (this module went 13 -> 12) and a student's instructions
-    should not follow them. So the mapping is the week's topic slug, with
-    LAB_OVERRIDES for the rare week whose lab has a different name.
-
-    A teaching week whose lab is missing is a BUILD ERROR, not a silently
-    dropped button: the mapping is derived, so a rename on either side would
-    otherwise publish a lab-less site with CI still green. Weeks that
-    legitimately have no lab must be named in NO_LAB_WEEKS.
-    """
-    slug = LAB_OVERRIDES.get(folder) or re.sub(r"^week-\d+-", "", folder)
-    if (LABS / slug).is_dir():
-        return slug
-    if folder in NO_LAB_WEEKS:
-        return None
-    raise SystemExit(
-        f"build_index: {folder} has a lecture but no lab at {LABS / slug}.\n"
-        f"  Either the lab folder is misnamed (it must be the week's topic "
-        f"slug), or the week's lab has a different name and needs an entry in "
-        f"LAB_OVERRIDES, or the week has no lab and belongs in NO_LAB_WEEKS.")
-
-
-def lecture_row(folder: str, week_no: str, title: str) -> str:
+def lecture_row(row: Row, title: str) -> str:
     t = html.escape(title)
-    slug = lab_slug(folder)
-    lab = (f'      <a class="open" href="labs/{slug}/"'
-           f' aria-label="Week {week_no}: {t} — lab">lab</a>\n') if slug else ""
-    return (f'  <li class="row lecture">\n'
-            f'    <span class="num" data-week="{week_no}" aria-hidden="true">{week_no}</span>\n'
-            f'    <span class="topic"><a href="{folder}/index.html">{t}</a></span>\n'
+    lab = (f'      <a class="open" href="labs/{row.lab}/"'
+           f' aria-label="Week {row.week}: {t} — lab">lab</a>\n') if row.lab else ""
+    return (f'  <li class="row lecture" data-index="{row.index}">\n'
+            f'    <span class="num" data-week="{row.week}" aria-hidden="true">{row.week}</span>\n'
+            f'    <span class="topic"><a href="{row.deck}/index.html">{t}</a></span>\n'
             f'    <span class="actions">\n'
-            f'      <a class="open" href="{folder}/index.html"'
-            f' aria-label="Week {week_no}: {t} — open slides">slides</a>\n'
+            f'      <a class="open" href="{row.deck}/index.html"'
+            f' aria-label="Week {row.week}: {t} — open slides">slides</a>\n'
             f'{lab}'
-            f'      <a class="dl" href="{folder}/slides.pdf"'
-            f' aria-label="Week {week_no}: {t} — download the PDF">pdf</a>\n'
+            f'      <a class="dl" href="{row.deck}/slides.pdf"'
+            f' aria-label="Week {row.week}: {t} — download the PDF">pdf</a>\n'
             f'    </span>\n'
             f'  </li>\n')
 
 
-def marker_row(week_no: str, label: str) -> str:
-    num_attr = f' data-week="{week_no}"' if week_no else ''
-    row_attr = '' if week_no else ' data-reading'  # the only unnumbered row is reading week
-    return (f'  <li class="row marker"{row_attr}>\n'
-            f'    <span class="num"{num_attr} aria-hidden="true">{week_no}</span>\n'
+def marker_row(row: Row, label: str) -> str:
+    week = "" if row.is_break else row.week
+    num_attr = f' data-week="{week}"' if week else ""
+    return (f'  <li class="row marker" data-index="{row.index}">\n'
+            f'    <span class="num"{num_attr} aria-hidden="true">{week}</span>\n'
             f'    <span class="comment">{label}</span>\n'
             f'    <span></span>\n'
             f'  </li>\n')
@@ -285,67 +262,56 @@ def deck_title(deck: Path, slug: str) -> str:
     return m.group(1) if m else slug.replace("-", " ").title()
 
 
-def build_main_rows() -> tuple[str, int, int]:
+def build_rows(sched: Schedule) -> tuple[str, int, int]:
     rows, lectures, markers = [], 0, 0
-    for folder in sorted(p for p in WEEKS.iterdir() if p.is_dir()):
-        name = folder.name
-        week_match = WEEK_NO_RE.match(name)
-        week_no = week_match.group(1).lstrip("0") if week_match else ""
-        slug = name.split("-", 2)[-1]
-        deck = folder / "slides.md"
-        if name in PENDING_DECKS and deck.is_file():
-            raise SystemExit(
-                f"build_index: {name} has a slides.md but is still listed in "
-                f"PENDING_DECKS.\n"
-                f"  Remove it from that list -- leaving it there hides a deck "
-                f"that exists, and the week renders as 'deck not converted "
-                f"yet' on a site where it is perfectly available.")
-
-        if slug in MCQ_LABELS:
-            rows.append(marker_row(week_no, MCQ_LABELS[slug]))
-            markers += 1
-        elif "reading-week" in name:
-            rows.append(marker_row("", READING_LABEL))
-            markers += 1
-        elif deck.is_file():
-            rows.append(lecture_row(name, week_no, deck_title(deck, slug)))
+    for row in sched.rows:
+        if row.deck:
+            deck = LECTURES / row.deck / "slides.md"
+            if not deck.is_file():
+                raise SystemExit(f"build_index: week {row.week} names lectures/{row.deck}/slides.md, "
+                                 f"which does not exist (check_schedule.py catches this first).")
+            rows.append(lecture_row(row, deck_title(deck, row.deck)))
             lectures += 1
-        elif name in PENDING_DECKS:
-            # Deck not converted from PowerPoint yet. Still verify the lab
-            # mapping holds, so a lab rename cannot hide behind a pending deck.
-            lab = lab_slug(name)
-            label = (f"{html.escape(slug.replace('-', ' '))} &middot; "
-                     f"deck not converted yet")
-            if lab:
-                label += f' &middot; <a href="labs/{lab}/">lab is ready</a>'
-            rows.append(marker_row(week_no, label))
+        elif row.mcq:
+            note = (row.notes[0].lower() + row.notes[1:]) if row.notes else "held during the lab slot"
+            rows.append(marker_row(row, f"{html.escape(row.assessment)} &middot; {html.escape(note)}"))
+            markers += 1
+        elif row.is_break:
+            rows.append(marker_row(row, READING_LABEL))
             markers += 1
         else:
-            # A week folder that is neither an MCQ week, nor reading week, nor
-            # a deck used to be skipped in silence -- the week simply vanished
-            # from the site and the build still went green. That is the same
-            # failure lab_slug refuses to allow at the other end of the
-            # mapping, so refuse it here too.
-            raise SystemExit(
-                f"build_index: {folder} has no slides.md and is not a "
-                f"recognised non-teaching week.\n"
-                f"  A teaching week needs weeks/{name}/slides.md; an "
-                f"assessment week's folder must end in mcq1/mcq2/mcq3; the "
-                f"reading week's name must contain 'reading-week'. Rename the "
-                f"folder or add the deck -- do not leave it half-created, or "
-                f"the week disappears from the site with CI still green.")
+            raise SystemExit(f"build_index: schedule week {row.week!r} has no lecture, is not an "
+                             f"MCQ and is not the reading week; fix module/schedule.json.")
     return "".join(rows), lectures, markers
+
+
+def redirect_page(new: str) -> str:
+    return (f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8">\n'
+            f'<meta http-equiv="refresh" content="0; url=../{new}/">\n'
+            f'<link rel="canonical" href="../{new}/">\n<title>Moved</title></head>\n'
+            f'<body><p>This deck moved to <a href="../{new}/">../{new}/</a>.</p></body></html>\n')
 
 
 def main() -> None:
     out_dir = Path(sys.argv[1] if len(sys.argv) > 1 else "build")
     out_dir.mkdir(parents=True, exist_ok=True)
+    sched = load()
 
-    rows, lectures, markers = build_main_rows()
-    page = (page_head("AI-Assisted Programming")
-            + MAIN_HEADER + rows + MAIN_FOOT)
+    rows, lectures, markers = build_rows(sched)
+    foot = (MAIN_FOOT.replace("__READING__", str(sched.reading_index))
+            .replace("__ROWS__", str(len(sched.rows)))
+            .replace("__START__", "" if sched.derived else sched.start.isoformat()))
+    page = page_head("AI-Assisted Programming") + MAIN_HEADER + rows + foot
     (out_dir / "index.html").write_text(page, encoding="utf-8", newline="\n")
-    print(f"wrote {out_dir / 'index.html'} ({lectures} lectures, {markers} marker rows)")
+
+    (out_dir / "schedule.json").write_text(json.dumps(sched.to_public(), indent=2) + "\n",
+                                           encoding="utf-8", newline="\n")
+    for old, new in OLD_FOLDERS.items():
+        stub = out_dir / old
+        stub.mkdir(parents=True, exist_ok=True)
+        (stub / "index.html").write_text(redirect_page(new), encoding="utf-8", newline="\n")
+    print(f"wrote {out_dir / 'index.html'} ({lectures} lectures, {markers} marker rows, "
+          f"week 1 = {sched.start}), schedule.json, {len(OLD_FOLDERS)} redirect stubs")
 
 
 if __name__ == "__main__":

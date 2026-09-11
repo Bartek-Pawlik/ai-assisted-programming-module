@@ -44,8 +44,8 @@ after half an hour idle). The free allowance is generous, not infinite.
 | 10 | [cicd](cicd/) | A GitHub Actions pipeline with AI in it | |
 | 11 | [vibe-coding](vibe-coding/) | The same app three ways — then spec-first | |
 
-There is no lab in weeks 1, 7 or 12 (week 1 is the introduction; 7 and 12
-are the MCQs). Each lab has a short Practical Assessment on Moodle, worth
+There is no lab in the introduction week or in the two MCQ weeks; the
+[schedule](../README.md#module-schedule) says which weeks those are. Each lab has a short Practical Assessment on Moodle, worth
 4% and open for that lab's week.
 
 ## Labs that need a key or a sign-in

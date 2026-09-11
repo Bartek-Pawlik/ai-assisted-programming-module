@@ -1,6 +1,5 @@
 ---
 title: Vibe Coding and Spec-Driven Development
-week: 11
 topic: vibe-coding
 type: lecture
 source: authored

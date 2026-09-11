@@ -1,6 +1,5 @@
 ---
 title: Retrieval and Grounding
-week: 4
 topic: rag
 type: lecture
 source: authored

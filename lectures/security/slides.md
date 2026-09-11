@@ -1,6 +1,5 @@
 ---
 title: Security of AI-Generated Code
-week: 8
 topic: security
 type: lecture
 source: authored

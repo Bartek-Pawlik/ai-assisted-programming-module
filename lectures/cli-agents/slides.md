@@ -1,6 +1,5 @@
 ---
 title: CLI Coding Agents
-week: 9
 topic: cli-agents
 type: lecture
 source: authored

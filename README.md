@@ -47,8 +47,8 @@ in a `.env`, which is gitignored and rejected by the repo's safety audit.
 
 | Component | Weight | When |
 |---|---|---|
-| MCQ 1 | 32% | Week 7, in person, during the lab slot |
-| MCQ 2 | 32% | Week 12, in person, during the lab slot |
+| MCQ 1 | 32% | In person, during the lab slot, straight after reading week |
+| MCQ 2 | 32% | In person, during the lab slot, in the last week |
 | Practical Assessments 1–9 | 4% each | One per lab, on Moodle, open for that lab's week |
 
 The **Practical Assessments** are short Moodle questions, one for each
@@ -70,24 +70,28 @@ only.
 > 🗓️ **Semester has not started yet** — teaching begins the week of 14 Sep 2026.
 <!-- current-week:end -->
 
+<!-- schedule-table:start -->
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
-| 1 | Module Introduction | [slides](weeks/week-01-introduction/slides.md) | _no lab in week 1_ |
-| 2 | AIAP Overview | [slides](weeks/week-02-overview/slides.md) | [lab](labs/setup/) |
-| 3 | Prompting & Context Engineering | [slides](weeks/week-03-prompting/slides.md) | [lab](labs/prompting/) |
-| 4 | Retrieval & Grounding | [slides](weeks/week-04-rag/slides.md) | [lab](labs/rag/) |
-| 5 | MCP | [slides](weeks/week-05-mcp/slides.md) | [lab](labs/mcp/) |
-| 6 | Coding Agents | [slides](weeks/week-06-agents/slides.md) | [lab](labs/agents/) |
-| — | Reading week | [details](weeks/week-06b-reading-week/README.md) | — |
-| 7 | **MCQ 1** (32%) | [details](weeks/week-07-mcq1/README.md) | — |
-| 8 | Security of AI-Generated Code | [slides](weeks/week-08-security/slides.md) | [lab](labs/security/) |
-| 9 | CLI Coding Agents | [slides](weeks/week-09-cli-agents/slides.md) | [lab](labs/cli-agents/) |
-| 10 | CI/CD & Evals | [slides](weeks/week-10-cicd/slides.md) | [lab](labs/cicd/) |
-| 11 | Vibe Coding & Spec-Driven | [slides](weeks/week-11-vibe-coding/slides.md) | [lab](labs/vibe-coding/) |
-| 12 | **MCQ 2** (32%) | [details](weeks/week-12-mcq2/README.md) | — |
+| 1 | Module Introduction | [slides](lectures/introduction/slides.md) | _No lab in week 1_ |
+| 2 | AIAP Overview | [slides](lectures/overview/slides.md) | [lab](labs/setup/) |
+| 3 | Prompting & Context Engineering | [slides](lectures/prompting/slides.md) | [lab](labs/prompting/) |
+| 4 | Retrieval & Grounding | [slides](lectures/rag/slides.md) | [lab](labs/rag/) |
+| 5 | MCP | [slides](lectures/mcp/slides.md) | [lab](labs/mcp/) |
+| 6 | Coding Agents | [slides](lectures/agents/slides.md) | [lab](labs/agents/) |
+| — | Reading week | — | — |
+| 7 | **MCQ 1** (32%) · held during the lab slot | [details](mcq/mcq1/README.md) | — |
+| 8 | Security of AI-Generated Code | [slides](lectures/security/slides.md) | [lab](labs/security/) |
+| 9 | CLI Coding Agents | [slides](lectures/cli-agents/slides.md) | [lab](labs/cli-agents/) |
+| 10 | CI/CD & Evals | [slides](lectures/cicd/slides.md) | [lab](labs/cicd/) |
+| 11 | Vibe Coding & Spec-Driven | [slides](lectures/vibe-coding/slides.md) | [lab](labs/vibe-coding/) |
+| 12 | **MCQ 2** (32%) · held during the lab slot | [details](mcq/mcq2/README.md) | — |
+<!-- schedule-table:end -->
 
-Reading week is always the week of the Irish October bank holiday, with
-six teaching weeks either side.
+The schedule is defined once, in [`module/schedule.json`](module/schedule.json);
+this table, the banner above it, the module site and the Moodle course page
+are all generated from it. Reading week is always the week of the Irish
+October bank holiday, and week 1 is worked out from that each year.
 
 ### The everyday uses, and where you practise them
 
@@ -108,8 +112,15 @@ own. They recur through the labs, so you meet each one more than once:
 <details>
 <summary>How the repo is put together (for maintainers)</summary>
 
-- **Lectures** are Marp markdown, one deck per teaching week in
-  `weeks/week-NN-<topic>/slides.md`. All ten are written. Every deck is
+- **The schedule is one file**, `module/schedule.json`: the order of
+  topics, which week teaches which deck and lab, and the assessment labels.
+  The table above, the site, the labs page and the Moodle course page are
+  generated from it, and `scripts/check_schedule.py` fails the build if
+  anything disagrees with it. There is no start date in it: week 1 is
+  derived from the October bank holiday every year.
+- **Lectures** are Marp markdown, one deck per topic in
+  `lectures/<topic>/slides.md`; folder names carry no week number. All ten
+  are written. Every deck is
   self-contained and names no lecturer or institution, so any week can be
   lifted into another course unchanged; the introduction may state its
   own schedule and link its own site. `scripts/check_deck_portability.py`
@@ -118,8 +129,8 @@ own. They recur through the labs, so you meet each one more than once:
   rather than week number so that a reshuffled schedule never breaks a
   student's instructions.
 - **Three GitHub Actions workflows.** `marp` runs on every push to `main`:
-  it runs the nine gates (safety audit, links, snippets, lab code, practice
-  bank, lab and deck structure, speaker notes, site index), renders every
+  it runs the ten gates (safety audit, links, snippets, lab code, practice
+  bank, lab and deck structure, speaker notes, schedule, site index), renders every
   deck to HTML and PDF, builds the lab pages and the practice app, and
   publishes the site straight to GitHub Pages — nothing is committed back.
   `current-week` runs every Monday and rewrites the banner above this

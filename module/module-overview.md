@@ -31,24 +31,24 @@ now stand rather than quietly ageing:
   Accountability did not move anywhere.
 - **RAG is not dead, but it is no longer the default.** Long context
   handles small corpora better and more cheaply; retrieval earns its place
-  on scale, cost, freshness and citation. Week 4 now teaches the decision,
-  not just the pipeline.
-- **Prompt engineering is being subsumed by context engineering.** Week 3
+  on scale, cost, freshness and citation. The retrieval deck teaches the
+  decision, not just the pipeline.
+- **Prompt engineering is being subsumed by context engineering.** The prompting deck
   keeps the SPEC drills — they are the practisable half — and adds the
   question that matters more now: *is this wrong because I asked badly, or
   because it doesn't know something?*
 - **MCP became a standard and then changed shape.** The 2026-07-28
   specification removed the `initialize` handshake and session header for
-  a stateless core. Week 5 teaches both models and why the change happened.
+  a stateless core. The MCP deck teaches both models and why the change happened.
 - **Spec-driven development is the counter-trend to vibe coding**, and
-  week 11 now runs them against each other rather than demonstrating one.
+  the vibe-coding deck runs them against each other rather than demonstrating one.
 - **Security of AI-generated code** has a week of its own. Around 45% of
   AI-generated samples carry an OWASP Top-10 vulnerability, and
   slopsquatting — registering the package names models hallucinate — is
-  an attack with no pre-AI equivalent. Week 11's lab still audits an app
+  an attack with no pre-AI equivalent. The vibe-coding lab still audits an app
   the students vibe-coded, and still reliably finds something.
-- **Licensing and confidentiality are taught in week 1**, before the
-  first tool is installed. A licence follows the code, not the typist, so
+- **Licensing and confidentiality are taught in the introduction**, before
+  the first tool is installed. A licence follows the code, not the typist, so
   generated code is treated as code of unknown origin; and what goes into
   a hosted assistant leaves the machine, so credentials, personal data and
   code the student has no right to share never go into a prompt. The law
@@ -57,7 +57,7 @@ now stand rather than quietly ageing:
 - **Coding agents moved into the terminal.** An agent with a shell is
   decided less by the prompt than by its configuration: standing
   instructions (`AGENTS.md`, now an open format most agents read), custom
-  commands, and allow/ask/deny permission policies. Week 9 teaches that
+  commands, and allow/ask/deny permission policies. The CLI agents deck teaches that
   configuration model rather than a tour of tools, because the tools
   change every few months and the model does not.
 
@@ -65,23 +65,28 @@ Percentages here come from 2026 industry surveys of varying rigour. They
 are taught as indicative of direction, and that caveat is taught with
 them.
 
-## Weekly topics
+## Topics
 
-| Week | Topic | What it covers | Lab |
-|---|---|---|---|
-| 1 | Module Introduction | How the module runs, assessment, tooling setup | — |
-| 2 | AIAP Overview | What AI-assisted programming is; the landscape and its limits | [setup](../labs/setup/) |
-| 3 | Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../labs/prompting/) |
-| 4 | Retrieval &amp; Grounding | Chunking, embeddings, vector search, grounded answers — when long context beats retrieval outright, and how an assistant finds its way round a codebase | [rag](../labs/rag/) |
-| 5 | MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../labs/mcp/) |
-| 6 | Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../labs/agents/) |
-| — | *Reading week* | October bank-holiday week — revision for MCQ 1 | — |
-| 7 | **MCQ 1 (32%)** | Assessment on weeks 1–6, lectures and labs | — |
-| 8 | Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../labs/security/) |
-| 9 | CLI Coding Agents | Agents in the terminal, configured before they are trusted: standing instructions (`AGENTS.md`), built-in and custom slash commands, allow/ask/deny permission policies, and running an agent from a script | [cli-agents](../labs/cli-agents/) |
-| 10 | CI/CD | Pipelines with GitHub Actions, and putting AI inside them (review, triage) | [cicd](../labs/cicd/) |
-| 11 | Vibe Coding &amp; Spec-Driven Development | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../labs/vibe-coding/) |
-| 12 | **MCQ 2 (32%)** | Assessment on weeks 8–11, lectures and labs | — |
+The order, and the week each topic falls in, come from
+[`module/schedule.json`](schedule.json); the README, the module site and the
+Moodle course page are generated from it. This table says only what each
+topic covers.
+
+| Topic | What it covers | Lab |
+|---|---|---|
+| Module Introduction | How the module runs, assessment, tooling setup; licensing and confidentiality before the first tool is installed | — |
+| AIAP Overview | What AI-assisted programming is; the landscape and its limits | [setup](../labs/setup/) |
+| Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../labs/prompting/) |
+| Retrieval &amp; Grounding | Chunking, embeddings, vector search, grounded answers — when long context beats retrieval outright, and how an assistant finds its way round a codebase | [rag](../labs/rag/) |
+| MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../labs/mcp/) |
+| Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../labs/agents/) |
+| Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../labs/security/) |
+| CLI Coding Agents | Agents in the terminal, configured before they are trusted: standing instructions (`AGENTS.md`), built-in and custom slash commands, allow/ask/deny permission policies, and running an agent from a script | [cli-agents](../labs/cli-agents/) |
+| CI/CD &amp; Evals | Pipelines with GitHub Actions, and putting AI inside them (review, triage); evals as a ladder of checks | [cicd](../labs/cicd/) |
+| Vibe Coding &amp; Spec-Driven | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../labs/vibe-coding/) |
+
+**MCQ 1** (32%) covers everything before the reading week and **MCQ 2**
+(32%) everything after it; both are sat in person during the lab slot.
 
 Nine **Practical Assessments** (4% each) make up the remaining 36%: one
 for each lab in weeks 2–6 and 8–11, on Moodle, each open for its lab's

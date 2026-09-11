@@ -51,7 +51,7 @@ withholding — by teaching while you help:
   from lecture and lab material.
 - If they ask for a whole feature, build it — then walk them through it.
 
-**Where the content is.** Lectures: `weeks/week-NN-<topic>/slides.md`
+**Where the content is.** Lectures: `lectures/<topic>/slides.md`
 (Marp markdown — the teaching is in the prose, the fenced code, and the
 `<!-- Speaker notes: ... -->` comments). Labs:
 `labs/<topic>/README.md` beside the code the student edits. A rendered,
@@ -73,8 +73,19 @@ that sign-in lives in the agent's own configuration, never in the repo.
 
 ## Map
 
-- `weeks/week-NN-<topic>/slides.md` — Marp deck, THE canonical lecture.
-  Week folders hold the lecture only; labs live under `labs/`.
+- `module/schedule.json` — THE schedule, stated once: the order of topics,
+  which week teaches which deck and lab, the reading-week row and the
+  assessment labels. The README's banner and table, the module overview's
+  topic order, the site index, the labs page order, the published
+  `schedule.json` the Moodle course page reads, and the redirect stubs for
+  old deck URLs are all generated from it (`scripts/schedule.py` loads it;
+  `scripts/check_schedule.py` fails the build if any view disagrees). It
+  carries no start date: week 1 is derived each year from the Irish October
+  bank holiday, the reading week. Nothing else in the repo may state a week
+  number.
+- `lectures/<topic>/slides.md` — Marp deck, THE canonical lecture. Folder
+  names carry no week number and decks declare none; the schedule does.
+  Lecture folders hold the lecture only; labs live under `labs/`.
 - `labs/<topic>/` — THE canonical labs: `README.md` (the instructions
   students follow) plus starter code. Students copy the repo from the
   template and work here; a devcontainer provides Python 3.12, Node 22 and
@@ -88,17 +99,13 @@ that sign-in lives in the agent's own configuration, never in the repo.
   in `current-week.yml`'s case commit to the student's own README.
 - **Labs are addressed by TOPIC, never by week number.** Week numbers move
   between years — this module went from 13 weeks to 12 — and student
-  instructions should not follow them. The week number appears only in
-  README's schedule table. `build_index.py` maps week folder → lab folder
-  by topic slug, with `LAB_OVERRIDES` for the single week (week 2:
-  overview lecture, setup lab) where the two names genuinely differ.
-- `weeks/week-07-mcq1/`, `weeks/week-12-mcq2/` and
-  `weeks/week-06b-reading-week/` — non-teaching weeks. Their `README.md`
-  is the ONLY tracked file in each folder, so it is load-bearing: git does
-  not track empty directories, and `build_index.py` derives the site's MCQ
-  and reading-week rows from these folder names. Deleting the README
-  deletes the row. MCQ question content lives in Moodle only — never
-  commit it here.
+  instructions should not follow them. The schedule names each week's lab
+  by folder, so the one week whose lab is not its lecture's topic (the
+  overview lecture with the setup lab) is just a row like any other.
+- `mcq/mcq1/README.md`, `mcq/mcq2/README.md` — the pages the schedule's
+  MCQ rows link to (what each covers, how to prepare). Their titles carry
+  no week number. The reading week is a schedule row only, no page. MCQ
+  question content lives in Moodle only — never commit it here.
 - `practice/` — the MCQ practice web app (`index.html`, self-contained
   vanilla JS) plus its bank (`bank/<topic>.json`). Bank questions are
   PRACTICE questions authored from the decks and labs — never the real
@@ -110,11 +117,9 @@ that sign-in lives in the agent's own configuration, never in the repo.
 
 ## All ten decks are written
 
-`PENDING_DECKS` in `scripts/build_index.py` is an **empty set** and must
-stay that way. It exists for the case where a week folder is created
-before its deck; a week in that list *and* holding a `slides.md` fails the
-build, deliberately, because a written deck hidden behind a "pending" row
-is the same failure as a missing one.
+The schedule names every deck. A row naming a deck folder that does not
+exist, or a deck folder no row names, fails `check_schedule.py` — so a
+deck can neither vanish from the site nor sit half-created with CI green.
 
 The 2025 PowerPoints in the module owner's OneDrive are **superseded, not
 sources**. The decks here were authored, not transcribed: the originals
@@ -123,35 +128,35 @@ statistics, and several were materially wrong by 2026.
 
 ### What each deck carries, and must keep carrying
 
-- **Week 3 (Prompting)** — keep the SPEC drills, then teach
+- **Prompting** — keep the SPEC drills, then teach
   **context engineering**: the shift from *how you ask* to *what you put
   in front of the model*. The deck's job is the diagnostic question — "is
   this answer wrong because I asked badly, or because it doesn't know
   something?" — because rewording cannot fix missing information. Note
   that more context is not better: a huge irrelevant paste makes answers
   worse.
-- **Week 4 (RAG)** — teach the **decision** before the pipeline. Long
+- **Retrieval and grounding (RAG)** — teach the **decision** before the pipeline. Long
   context beats retrieval on small corpora; retrieval wins on scale, cost,
   freshness and citation, with the crossover around a couple of thousand
   pages. Cover the failure modes of long context (lost-in-the-middle,
   dilution) so "just paste everything" is not the takeaway either. The
   hybrid — bounded retrieval, then long-context reasoning over the result
   — is the shape most real systems use.
-- **Week 5 (MCP)** — the 2026-07-28 spec removed the
+- **MCP** — the 2026-07-28 spec removed the
   `initialize`/`initialized` handshake and `Mcp-Session-Id`, deprecated
   HTTP+SSE on a year-long offramp, and added header-based routing plus
   Multi Round-Trip Requests. Teach *why*: a handshake forces the server to
   remember who you are, which is fine on one machine and miserable behind
   a load balancer. State became an explicit handle a tool mints and the
   model passes back.
-- **Week 9 (CLI Coding Agents)** — teach the **configuration model**, not
+- **CLI Coding Agents** — teach the **configuration model**, not
   a tour of tools: standing instructions (`AGENTS.md`), built-in and
   custom slash commands, and allow/ask/deny permissions, where deny wins
   and anything unlisted is asked. Tool names, plans and matching rules
   change every few months, so the deck teaches the columns and dates the
   cells. The hook is the July 2025 Gemini CLI incident: a failed `mkdir`
   nobody checked, then moves that overwrote the files one by one.
-- **Week 11 (Vibe Coding)** — run vibe coding **against**
+- **Vibe Coding** — run vibe coding **against**
   spec-driven development rather than demonstrating one. Carry the cost
   data (see below) and the two terms students will meet everywhere:
   **comprehension debt** and **haunted codebases**.
@@ -159,7 +164,7 @@ statistics, and several were materially wrong by 2026.
   about the limits of AI-generated code. See `module/module-overview.md`
   under "Currency" for the module's stated position.
 
-**On the statistics.** Week 1 and the vibe-coding lab quote 2026 industry
+**On the statistics.** The introduction and the vibe-coding lab quote 2026 industry
 figures (92% daily use / 29% trust / 48% always review / 1.7× defects /
 ~45% OWASP). These come from surveys of varying rigour that recycle each
 other. They are taught as **direction, not decimal points**, and the
@@ -169,9 +174,10 @@ that caveat attached, and do not sharpen these into false precision.
 ## Conventions (guaranteed repo-wide)
 
 - Folder/file names: kebab-case, no spaces.
-- Every `slides.md` starts with YAML frontmatter: `title`, `week` (int),
-  `topic` (kebab slug), `type` (`lecture`), `source` (`authored`),
-  `marp: true`, `theme: aiap`, `paginate`. Lab READMEs carry no
+- Every `slides.md` starts with YAML frontmatter: `title`, `topic` (kebab
+  slug), `type` (`lecture`), `source` (`authored`), `marp: true`,
+  `theme: aiap`, `paginate` — and no `week:`, which the schedule states and
+  `check_schedule.py` rejects. Lab READMEs carry no
   frontmatter — they are read as plain markdown on GitHub and on the site.
 - Slides are separated by `---` on its own line; slide 1 uses `#`, the rest `##`.
 - All decks use `themes/aiap.css` — edit the theme to restyle every deck at
@@ -257,8 +263,8 @@ cohorts.
 - Decks are SELF-CONTAINED and reusable: never reference other weeks or
   the module schedule, and never name an institution, a lecturer, a VLE
   or a course code — any lecturer in any college must be able to present
-  a deck as it stands. Exempt from the schedule rule only: title-slide
-  kickers, frontmatter `week:`, and week-01's module-logistics act, which
+  a deck as it stands. Exempt from the schedule rule only: the
+  introduction's module-logistics act, which
   may state its own schedule and link its own site and repo (the links are
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
@@ -297,8 +303,8 @@ slide's speaker note must name **the wrong answer to expect and the
 faulty reasoning behind it** — the slide already states the right answer,
 and the misconception is the thing an AI reading the deck cannot infer.
 
-Week 1 is the one exception: a two-act deck (logistics, then content),
-about an hour long by design, still hook-first and Summary-last.
+The introduction is the one exception: a two-act deck (the argument, then
+logistics), about an hour long by design, still hook-first and Summary-last.
 
 ### Lab formula — every lab, same shape
 
@@ -337,25 +343,26 @@ produces; never omit both, or the student has no way to self-check.
 
 ## Editing rules
 
-- To change a lecture: edit its `weeks/week-NN-<topic>/slides.md` and push —
+- To change a lecture: edit its `lectures/<topic>/slides.md` and push —
   CI re-renders the deck and republishes the site.
 - To add a lab: create `labs/<topic>/` with a `README.md` to the formula
   above plus starter code, and add `"<topic>"` to `CONFORMING` in
   `scripts/check_lab_structure.py`. If its tests need a live key, add it to
   `NEEDS_KEY` in `scripts/verify_labs.py`; if it ships a test meant to stay
   red until the student writes it, add it to `PLACEHOLDER_TESTS`.
-- To add or move a teaching week: create `weeks/week-NN-<topic>/slides.md`
-  (a teaching-week folder with no deck fails `build_index.py`). An MCQ
-  week's folder must end in `mcqN` and a reading week's name must contain
-  `reading-week`; both render as marker rows. Labs are found by topic slug,
-  with `LAB_OVERRIDES` in `build_index.py` for the one week whose lab name
-  differs from its topic.
+- To add, move or drop a teaching week: edit `module/schedule.json` (the
+  order, the week numbers, each row's `lecture` and `lab` folders and
+  `assessment` label), add or remove `lectures/<topic>/`, then run
+  `python scripts/update_current_week.py` to regenerate the README's table.
+  `check_schedule.py` fails on any disagreement; nothing else may state a
+  week number. When a deck folder is renamed, add the old name to
+  `OLD_FOLDERS` in `build_index.py` so its old URL still resolves.
 - Never edit the published HTML — it is generated. Edit the Markdown source
   and let CI rebuild.
 
 ## The gates
 
-Nine run on every push. Before any push, all must pass:
+Ten run on every push. Before any push, all must pass:
 
     python scripts/safety_audit.py           # credentials, student data, bad paths
     python scripts/check_links.py            # every relative link and anchor resolves
@@ -365,6 +372,7 @@ Nine run on every push. Before any push, all must pass:
     python scripts/check_lab_structure.py    # every lab follows the formula
     python scripts/check_deck_portability.py # every deck is liftable to another course
     python scripts/check_speaker_notes.py    # notes are AI-usable; predicts name the misconception
+    python scripts/check_schedule.py         # the schedule is stated once, and every view agrees with it
     python scripts/build_index.py build      # week <-> deck <-> lab structure holds
 
 - `verify_snippets.py` is this repo's replacement for OOC's `javac` gate.
@@ -408,7 +416,7 @@ Nine run on every push. Before any push, all must pass:
                          # package.json, the same one CI installs. There is no
                          # committed lockfile: CI uses `npm install -g <pinned>`
                          # and never reads one.
-    npm run preview      # live server over weeks/ -> http://localhost:8080
+    npm run preview      # live server over the repo -> http://localhost:8080
     npm run export:intro # one deck straight to build/…/slides.pdf
 
 After editing a deck's layout, re-render and check nothing overflows the

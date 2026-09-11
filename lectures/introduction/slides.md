@@ -1,6 +1,5 @@
 ---
 title: Module Introduction
-week: 1
 topic: introduction
 type: lecture
 source: authored

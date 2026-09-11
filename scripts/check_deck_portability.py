@@ -28,10 +28,10 @@ import re
 import sys
 from pathlib import Path
 
-WEEKS = Path("weeks")
+LECTURES = Path("lectures")
 
 # The introduction: identity rules apply, schedule rules do not.
-INTRO = "week-01-introduction"
+INTRO = "introduction"
 URL_RE = re.compile(r"https?://\S+")
 
 # Identity and institution. Extend if the module changes hands -- the
@@ -103,9 +103,9 @@ def check(deck: Path, identity_only: bool = False) -> list[str]:
 
 
 def main() -> int:
-    if not WEEKS.is_dir():
+    if not LECTURES.is_dir():
         return 0
-    decks = sorted(WEEKS.glob("week-*/slides.md"))
+    decks = sorted(LECTURES.glob("*/slides.md"))
     findings = []
     for deck in decks:
         findings.extend(check(deck, identity_only=(deck.parent.name == INTRO)))

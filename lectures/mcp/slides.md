@@ -1,6 +1,5 @@
 ---
 title: Model Context Protocol
-week: 5
 topic: mcp
 type: lecture
 source: authored

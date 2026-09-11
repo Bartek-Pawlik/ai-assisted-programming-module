@@ -1,6 +1,5 @@
 ---
 title: Automated Checking and Evals
-week: 10
 topic: cicd
 type: lecture
 source: authored

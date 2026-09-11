@@ -51,8 +51,8 @@ fi
 
 # The course files, listed one by one (not as directories) so that editing
 # one file never blocks the rest from updating: every tracked file under
-# weeks/ (the lectures), labs/ (instructions, worksheets AND starter code)
-# and .devcontainer/, plus the README.
+# lectures/, mcq/, labs/ (instructions, worksheets AND starter code),
+# module/ (the schedule and overview) and .devcontainer/, plus the README.
 #
 # Starter code is included so that a fix to a lab you have not started yet
 # still reaches you. The rule further down keeps every file you have edited,
@@ -66,7 +66,7 @@ fi
 # scripts (the module site serves what those produce).
 mapfile -t PATHS < <(
   git ls-tree -r --name-only "upstream/$BRANCH" | grep -E \
-    '^(README\.md|weeks/.*|labs/.*|\.devcontainer/.*)$' || true
+    '^(README\.md|lectures/.*|mcq/.*|labs/.*|module/.*|\.devcontainer/.*)$' || true
 )
 
 # Baseline = the content as you last received it: the commit recorded by the
@@ -105,11 +105,11 @@ for p in "${PATHS[@]}"; do
   git checkout --quiet "upstream/$BRANCH" -- "$p" 2>/dev/null && touched+=("$p")
 done
 
-# Course-owned pages that upstream has since removed or renamed (a week folder
-# under its new name, a retired week) — drop our copy too, or the old and the
-# new sit side by side. Same rule as above: a file you edited is yours and
-# stays. Only weeks/ is scanned; lab folders hold your own code and
-# worksheets, so a retired lab README is left in place rather than risk
+# Course-owned pages that upstream has since removed or renamed (a deck folder
+# under its new name, a retired MCQ page) — drop our copy too, or the old and
+# the new sit side by side. Same rule as above: a file you edited is yours and
+# stays. Only lectures/ and mcq/ are scanned; lab folders hold your own code
+# and worksheets, so a retired lab file is left in place rather than risk
 # deleting your work.
 while IFS= read -r p; do
   [ -n "$p" ] || continue
@@ -121,7 +121,7 @@ while IFS= read -r p; do
     continue
   fi
   git rm -q -- "$p" 2>/dev/null && touched+=("$p") && say "  removed (retired upstream): $p"
-done < <(git ls-files -- 'weeks/*')
+done < <(git ls-files -- 'lectures/*' 'mcq/*')
 
 # Local bookkeeping only -- gitignored, never committed, never pushed.
 git rev-parse "upstream/$BRANCH" > "$MARKER"
