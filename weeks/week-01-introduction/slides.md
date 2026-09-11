@@ -17,11 +17,9 @@ this module is "how to use Copilot", and it is not. -->
 
 <!-- _class: lead -->
 
-<span class="kicker">// AI-Assisted Programming · Semester 1</span>
+<span class="kicker">// AI-Assisted Programming</span>
 
 # Module Introduction
-
-Atlantic Technological University
 
 ---
 
@@ -198,7 +196,7 @@ this deck or the repo: the deck is published on a public website. -->
 
 1. Go to **vlegalwaymayo.atu.ie**
 2. Search for course **10720** — *AI Assisted Programming*
-3. Find out which group you are in (A, B or C)
+3. Find out which group you are in (A, B, C or D)
 4. Click **Enrol** and use your group's enrolment password
 
 <div class="callout">
@@ -243,7 +241,7 @@ as zero — it is not dropped from the total. -->
 
 <div class="callout">
 
-**Nine small assessments are 36% of the module.** A missed one counts as
+**Nine small continuous assessments are 36% of the module.** A missed one counts as
 zero, and each closes at the end of its week.
 
 </div>
@@ -256,7 +254,7 @@ are surprised by lab questions. The NotebookLM tip is genuinely good; also
 point at the practice app on the module site, which is built from this
 module's own material. -->
 
-## The MCQs
+## The two MCQs
 
 * Multiple choice, sat **in person** in the lab slot
 
@@ -277,7 +275,7 @@ question in". Each question is built so the question alone is not enough —
 it asks about the lab code in front of them, what it actually does when
 run, or what is true right now. Doing the lab is the preparation. -->
 
-## The practical assessments
+## The Practical Assessments (PAs)
 
 - **One per lab**, on Moodle, worth **4%** each
 - Open **all week** — do it when it suits you, not only in the lab
@@ -286,26 +284,6 @@ run, or what is true right now. Doing the lab is the preparation. -->
   front of you** and what it actually does
 
 <span class="kicker">// the first one opens with the first lab</span>
-
----
-
-<!-- Speaker notes: ~0:26. Effort. Say the hours out loud: 5 credits is
-100-125 hours across 12 weeks, which is roughly 8-10 hours a week
-INCLUDING the 3 contact hours. So 5-7 hours of their own time weekly. Most
-students underestimate this by half. -->
-
-## Effort required
-
-- A **5-credit** module — 100–125 hours of work
-- Across 12 weeks, that is roughly **8–10 hours a week**, contact time
-  included
-- Self-directed learning is the main source of learning
-
-<div class="callout">
-
-Three of those hours are timetabled. The rest are yours to schedule.
-
-</div>
 
 ---
 
@@ -357,12 +335,19 @@ correction and their copy may not. -->
 
 - **The module site** — every lecture, every lab and the MCQ practice, in
   a browser
+<div style="text-align: center; font-size: 1.5em;">
+  <a href="http://danielcregg.is-a.dev/ai-assisted-programming">http://danielcregg.is-a.dev/ai-assisted-programming</a>
+</div>
+<br>
+
 - **Your own copy** — click *Use this template* to get a private
   repository for your lab work
-- The site is always current. If a lab is corrected, it is corrected there
-  first.
 
-<span class="kicker">// danielcregg.is-a.dev/ai-assisted-programming</span>
+
+<div style="text-align: center; font-size: 1.5em;">
+  <a href="https://github.com/danielcregg/ai-assisted-programming">https://github.com/danielcregg/ai-assisted-programming</a>
+</div>
+<br>
 
 ---
 
