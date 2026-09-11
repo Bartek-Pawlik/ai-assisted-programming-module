@@ -1,8 +1,8 @@
 # Module overview
 
 **AI-Assisted Programming** — Atlantic Technological University, semester 1.
-A 5-credit module: 100–125 hours across 12 teaching weeks, of which 36 are
-contact hours (1 hour lecture + 2 hour lab per week).
+A 5-credit module: 100–125 hours across 12 teaching weeks, of which 48 are
+contact hours (2 hour lecture + 2 hour lab per week).
 
 ## The argument
 

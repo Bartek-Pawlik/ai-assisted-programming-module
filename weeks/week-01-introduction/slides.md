@@ -179,11 +179,11 @@ the week straight after it. -->
 - **12 teaching weeks**, plus a reading week
 - Reading week is the October bank-holiday week — it sits between week 6
   and MCQ 1
-- Each week: **1 hour lecture + 2 hour lab**
+- Each week: **2 hour lecture + 2 hour lab**
 - **No lab in week 1** — labs start next week
 - The class is split into groups for labs; check your timetable
 
-<span class="kicker">// timetables.atu.ie</span>
+<span class="kicker">// your lab group and room are on your timetable</span>
 
 ---
 
@@ -192,11 +192,11 @@ they enrol, it is faster than answering it by email for two weeks. The
 group passwords are given out HERE, verbally, and are deliberately not in
 this deck or the repo: the deck is published on a public website. -->
 
-## Enrol on Moodle
+## Enrol on the VLE
 
-1. Go to **vlegalwaymayo.atu.ie**
-2. Search for course **10720** — *AI Assisted Programming*
-3. Find out which group you are in (A, B, C or D)
+1. Go to your college's **VLE** — the link is on your timetable
+2. Search for **AI-Assisted Programming**
+3. Find out which lab group you are in (A, B, C or D)
 4. Click **Enrol** and use your group's enrolment password
 
 <div class="callout">
@@ -267,8 +267,8 @@ week's material to a tool like NotebookLM and ask it to generate questions.
 
 ---
 
-<!-- Speaker notes: ~0:23. The practical assessments. One short Moodle
-question per lab, open Monday to Sunday of that lab's week, one attempt,
+<!-- Speaker notes: ~0:23. The practical assessments. One short online
+question per lab on the VLE, open Monday to Sunday of that lab's week, one attempt,
 submitted automatically when the week closes. AI tools are allowed, as in
 the labs. The misconception to head off: "if AI is allowed, I can paste the
 question in". Each question is built so the question alone is not enough —
@@ -277,7 +277,7 @@ run, or what is true right now. Doing the lab is the preparation. -->
 
 ## The Practical Assessments (PAs)
 
-- **One per lab**, on Moodle, worth **4%** each
+- **One per lab**, on the VLE, worth **4%** each
 - Open **all week** — do it when it suits you, not only in the lab
 - You **may** use AI tools, as you do in the labs
 - But the question alone is not enough: each asks about **the lab code in
@@ -358,7 +358,7 @@ Leave time for questions. -->
 
 ## Summary
 
-- **12 weeks**, 1 hour lecture + 2 hour lab, no lab this week
+- **12 weeks**, 2 hour lecture + 2 hour lab, no lab this week
 - **32% + 32% + 9 × 4%** — two MCQs and nine practical assessments
 - The first practical assessment opens **next week**, with the first lab
 - Set up GitHub and the Student Developer Pack **before** next week

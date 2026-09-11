@@ -14,10 +14,13 @@ a deliberately narrow pattern, because English is full of innocent uses of
 "next week" inside an example, and a gate that cries wolf gets switched
 off.
 
-The week-01 deck is EXEMPT and always will be: a module introduction is
-inherently about a specific module at a specific institution. It is the
-one deck nobody can lift, which is exactly why every other deck must be
-liftable. Keep the exemption list at one entry.
+The module introduction is a partial exception, not an exemption. It may
+talk about its own schedule ("week 7", "the module") and link to its own
+site and repository -- that is what an introduction is for -- but it must
+not name an institution, a lecturer, a VLE or a course code any more than
+the other decks: a lecturer at another college should be able to present
+it after swapping two links. So it is checked for IDENTITY only, with URLs
+blanked out first.
 
 Run from the repo root:  python scripts/check_deck_portability.py
 """
@@ -27,8 +30,9 @@ from pathlib import Path
 
 WEEKS = Path("weeks")
 
-# The only deck allowed to be institution-specific. Do not add to this.
-EXEMPT = {"week-01-introduction"}
+# The introduction: identity rules apply, schedule rules do not.
+INTRO = "week-01-introduction"
+URL_RE = re.compile(r"https?://\S+")
 
 # Identity and institution. Extend if the module changes hands -- the
 # point is that NO owner's name appears, not that this one's does not.
@@ -60,14 +64,18 @@ SCHEDULE = {
 FRONTMATTER_WEEK = re.compile(r"(?m)^week:\s*\d+\s*$")
 
 
-def check(deck: Path) -> list[str]:
+def check(deck: Path, identity_only: bool = False) -> list[str]:
     text = deck.read_text(encoding="utf-8")
     text = FRONTMATTER_WEEK.sub("", text, count=1)
+    patterns = IDENTITY if identity_only else {**IDENTITY, **SCHEDULE}
 
     findings = []
     for lineno, line in enumerate(text.split("\n"), start=1):
-        for label, pattern in {**IDENTITY, **SCHEDULE}.items():
-            m = pattern.search(line)
+        # The introduction may link to its own site and repo; the link is
+        # the thing another lecturer swaps, so it is not a portability fault.
+        scan = URL_RE.sub("", line) if identity_only else line
+        for label, pattern in patterns.items():
+            m = pattern.search(scan)
             if m:
                 findings.append(
                     f"{deck.as_posix()}:{lineno}: {label} -> {m.group(0)!r}")
@@ -78,23 +86,21 @@ def main() -> int:
     if not WEEKS.is_dir():
         return 0
     decks = sorted(WEEKS.glob("week-*/slides.md"))
-    findings, checked = [], 0
+    findings = []
     for deck in decks:
-        if deck.parent.name in EXEMPT:
-            continue
-        checked += 1
-        findings.extend(check(deck))
+        findings.extend(check(deck, identity_only=(deck.parent.name == INTRO)))
 
     for line in findings:
         print(line)
     if findings:
-        print(f"\n{len(findings)} portability problem(s). Every deck except "
-              f"the module introduction must be teachable by another lecturer "
-              f"in another course, unchanged.", file=sys.stderr)
+        print(f"\n{len(findings)} portability problem(s). Every deck must be "
+              f"teachable by another lecturer in another college, unchanged; "
+              f"the introduction may state its own schedule and links but "
+              f"not its institution.", file=sys.stderr)
         return 1
 
-    print(f"check_deck_portability: {checked} deck(s) are self-contained "
-          f"({len(EXEMPT)} exempt)")
+    print(f"check_deck_portability: {len(decks)} deck(s) are self-contained "
+          f"(the introduction checked for identity only)")
     return 0
 
 

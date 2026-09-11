@@ -44,7 +44,8 @@ MISCONCEPTION_RE = re.compile(
     r"students? (?:assume|think|believe|expect)|"
     r"the room (?:assumes|thinks|guesses|expects)|commonly assume")
 
-# `~H:MM` — an hour lecture, so hours is 0 and minutes is 0-59.
+# `~H:MM` — lectures are two-hour slots, so hours is 0 or 1 and minutes is
+# 0-59. Anything from 2:00 up is the M:SS slip (`~47:00` meaning 47 minutes).
 GOOD_TIMING_RE = re.compile(r"~(\d+):([0-5]\d)\b")
 
 STAGE_RE = re.compile(
@@ -84,15 +85,15 @@ def check(deck: Path) -> list[str]:
                 f"note never names the WRONG answer to expect — which is the "
                 f"only thing an assistant cannot infer from the slide")
 
-        # An hour-long lecture, so hours is always 0 and minutes 0-59.
-        # Without the hours==0 rule, `~47:00` passes as "47 hours" -- which
-        # is exactly the M:SS slip this check exists to catch.
+        # A two-hour lecture, so hours is 0 or 1 and minutes 0-59. Without
+        # the hours<=1 rule, `~47:00` passes as "47 hours" -- which is
+        # exactly the M:SS slip this check exists to catch.
         for hrs, mins in re.findall(r"~(\d+):(\d\d)\b", note):
-            if int(hrs) != 0 or int(mins) > 59:
+            if int(hrs) > 1 or int(mins) > 59:
                 findings.append(
                     f"{rel}: slide {i}: timing ~{hrs}:{mins} is not ~H:MM "
-                    f"cumulative elapsed — twenty minutes in is ~0:20, "
-                    f"not ~20:00")
+                    f"cumulative elapsed — twenty minutes in is ~0:20 and an "
+                    f"hour and ten is ~1:10, not ~70:00")
         if "~" in note and not GOOD_TIMING_RE.search(note):
             findings.append(
                 f"{rel}: slide {i}: timing marker is malformed — expected "

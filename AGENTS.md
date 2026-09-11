@@ -255,22 +255,40 @@ Notes **ship inside the rendered HTML** and are readable by anyone viewing
 source, so write them publishable: nothing about individual students or
 cohorts.
 - Decks are SELF-CONTAINED and reusable: never reference other weeks or
-  the module schedule. Exempt: title-slide kickers, frontmatter `week:`,
-  and week-01's module-logistics act.
+  the module schedule, and never name an institution, a lecturer, a VLE
+  or a course code — any lecturer in any college must be able to present
+  a deck as it stands. Exempt from the schedule rule only: title-slide
+  kickers, frontmatter `week:`, and week-01's module-logistics act, which
+  may state its own schedule and link its own site and repo (the links are
+  what another lecturer swaps) but is held to the identity rule like every
+  other deck. `check_deck_portability.py` enforces both.
 
 ### Deck flow — every topic deck, same shape
 
-Mirrors the sibling OOC module so a student moving between them never has
-to relearn where things are:
+Lectures are **two-hour** slots. The shape mirrors the sibling OOC module
+so a student moving between them never has to relearn where things are:
 
     title (lead + kicker)
       -> hook: a problem, a number, or a question (1-2 slides)
-      -> "the idea": the one sentence the hour is about
-      -> agenda
-      -> concepts, each with a worked example
-      -> 3-4 PREDICT beats spaced through the hour
+      -> "the idea": the one sentence the two hours are about
+      -> agenda, naming both halves
+      -> PART 1 (~0:05 to ~0:55): the core concepts, each with a worked
+         example, and 2-3 PREDICT beats
+      -> break: one `lead` slide at about ~0:55 — "ten minutes", and the
+         question part 2 answers
+      -> PART 2 (~1:05 to ~1:45): the deeper mechanism, a second worked
+         case, and ONE "try it now" activity (5-10 minutes, students on
+         their own laptops, with a .prompt box to type), plus 2-3 more
+         PREDICT beats
       -> common mistakes / honest limits
       -> Summary            <- ALWAYS last, no resources slide after it
+
+Timing notes run from ~0:01 to about ~1:45, which leaves the break and
+questions inside the slot; `check_speaker_notes.py` accepts hours 0 and 1.
+Part 2 is not padding: it is where the mechanism gets explained rather
+than named, and where the room does something with its hands. Do not add
+a statistic or a dated claim to fill time — reuse a figure the deck or its
+lab already carries, or make the point without one.
 
 **Predict beats** are the load-bearing part. A slide poses something and
 the room commits to an answer out loud *before* the reveal; answers are
@@ -280,7 +298,7 @@ faulty reasoning behind it** — the slide already states the right answer,
 and the misconception is the thing an AI reading the deck cannot infer.
 
 Week 1 is the one exception: a two-act deck (logistics, then content),
-still hook-first and Summary-last.
+about an hour long by design, still hook-first and Summary-last.
 
 ### Lab formula — every lab, same shape
 
