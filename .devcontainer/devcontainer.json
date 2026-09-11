@@ -32,10 +32,11 @@
   // Each time the workspace is opened: first take any commit the nightly
   // course-sync workflow pushed to your repo overnight (fast-forward only, so
   // it can never merge, rebase or touch your own work; if it cannot fast-
-  // forward it simply does nothing), then refresh the lectures and lab
-  // instructions from the module repo. Content only -- it never touches
-  // your own code -- and it exits quietly (never non-zero) so it can't stop
-  // the Codespace starting if you are offline. In the module's own repo the
+  // forward it simply does nothing), then refresh the lectures, lab
+  // instructions, this configuration and any lab starter file you have not
+  // changed from the module repo. A file you edited or created is always
+  // kept, and it exits quietly (never non-zero) so it can't stop the
+  // Codespace starting if you are offline. In the module's own repo the
   // sync does nothing.
   "postAttachCommand": "(git pull --ff-only --quiet origin main || true) && bash scripts/update-course-content.sh --quiet || true"
 }

@@ -87,9 +87,11 @@ wrong. To pull corrections into your own copy:
 - **A button** — *Terminal → Run Task → Update course content*.
 - **One line** — `bash scripts/update-course-content.sh`.
 
-It only ever touches lab instructions, lectures and the README. It never
-touches code you wrote, and if you've edited a file it keeps your version
-and tells you.
+It refreshes the lectures, the lab instructions, the README, the Codespace
+configuration, and any lab starter file you have **not** changed — so a
+fix to a lab you have not started yet reaches you too. A file you have
+edited, created or deleted is always yours: it is kept, and the script
+tells you so.
 
 The same update also runs **in your repo on GitHub every night**, so you
 may see a commit called *update course content* appear that you did not

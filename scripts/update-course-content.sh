@@ -6,9 +6,11 @@
 # reports every differing file as an add/add CONFLICT, even files you never
 # opened. This script copies files instead, which cannot conflict.
 #
-# It touches ONLY course content -- the lectures, the lab instructions and
-# the README. It never touches any code you wrote, your .env, or any file
-# you created, and it skips anything you have edited yourself.
+# It refreshes the course files -- the lectures, the lab instructions, the
+# README, the Codespace configuration and the lab starter files -- from the
+# module repo. It never touches your .env, a file you created, a file you
+# edited or a file you deleted: anything that differs from what you were
+# given is yours and is left alone, and the script says so when it does.
 #
 # Run it whenever you like:   bash scripts/update-course-content.sh
 # (In a Codespace it also runs by itself each time you open the workspace,
@@ -47,22 +49,24 @@ if ! git fetch --quiet upstream "$BRANCH" 2>/dev/null; then
   die "Could not reach the module repo (offline?). Nothing changed."
 fi
 
-# The content files, listed one by one (not as directories) so that editing
-# one deck never blocks the rest from updating.
+# The course files, listed one by one (not as directories) so that editing
+# one file never blocks the rest from updating: every tracked file under
+# weeks/ (the lectures), labs/ (instructions, worksheets AND starter code)
+# and .devcontainer/, plus the README.
 #
-# Lab instructions are nested more deeply here than in the sibling OOC repo:
-# some labs split their instructions across part folders
-# (labs/agents/part1_ask_mode/README.md), and some carry sibling guides in
-# SHOUTY_CASE (TROUBLESHOOTING.md). All of those are instructions and should
-# refresh; nothing below matches lab source code.
+# Starter code is included so that a fix to a lab you have not started yet
+# still reaches you. The rule further down keeps every file you have edited,
+# created or deleted, which is what makes that safe: a starter file you are
+# working in is yours from your first edit onward and stays as you left it.
 #
-# Student worksheets (labs/prompting/lab/prompts/*.md, REFLECTION.md) do match
-# the SHOUTY_CASE arm in one case, but that is safe: a file the student has
-# edited is detected as theirs and kept, and a worksheet they have not touched
-# is still a blank template either way.
+# Deliberately NOT included: this script (bash reads a script while it runs,
+# so overwriting it mid-run misbehaves), the workflows (a push made with the
+# Actions token may not change them, so the nightly run would fail every
+# night after the first change), and the theme, practice bank and build
+# scripts (the module site serves what those produce).
 mapfile -t PATHS < <(
   git ls-tree -r --name-only "upstream/$BRANCH" | grep -E \
-    '^(README\.md|labs/README\.md|weeks/.*|labs/[^/]+/README\.md|labs/[^/]+/[A-Z_]+\.md|labs/[^/]+/[^/]+/README\.md)$' || true
+    '^(README\.md|weeks/.*|labs/.*|\.devcontainer/.*)$' || true
 )
 
 # Baseline = the content as you last received it: the commit recorded by the
@@ -83,9 +87,18 @@ for p in "${PATHS[@]}"; do
   [ -n "$p" ] || continue
   base="$ROOT"
   if [ -n "$LAST" ] && git cat-file -e "$LAST:$p" 2>/dev/null; then base="$LAST"; fi
-  # Untouched since you received it? Safe to refresh. Otherwise it is yours.
-  if git cat-file -e "$base:$p" 2>/dev/null && ! git diff --quiet "$base" -- "$p" 2>/dev/null; then
-    say "  kept your version: $p"
+  if git cat-file -e "$base:$p" 2>/dev/null; then
+    # You received this file. Untouched since? Safe to refresh. Edited, or
+    # deleted? It is yours -- and a file you deleted stays deleted.
+    if ! git diff --quiet "$base" -- "$p" 2>/dev/null; then
+      say "  kept your version: $p"
+      skipped=$((skipped + 1))
+      continue
+    fi
+  elif [ -e "$p" ]; then
+    # New upstream, but something already sits at that path here: you
+    # created it, so it stays, whatever the module repo has put there.
+    say "  kept your file (the module repo has a new file of the same name): $p"
     skipped=$((skipped + 1))
     continue
   fi

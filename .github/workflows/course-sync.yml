@@ -1,10 +1,11 @@
 name: course-sync
 
 # Runs in a STUDENT's copy of the template, every night, so corrections to
-# the lectures, lab instructions and README reach their repo whether or not
-# they ever open a Codespace. It runs the same script a Codespace runs on
-# attach (scripts/update-course-content.sh): course content only, never
-# their code, and a course file they edited themselves is kept.
+# the lectures, lab instructions, README, Codespace configuration and lab
+# starter files reach their repo whether or not they ever open a Codespace.
+# It runs the same script a Codespace runs on attach
+# (scripts/update-course-content.sh): a file the student edited, created or
+# deleted themselves is always kept, so their own work is never touched.
 #
 # The script's "what did you last receive" baseline lives in a gitignored
 # file in a Codespace; a fresh checkout here has no such file, so this

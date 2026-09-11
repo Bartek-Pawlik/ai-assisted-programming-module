@@ -126,8 +126,9 @@ own. They recur through the labs, so you meet each one more than once:
   schedule. Both are guarded to run only in this repository, never in a
   student's copy. `course-sync` is the inverse: it runs only in a
   student's copy, nightly, and commits any changed lectures, lab
-  instructions and READMEs from this repo into theirs (never their code,
-  never a course file they edited). It needs this repository to be public.
+  instructions, READMEs, devcontainer and untouched lab starter files from
+  this repo into theirs. A file the student edited, created or deleted is
+  always kept. It needs this repository to be public.
 - **Conventions and editing rules** live in [`AGENTS.md`](AGENTS.md)
   (`CLAUDE.md` imports it). Local preview: `npm install`, then
   `npm run preview`.
