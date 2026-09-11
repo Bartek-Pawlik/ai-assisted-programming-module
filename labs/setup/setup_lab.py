@@ -1,55 +1,86 @@
+"""Prove the environment works before the first exercise.
+
+    python setup_lab.py
+
+Checks the Python version, that the lab's files and packages are present,
+whether this is your own copy of the repo, and whether the GitHub CLI is
+signed in. It cannot see the editor's assistant -- that is what steps 3
+and 4 of DIY 1 are for. Prints one line per check and exits non-zero if
+anything essential is missing. It never prints a token or a key.
 """
-AI Assisted Programming - Lab 01 Starter File
-This file contains starter code for practicing with GitHub Copilot
-"""
+from __future__ import annotations
 
-# Task 1: Basic AI-assisted programming
-# TODO: Create a function that greets a user by name
-# Use GitHub Copilot to help you write this function
+import importlib
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
 
-
-# Task 2: AI-assisted data processing
-# TODO: Create a function that takes a list of numbers and returns statistics
-# Ask Copilot to help generate a function that calculates mean, median, and mode
-
-
-# Task 3: AI-assisted class creation
-# TODO: Create a simple Calculator class with basic operations
-# Let Copilot assist you in creating methods for add, subtract, multiply, divide
-# Use Copilot to suggest appropriate exception handling
+HERE = Path(__file__).parent
+MODULE_REPO = "danielcregg/ai-assisted-programming"
+PACKAGES = ("numpy", "pandas")   # DIY 2 imports pandas; requirements.txt lists both
 
 
-# Task 4: Sorting Algorithms
-# TODO: Implement bubble sort, quick sort, and merge sort algorithms in a class
+def line(ok: bool, label: str, detail: str = "") -> bool:
+    print(f"  [{'ok' if ok else '  '}] {label}{'  — ' + detail if detail else ''}")
+    return ok
 
 
-# Task 4: Sorting Algorithms
-# TODO: Implement bubble sort, quick sort, and merge sort algorithms in a class
-class SortingAlgorithms:
-    pass
-
-# Task 5: Search Algorithms
-# TODO: Implement linear search and binary search algorithms in a class
-
-
-class SearchAlgorithms:
-    pass
-
-# Task 6: Data Structure
-# TODO: Create a custom data structure class with insert, search, and delete methods
+def run(*cmd: str) -> str | None:
+    """stdout of a command, or None if it is missing or fails."""
+    exe = shutil.which(cmd[0])
+    if not exe:
+        return None
+    try:
+        r = subprocess.run([exe, *cmd[1:]], capture_output=True, text=True, timeout=15)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return r.stdout.strip() if r.returncode == 0 else None
 
 
-class AIDataStructure:
-    pass
+def main() -> int:
+    print("AIAP setup check\n")
+    good = True
 
-# Task 7: Benchmarking
-# TODO: Write a function to benchmark the performance of an algorithm
+    v = sys.version_info
+    good &= line(v >= (3, 10), f"Python {v.major}.{v.minor}",
+                 "" if v >= (3, 10) else "3.10 or newer required")
 
+    present = all((HERE / f).is_file() for f in ("README.md", "requirements.txt"))
+    good &= line(present, "Lab files present", "" if present else "missing README.md or requirements.txt")
 
-def benchmark_algorithm(func, *args, **kwargs):
-    pass
+    missing = []
+    for name in PACKAGES:
+        try:
+            importlib.import_module(name)
+        except ImportError:
+            missing.append(name)
+    good &= line(not missing, " and ".join(PACKAGES) + " installed",
+                 "" if not missing else "pip install -r requirements.txt")
+
+    # The rest is reported, not required: none of it stops the lab, and all
+    # of it is handled for you inside a Codespace.
+    line(bool(os.environ.get("CODESPACES")), "Running in a Codespace",
+         "" if os.environ.get("CODESPACES") else "fine if you set up locally")
+
+    line(run("gh", "auth", "status") is not None, "GitHub CLI signed in",
+         "" if run("gh", "auth", "status") is not None else
+         "run: gh auth login  (a Codespace signs in for you)")
+
+    origin = run("git", "remote", "get-url", "origin") or ""
+    if not origin:
+        line(False, "Your own copy of the repo", "no git remote found")
+    elif MODULE_REPO in origin:
+        line(False, "Your own copy of the repo",
+             "this is the module repo itself; students work in a copy made with Use this template")
+    else:
+        line(True, "Your own copy of the repo")
+
+    print()
+    print("Ready." if good else "Something above needs fixing before you start.")
+    return 0 if good else 1
 
 
 if __name__ == "__main__":
-    # TODO: Add test code here to demonstrate your implementations
-    pass
+    sys.exit(main())

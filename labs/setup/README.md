@@ -51,17 +51,24 @@ you go on rather than discovering a problem in week 5.
 
 2. Fix anything it reports. Do not skip a failure because "it probably
    does not matter" — it does.
-3. Open the chat panel and ask it a question about `setup_lab.py`.
+3. Open the chat panel and ask it a question about `setup_lab.py` —
+   for example *"Which of this script's checks are essential and
+   which are only reported?"*
 4. Confirm you get an answer that refers to the actual file, not a
-   generic one.
+   generic one. The script cannot see the assistant; this step is
+   how you check it.
 
 **Expected output**
 
 ```text
 AIAP setup check
+
   [ok] Python 3.12
-  [ok] Assistant reachable
   [ok] Lab files present
+  [ok] numpy and pandas installed
+  [ok] Running in a Codespace
+  [ok] GitHub CLI signed in
+  [ok] Your own copy of the repo
 
 Ready.
 ```

@@ -101,6 +101,9 @@ section.lead {
 section.lead::after { color: #4E6478; }
 section.lead h1 { font-size: 62px; color: #FFFFFF; margin: 6px 0 18px 0; }
 section.lead h1::after { content: ';'; color: #6741D9; }
+/* a ## heading on a lead slide (the break slide in a two-hour deck) */
+section.lead h2 { font-size: 48px; color: #FFFFFF; margin: 6px 0 18px 0; border: 0; padding: 0; }
+section.lead h2::after { content: ';'; color: #6741D9; }
 section.lead p { color: #A9B6C4; font-size: 26px; }
 section.lead .kicker {
   font-family: 'Cascadia Code', Consolas, monospace;
