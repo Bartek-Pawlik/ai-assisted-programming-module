@@ -1,5 +1,6 @@
 {
   "topics": [
+    { "slug": "introduction", "title": "Module Introduction" },
     { "slug": "overview", "title": "Overview & Setup" },
     { "slug": "prompting", "title": "Prompting" },
     { "slug": "rag", "title": "Retrieval & Grounding" },

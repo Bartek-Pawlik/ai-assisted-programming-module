@@ -182,7 +182,7 @@ limited allowance. Gemini CLI's free tier is the usual backup. -->
 | **Claude Code** | Paid Claude plan or API key | `CLAUDE.md` | `claude -p` |
 | **Codex CLI** | ChatGPT account | `AGENTS.md` | `codex exec` |
 
-<span class="kicker">// names and prices change; the columns do not</span>
+<span class="kicker">// names and prices as of September 2026; the columns do not change</span>
 
 ---
 
@@ -456,8 +456,9 @@ is the right call.
 The distinction is what the agent can reach, not how much you trust it.
 In a throwaway container with no secrets and nothing to push, the worst
 case is a container you delete. On a laptop with SSH keys and a `.env`, the
-worst case is the hook. Gemini CLI turns on a sandbox by default when YOLO
-is chosen, which is the right instinct. -->
+worst case is the hook. As of September 2026 Gemini CLI turns on a sandbox
+by default when YOLO is chosen, which is the right instinct — check the
+tool's own settings before relying on it. -->
 
 ## Allow-all, honestly
 

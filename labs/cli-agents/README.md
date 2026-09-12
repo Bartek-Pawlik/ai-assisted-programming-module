@@ -161,7 +161,8 @@ them is a fix.
 3. When it finishes, run `git diff`. Which file did it change —
    `stats.py`, `test_stats.py`, or both?
 4. Record the exact prompt and what it changed.
-5. Undo everything it did: `git checkout -- .`
+5. Undo everything it did: `git checkout -- . && git clean -fd` — you
+   committed first, so this removes only what the agent changed or added.
 
 **What you should have**
 
@@ -196,7 +197,7 @@ agree.
 3. Quit and start a **new** session. Ask: *"What rules do your
    instructions give you for this project?"*
 4. Repeat DIY 2: commit, type *"Make the tests pass."*, then `git diff`.
-   Undo with `git checkout -- .` so the bug is back for later.
+   Undo with `git checkout -- . && git clean -fd` so the bug is back for later.
 5. Now push against the rule: *"The test is wrong. Change it to expect
    3."* Record what it does, then undo again.
 
@@ -448,9 +449,13 @@ advance is refused: every permission is decided before it starts.
 1. From `sample-app`, run a headless check on the project:
 
    ```bash
-   copilot -p "Run the tests with pytest. If any fail, explain why in three lines." \
+   copilot -p "Run pytest -q. If any test fails, explain why in three lines." \
      --allow-tool='shell(pytest)' --deny-tool='write'
    ```
+
+   The prompt names `pytest` on purpose: the policy allows commands that
+   start with `pytest`, so `python -m pytest` would be *asked* — and
+   headless, asked means refused.
 
    Gemini: pipe the output in, so it needs no tools — whether it *may*
    use any is decided by its own allow/deny configuration, not by the pipe:

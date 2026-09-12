@@ -33,7 +33,7 @@ REQUIRED: dict[int, list[str]] = {
     6: ["(a) buggy", "(b) trimmed reasoning", "(c) micro tests", "(d) minimal fix", "(e) root cause"],
     7: ["few-shot", "strict constraints", "ai output"],
     9: ["prompt (unified diff request)", "ai diff output", "how you applied"],
-    10: ["bad prompt", "spec prompt", "ai output"],
+    10: ["answer 1", "with the file", "what changed"],
 }
 PLACEHOLDERS = ["# paste", "paste the", "paste your", "todo", "fill in", "placeholder", "replace this"]
 

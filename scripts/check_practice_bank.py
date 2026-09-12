@@ -3,8 +3,10 @@
 
 Fails (exit 1, one line per finding) if any topic file is malformed:
 missing fields, wrong option counts, out-of-range answers, duplicate
-ids, schedule references (banned — questions are self-contained), or a
-topic listed in the manifest with no question file / too few questions.
+ids, schedule references (banned — questions are self-contained), a
+topic listed in the manifest with no question file / too few questions,
+or a file whose correct answers cluster on one option index (a bank that
+"always pick B" would pass is not a practice bank).
 
 Run from the repo root:  python scripts/check_practice_bank.py
 Prints nothing on success.
@@ -16,6 +18,7 @@ from pathlib import Path
 
 BANK = Path("practice/bank")
 MIN_QUESTIONS = 25
+MAX_INDEX_SHARE = 0.45   # no option index may hold more than this share of a file's answers
 DIFFICULTIES = {"easy", "medium", "hard"}
 TYPES = {"concept", "code"}
 SCHEDULE_RE = re.compile(r"\bweek\s*\d|\blecture\b|\bthis module\b|\bMCQ\s*[123]\b", re.I)
@@ -61,6 +64,12 @@ def check_topic(slug: str) -> None:
         blob = " ".join([q.get("question", ""), q.get("explanation", ""), *map(str, opts)])
         if SCHEDULE_RE.search(blob):
             findings.append(f"{qid}: schedule/module reference (questions must be self-contained)")
+    answers = [q.get("answer") for q in qs if isinstance(q.get("answer"), int)]
+    if answers:
+        top = max(answers.count(i) for i in range(4))
+        if top / len(answers) > MAX_INDEX_SHARE:
+            findings.append(f"{slug}: {top} of {len(answers)} correct answers sit on one option "
+                            f"index — rotate the options so guessing a position does not pay")
 
 
 def main() -> None:
@@ -70,6 +79,7 @@ def main() -> None:
     if findings:
         print("\n".join(findings))
         sys.exit(1)
+    print(f"check_practice_bank: {len(manifest['topics'])} topics well-formed, answers spread")
 
 
 if __name__ == "__main__":

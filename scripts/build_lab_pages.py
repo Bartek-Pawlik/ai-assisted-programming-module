@@ -191,7 +191,7 @@ def rewrite_links(body: str, source: Path) -> str:
             new = path[:-3] + ".html"
         else:
             target = posixpath.normpath(posixpath.join(src_dir, path))
-            kind = "tree" if path.endswith("/") or "." not in posixpath.basename(path) else "blob"
+            kind = "tree" if path.endswith("/") else "blob"   # a Makefile is a file too
             new = f"{REPO_URL}/{kind}/main/{target}"
         return f'href="{new}{sep}{frag}"'
     return HREF_RE.sub(repl, body)

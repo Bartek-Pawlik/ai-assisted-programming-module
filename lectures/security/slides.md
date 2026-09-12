@@ -326,7 +326,7 @@ mistake. Here you did everything right and the **tool** made it.
 
 </div>
 
-<span class="kicker">// react-codeshift, January 2026, 237 repositories</span>
+<span class="kicker">// react-codeshift, January 2026, 237 repositories — a researcher got there first</span>
 
 ---
 
@@ -455,7 +455,8 @@ one of these defences being broken. -->
 * Untrusted text is material to reason **about**, never a source of
   authority
 
-- Delimit it, label it, and say so in the system prompt
+- Delimit it, label it, and say so in the system prompt — that raises the
+  odds; the only real boundary is what the tool is **allowed to do**
 - **This is not a solved problem** — treat defences as provisional
 
 ---

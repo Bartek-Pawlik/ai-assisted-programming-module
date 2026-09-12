@@ -110,7 +110,7 @@ def main() -> None:
 
     labs_readme = Path("labs/README.md").read_text(encoding="utf-8")
     scheduled = [r.lab for r in sched.rows if r.lab]
-    listed = re.findall(r"(?m)^\| \[([a-z0-9-]+)\]\(\1/\) \|", labs_readme)
+    listed = re.findall(r"(?m)^\| \[[^\]]+\]\(([a-z0-9-]+)/\) \|", labs_readme)
     if listed != scheduled:
         findings.append(f"labs/README.md: the labs table must list the scheduled labs in "
                         f"schedule order; expected {scheduled}, found {listed}")

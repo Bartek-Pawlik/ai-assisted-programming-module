@@ -116,7 +116,8 @@ has largely lifted. -->
 <div class="callout">
 
 For a lot of problems, the correct architecture is now **paste the whole
-thing in.** No chunking, no embeddings, no database to maintain.
+thing in** — when the whole thing fits, and is what the question is about.
+No chunking, no embeddings, no database to maintain.
 
 </div>
 
@@ -521,7 +522,7 @@ on its own. -->
 
 | Text | Becomes |
 |---|---|
-| "what is a variable" | 384 numbers: 0.021, −0.114, 0.087, … |
+| "what is a variable" | 384 numbers (the lab's model; the count is per model): 0.021, −0.114, 0.087, … |
 | "A variable is a named location…" | 384 numbers, pointing **almost the same way** |
 | "Bubble sort compares neighbours…" | 384 numbers, pointing **somewhere else** |
 

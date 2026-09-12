@@ -401,7 +401,7 @@ them. -->
 | **Start of a connection** | `initialize` / `initialized` handshake | None. Every request stands alone |
 | **Session** | `Mcp-Session-Id`; the server remembers you | None. Version and identity travel in each request's `_meta` |
 | **State a tool needs** | The server's memory | An explicit handle the model passes back |
-| **Old HTTP+SSE transport** | Deprecated in 2025, still tolerated | Deprecated, year-long offramp |
+| **Old HTTP+SSE transport** | Deprecated in 2025, still tolerated | Removal on a year-long offramp |
 
 <span class="kicker">// the same release also added header-based routing and Multi Round-Trip Requests — names to recognise, not taught here</span>
 

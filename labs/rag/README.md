@@ -231,10 +231,12 @@ Everything so far had one setting. Now find out whether it was a good one.
 Work in `part5_experiments.py`, recording results in `results.md`.
 
 1. Rebuild the index at **50 words**, **200 words**, and **800 words**
-   per chunk — part 2 takes the size as an argument:
+   per chunk — part 2 takes the size as an argument. Hold the overlap
+   fixed, so you change one thing at a time (left to itself it shrinks
+   with small chunks):
 
    ```bash
-   python part2_embeddings.py --chunk-words 50
+   python part2_embeddings.py --chunk-words 50 --overlap-words 20
    ```
 
 2. Run `part3_retrieval.py` against each and read what comes back for its

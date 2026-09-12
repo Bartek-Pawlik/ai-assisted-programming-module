@@ -40,10 +40,6 @@ package-lock.json
 # SDD scratch workspace (plan execution artifacts, never repo content)
 .superpowers/
 
-# Output of scripts/content_review.py. CI uploads it as an artifact and files
-# it as an issue; it is a generated report, never repo content.
-content-review-findings.md
-
 # personal working notes: course ids, private material locations, open
 # decisions. Loads alongside AGENTS.md for local AI sessions; must never
 # reach a copy of this repo.

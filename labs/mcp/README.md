@@ -198,21 +198,51 @@ tool. This is the section that matters.
 
 ### DIY 5: A news server, from the specification
 
-1. Implement a `get_headlines` tool taking a `topic` string and an
-   optional `count` integer defaulting to 5.
-2. Give it a schema and a description that would make a model choose it.
-3. Fetch from a real news source, or a fixed sample if you have no key.
-4. Return results as text content.
-5. Implement the client half and call your tool end to end.
+`part3_student_exercise/student_news_mcp_server.py` is a skeleton: the two
+helpers that talk to the Hacker News API and the two MCP tools are all
+`TODO`. `student_news_mcp_client.py` beside it is a validator that starts
+your server and checks it, test by test.
+
+1. Implement the helpers: `fetch_top_stories(count)` returns the first
+   `count` story ids from the API's `topstories` endpoint (at most 10), and
+   `fetch_story_details(story_id)` returns one story's details. No key is
+   needed.
+2. In `list_tools()`, define `get_top_stories` (one optional integer
+   `count`, default 5, at most 10) and `get_story_details` (one required
+   integer `story_id`), each with a schema and a description a model would
+   choose from.
+3. In `call_tool()`, implement both: read the arguments explicitly (an
+   absent `count` means 5), validate them, call your helpers, and return
+   the result as text content. A bad argument or an unknown story comes
+   back as a **result** that says what went wrong, not as an exception.
+4. Run the validator from the exercise folder until every test passes:
+
+   ```bash
+   cd part3_student_exercise
+   python student_news_mcp_client.py
+   ```
 
 **Expected output**
 
 ```text
--> tools/call  get_headlines  {"topic": "technology", "count": 3}
-<- result:
-   1. ...
-   2. ...
-   3. ...
+Test 1: Server Initialization
+  ✅ PASSED - Server initialized successfully
+
+Test 2: Tool Discovery
+  ✅ PASSED - All required tools found:
+      • get_top_stories: ...
+      • get_story_details: ...
+
+Test 3: get_top_stories Tool
+  ✅ PASSED - Tool returned data:
+      ...
+
+Test 4: get_story_details Tool
+  ✅ PASSED - Tool returned story details:
+      ...
+
+Test 5: Error Handling
+  ✅ PASSED - Server handled invalid input gracefully
 ```
 
 <details><summary>Hint</summary>

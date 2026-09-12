@@ -104,7 +104,7 @@ What are context managers and when should I use them?
 6. Right-click → **Generate Code** → **Fix**
 7. In the Terminal, run the code. 
     ```
-    cd part1
+    cd labs/agents/part1_ask_mode
     python buggy_code.py
    ```
 

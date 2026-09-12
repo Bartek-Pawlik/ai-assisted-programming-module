@@ -113,7 +113,8 @@ earns its minute if the clock allows. -->
 
 * A token is a chunk of text — a word, part of a word, or punctuation
 
-- `"Programming"` → `Pro` + `gram` + `ming`
+- `"Programming"` → `Pro` + `gram` + `ming` — one tokenizer's split; others
+  cut differently
 - Everything is priced, limited, and remembered **in tokens**
 
 <div class="callout">

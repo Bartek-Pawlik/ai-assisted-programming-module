@@ -65,9 +65,10 @@ Work in `part1_ask_mode/`.
 2. Ask the assistant to explain what it does, then predict its output for
    the input `[3, 1, 4, 1, 5]` **before** running anything.
 3. Run it. Compare the real output with your prediction.
-4. Open `buggy_code.py`. It processes `grades.csv` and gets the wrong
-   answer. Ask the assistant *what could make this produce the wrong
-   average* — do not ask it to fix anything.
+4. Open `buggy_code.py`. It processes `grades.csv` and happens to get the
+   right answer on that file; its bugs bite on data it has not seen yet.
+   Ask the assistant *what input could make this crash or produce the
+   wrong average* — do not ask it to fix anything.
 5. Fix the bug **yourself**, using what it told you.
 
 **What you should have**

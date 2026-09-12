@@ -160,6 +160,7 @@ review that could not run must go red, not green.
            env:
              LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
            run: |
+             git fetch --quiet origin ${{ github.base_ref }}
              git diff origin/${{ github.base_ref }}...HEAD > pr.diff
              python labs/cicd/review_diff.py pr.diff | tee review.md
          - name: Post the findings as a comment

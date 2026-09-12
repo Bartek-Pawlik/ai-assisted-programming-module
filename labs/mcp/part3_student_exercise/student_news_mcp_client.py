@@ -23,7 +23,7 @@ async def validate_student_server(server_file: str):
     
     try:
         server_params = StdioServerParameters(
-            command="python",
+            command=sys.executable,
             args=[server_file]
         )
         

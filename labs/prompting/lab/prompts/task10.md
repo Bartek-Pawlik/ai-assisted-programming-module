@@ -1,44 +1,29 @@
-# Task 10 — Documentation Prompt Practice (≈ 10 min)
+# Task 10 — Wording problem or knowledge problem?
 
-**Goal:** Practice writing SPEC-style prompts to produce professional
-NumPy-style docstrings and a short README snippet for a given function.
+Ask the assistant something about **your own** repository that it cannot
+possibly know — what a specific function in another lab returns, say —
+without showing it the file. Then find out what rewording can and cannot fix.
 
-**What to do:**
+## The question, as first asked
 
-1. Write a SPEC prompt that asks the AI to produce a NumPy-style docstring
-   for the provided function and a brief README section that explains the
-   function's purpose and usage.
-2. Ask the AI and capture the accepted output (trimmed to the docstring +
-   README snippet).
-3. Save the prompt you used and the AI's accepted output in this file.
+# Paste the question exactly as you typed it
 
-## Given function
+## Answer 1
 
-```python
-def compute_statistics(numbers: list[float]) -> dict:
-    """Return a dictionary with keys: count, mean, median, stdev."""
-    # minimal naive implementation
-    import math
-    n = len(numbers)
-    if n == 0:
-        return {"count": 0, "mean": 0.0, "median": 0.0, "stdev": 0.0}
-    sorted_nums = sorted(numbers)
-    mean = sum(numbers) / n
-    median = sorted_nums[n//2] if n % 2 == 1 else (sorted_nums[n//2 - 1] + sorted_nums[n//2]) / 2
-    var = sum((x - mean) ** 2 for x in numbers) / n
-    stdev = math.sqrt(var)
-    return {"count": n, "mean": mean, "median": median, "stdev": stdev}
-```
+# Paste the answer. It will be plausible.
 
-## Bad Prompt
+## Rewording 2 and its answer
 
-# Paste the vague prompt you started with (e.g., "Document this function")
+# Reword the question. Paste the new wording and the answer it produced.
 
-## SPEC Prompt (for docs)
+## Rewording 3 and its answer
 
-# Paste the SPEC-style prompt you used to request a NumPy-style docstring
-# plus a README snippet
+# Reword it once more. Paste the wording and the answer.
 
-## AI Output (trimmed)
+## With the file pasted in
 
-# Paste the docstring/README snippet the AI produced and you accepted
+# Now paste the actual file into the conversation and ask again. Paste the answer.
+
+## What changed, and why rewording could not have achieved it
+
+# One or two sentences. Name the thing it was missing.

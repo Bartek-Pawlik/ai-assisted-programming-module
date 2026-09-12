@@ -152,7 +152,7 @@ done
 # under its new name, a retired MCQ page) — drop our copy too, or the old and
 # the new sit side by side. Same rule as above: a file you edited is yours and
 # stays, and so is a file you created there, which was never ours to remove.
-# Only lectures/ and mcq/ are scanned; lab folders hold your own code and
+# Only lectures/, mcq/ and module/ are scanned; lab folders hold your own code and
 # worksheets, so a retired lab file is left in place rather than risk
 # deleting your work.
 while IFS= read -r p; do
@@ -163,7 +163,7 @@ while IFS= read -r p; do
     continue
   fi
   git rm -q -- "$p" 2>/dev/null && touched+=("$p") && say "  removed (retired upstream): $p"
-done < <(git ls-files -- 'lectures/*' 'mcq/*')
+done < <(git ls-files -- 'lectures/*' 'mcq/*' 'module/*')
 
 # Commit ONLY the content paths this script rewrote. A bare `git commit`
 # would sweep in anything you happened to have staged -- and this runs
