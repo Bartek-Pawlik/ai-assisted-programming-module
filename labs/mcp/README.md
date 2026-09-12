@@ -265,8 +265,11 @@ shape of problem against a real API.
 ## 5. What changed in 2026
 
 The traces in section 1 show the **stateful** protocol MCP used from
-launch until mid-2026. It is what the SDK still does over stdio, so your
-code is correct and runs.
+launch until mid-2026. It is what the SDK version this lab pins (1.26)
+does, so your code is correct and runs. Version 2.0 of the SDK, released
+with the new specification, speaks the new protocol on stdio as well:
+no handshake, a `server/discover` request in its place. The pin is what
+lets you watch the handshake before it disappears.
 
 But the [2026-07-28 specification](https://blog.modelcontextprotocol.io/posts/2026-07-28/)
 removed the `initialize`/`initialized` handshake and the session header

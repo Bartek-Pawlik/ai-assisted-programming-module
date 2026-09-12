@@ -8,5 +8,8 @@
 # stop matching what they see.
 #
 # When you unpin this, re-run the lab end to end first -- the README's
-# JSON-RPC traces are teaching material and must match reality.
+# JSON-RPC traces are teaching material and must match reality. The 2.x
+# SDK (2.0.0 shipped with the 2026-07-28 specification) speaks the new
+# protocol on stdio too, renames FastMCP to MCPServer, and rebuilds the
+# low-level Server this lab uses; the traces in the README would change.
 mcp==1.26.0

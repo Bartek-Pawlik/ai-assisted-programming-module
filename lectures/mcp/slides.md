@@ -389,10 +389,13 @@ state lives, and the old remote transport on its offramp.
 
 Each request in the new version carries protocol version and client
 identity in its own _meta, which is what the handshake used to establish
-once. The kicker names two further additions from the same release —
-header-based routing and Multi Round-Trip Requests — so the words are
-recognisable in a changelog; this lecture deliberately does not teach
-them. -->
+once. The question a sharp student asks is how a client then learns what
+a server supports: the answer is a request, `server/discover`, which every
+new-protocol server must implement and a client may call up front — or
+use as a probe to tell an old server from a new one. The kicker names two
+further additions from the same release — header-based routing and Multi
+Round-Trip Requests — so the words are recognisable in a changelog; this
+lecture deliberately does not teach them. -->
 
 ## Two versions, side by side
 
@@ -400,6 +403,7 @@ them. -->
 |---|---|---|
 | **Start of a connection** | `initialize` / `initialized` handshake | None. Every request stands alone |
 | **Session** | `Mcp-Session-Id`; the server remembers you | None. Version and identity travel in each request's `_meta` |
+| **What the server supports** | Learned once, in the handshake reply | Asked for on demand: `server/discover` |
 | **State a tool needs** | The server's memory | An explicit handle the model passes back |
 | **Old HTTP+SSE transport** | Deprecated in 2025, still tolerated | Removal on a year-long offramp |
 

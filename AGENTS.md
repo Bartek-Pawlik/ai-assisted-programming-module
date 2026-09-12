@@ -144,9 +144,11 @@ statistics, and several were materially wrong by 2026.
   hybrid — bounded retrieval, then long-context reasoning over the result
   — is the shape most real systems use.
 - **MCP** — the 2026-07-28 spec removed the
-  `initialize`/`initialized` handshake and `Mcp-Session-Id`, deprecated
-  HTTP+SSE on a year-long offramp, and added header-based routing plus
-  Multi Round-Trip Requests. Teach *why*: a handshake forces the server to
+  `initialize`/`initialized` handshake and `Mcp-Session-Id`, added
+  `server/discover` in their place, deprecated HTTP+SSE on a year-long
+  offramp, and added header-based routing plus Multi Round-Trip Requests.
+  Checked against the published changelog on 12 Sep 2026; the lab pins
+  the 1.26 SDK on purpose so students see the old handshake first. Teach *why*: a handshake forces the server to
   remember who you are, which is fine on one machine and miserable behind
   a load balancer. State became an explicit handle a tool mints and the
   model passes back.
