@@ -32,7 +32,8 @@ rather than look up, and that what you show them changes what you get.
    ```
 
 3. Confirm the assistant is active — its icon should appear in the status
-   bar, and `Ctrl+Alt+I` should open the chat panel.
+   bar, and `Ctrl+Alt+I` (`Ctrl+Cmd+I` on a Mac) should open the chat
+   panel.
 
 ---
 

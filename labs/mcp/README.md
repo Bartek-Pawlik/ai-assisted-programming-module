@@ -63,19 +63,26 @@ watching the conversation rather than reading the code.
 **Expected output**
 
 ```text
--> {"jsonrpc":"2.0","id":1,"method":"initialize", ...}
-<- {"jsonrpc":"2.0","id":1,"result":{"capabilities": ...}}
--> {"jsonrpc":"2.0","id":2,"method":"tools/list"}
-<- {"jsonrpc":"2.0","id":2,"result":{"tools":[{"name":"add", ...}]}}
--> {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"add", ...}}
-<- {"jsonrpc":"2.0","id":3,"result":{"content":[{"text":"8"}]}}
+-> {"method":"initialize","params":{"protocolVersion":"2025-11-25", ...},"jsonrpc":"2.0","id":0}
+[server] calculator server starting -- this line came from the server process, on stderr
+<- {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{...},"serverInfo":{"name":"calculator-server", ...}}}
+-> {"method":"notifications/initialized","jsonrpc":"2.0"}
+-> {"method":"tools/list","jsonrpc":"2.0","id":1}
+<- {"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"add", ...},{"name":"multiply", ...},{"name":"divide", ...}]}}
+-> {"method":"tools/call","params":{"name":"add","arguments":{"a":15,"b":7}},"jsonrpc":"2.0","id":2}
+<- {"jsonrpc":"2.0","id":2,"result":{"content":[{"type":"text","text":"Result: 15 + 7 = 22"}],"isError":false}}
 ```
 
 <details><summary>Hint</summary>
 
-Note the shape: every message is a request with an `id` and a response
-carrying the same `id`. That is plain JSON-RPC and it predates all of
-this by twenty years.
+Note the shape: every request carries an `id` and its response carries
+the same `id`. That is plain JSON-RPC and it predates all of this by
+twenty years. The one message with no `id` is a **notification**:
+`initialized` is sent, and nothing answers it.
+
+The trace is printed by the client — both streams pass through it — so the
+only line from the other process is the server's own `[server]` line. That
+matters for DIY 3.
 
 Watch the `initialize` exchange especially closely — section 5 is about
 why it no longer exists in the current specification.
@@ -88,17 +95,19 @@ Work in `part1/mcp_server.py`.
 
 1. Add a `power` tool computing `x ** y`.
 2. Give it an input schema with both arguments required.
-3. Restart the client and confirm `power` appears in `tools/list`.
-4. Call it and confirm the result.
+3. Run the client again and confirm `power` appears in `tools/list`.
+4. In `part1/mcp_client.py`, add a call —
+   `await session.call_tool("power", {"x": 2, "y": 10})` — print what
+   comes back, and confirm the result.
 
 **Expected output**
 
 ```text
-<- {"jsonrpc":"2.0","id":2,"result":{"tools":[
-     {"name":"add", ...},
+<- {"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"add", ...}, ...,
      {"name":"power","description":"Raise x to the power of y", ...}]}}
 
-power(2, 10) = 1024
+-> {"method":"tools/call","params":{"name":"power","arguments":{"x":2,"y":10}}, ...}
+<- {"jsonrpc":"2.0","id":6,"result":{"content":[{"type":"text","text":"Result: 2 ^ 10 = 1024"}],"isError":false}}
 ```
 
 <details><summary>Hint</summary>
@@ -107,8 +116,9 @@ Two places need editing: the list of declared tools, and the handler that
 dispatches a call by name. Miss the second and the tool appears in the
 listing but errors when called.
 
-The schema is not decoration — it is how the client validates arguments
-before your code ever runs.
+The schema is not decoration. The SDK validates every call against it
+**on the server, before your handler runs**: leave `y` out of the call and
+the trace shows an error result, and your code never ran.
 
 </details>
 
@@ -122,9 +132,12 @@ before your code ever runs.
    `"[server] power called"` to stderr.
 2. Run the client and trigger the tool.
 3. Note **where** that line appears — which process printed it.
-4. Now make the handler raise an exception deliberately.
-5. Observe what the client receives, and confirm the process that crashed
-   is the server, not the model.
+4. Now make the handler raise an exception deliberately, and call it
+   again.
+5. Read the trace. The reply is a result with `"isError": true` carrying
+   the exception's text; the server is still running (the next call
+   works); and the process that ran your code was the server, not the
+   model.
 
 **What you should have**
 
@@ -207,9 +220,10 @@ tool. This is the section that matters.
 Handle the optional argument explicitly: if `count` is absent, use 5. A
 schema default does not populate the value for you.
 
-Errors should come back as a **result** describing the failure, not as a
-crashed server — a tool that kills the process takes the whole session
-with it.
+Errors should come back as a **result** describing the failure. The SDK
+turns an unhandled exception into a bare error result, which is better
+than a crashed server but tells the model nothing useful about what to do
+next.
 
 Study `part2/mcp_server_weather.py` if you are stuck; it solves the same
 shape of problem against a real API.
@@ -270,7 +284,9 @@ made HTTP stateless.
   calls it.
 - Assuming the model executes tools itself — it only ever asks.
 - Adding a tool to the listing but not to the dispatcher.
-- **Letting a handler crash the server.** Return an error result instead.
+- **Leaving errors to the SDK.** It turns an exception into an error
+  result, but the message is whatever the exception said. Return a result
+  that says what went wrong and what would work.
 - Installing unknown servers, or giving one far more access than its job
   needs.
 - Treating tool output as trusted. It is untrusted input like any other.

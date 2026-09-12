@@ -61,11 +61,12 @@ https://danielcregg.is-a.dev/ai-assisted-programming/.
 **Their work is theirs.** Edit the files they are working in. Leave decks,
 scripts, workflows and the practice bank alone.
 
-**Keys.** One lab (`rag`, for its generation half: a free Gemini key by
-default, or any OpenAI-compatible endpoint via `.env`) needs the student's
-own API key. Put it in a `.env`
-(gitignored) and read it from the environment — never a literal in code,
-never a committed config file. Nothing in the module may cost a student
+**Keys.** Two places need the student's own free API key: the `rag` lab's
+generation half (a free Gemini key by default, or any OpenAI-compatible
+endpoint via `.env`) and the `cicd` lab's review step, which uses the same
+key stored as a repository secret. Put it in a `.env` (gitignored) and read
+it from the environment — never a literal in code, never a committed
+config file. Nothing in the module may cost a student
 money. If you see a key in a file that is about to
 be committed, say so loudly. `mcp` needs no key (its weather server uses
 `wttr.in`), and the `cli-agents` lab signs in to a coding agent instead;

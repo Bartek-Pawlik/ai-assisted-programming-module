@@ -1,30 +1,43 @@
 #!/usr/bin/env python3
-"""Render the lab READMEs as styled pages for GitHub Pages.
+"""Render the lab READMEs, their supporting pages and the MCQ pages for GitHub Pages.
 
-For every labs/<slug>/README.md this emits
-OUTPUT_DIR/labs/<slug>/index.html in the site's visual identity, plus a
-labs index page at OUTPUT_DIR/labs/index.html. Pages are READ-ONLY
-previews — each carries a banner telling students to make their own
-copy of the repo from the template and work in a Codespace.
+For every labs/<slug>/README.md this emits OUTPUT_DIR/labs/<slug>/index.html in
+the site's visual identity, plus a labs index at OUTPUT_DIR/labs/index.html.
+Every other Markdown file under a lab (a TROUBLESHOOTING.md, a part folder's
+README, a worksheet template) is rendered beside it at the same relative path
+(README.md -> index.html, NAME.md -> NAME.html), so links between them keep
+working on the site. Relative links to anything that is not Markdown (starter
+code, data files) point at the file on GitHub, since the site does not serve
+source files. mcq/<n>/README.md renders the same way under OUTPUT_DIR/mcq/.
 
-Mermaid fences render client-side (pinned mermaid, same version as the
-repo's assets), and ```python fences get client-side highlight.js
-colouring — pinned to the same highlight.js version marp-core bundles,
-with the token palette copied from themes/aiap.css, so lab code looks
-exactly like deck code. ```text fences (Expected output) stay flat.
-Requires the `markdown` package (pip install markdown).
+Pages are READ-ONLY previews -- each lab README carries a banner telling
+students to make their own copy of the repo from the template and work in a
+Codespace.
+
+Rendering is CommonMark via markdown-it-py (pip install markdown-it-py), with
+tables and strikethrough enabled -- the same dialect GitHub renders, so a
+fenced code block indented inside a numbered step comes out as a code block,
+not as inline code with a stray "bash" in it, which is what Python-Markdown
+made of it. Headings get GitHub's anchor ids so the READMEs' tables of
+contents resolve. Mermaid fences render client-side (pinned mermaid), and
+```python fences get client-side highlight.js colouring, pinned to the same
+version marp-core bundles, with the token palette copied from themes/aiap.css
+so lab code looks exactly like deck code. ```text fences (Expected output)
+stay flat.
 
 Usage:
     python scripts/build_lab_pages.py [OUTPUT_DIR]     # default: build
 """
 import html
+import posixpath
 import re
 import sys
 from pathlib import Path
 
-import markdown
+from markdown_it import MarkdownIt
 
 LABS = Path("labs")
+MCQ = Path("mcq")
 REPO_URL = "https://github.com/danielcregg/ai-assisted-programming"
 
 # Both scripts are third-party code executed on the module's public site, so
@@ -105,6 +118,7 @@ STYLE = """<style>
             padding: 10px 16px; margin: 12px 0; background: #FFFFFF; }
   details summary { font-family: var(--mono); font-weight: 600; color: var(--blue); cursor: pointer; }
   img { max-width: 100%; }
+  li > pre { margin: 8px 0; }
   .row-list { list-style: none; padding: 0; }
   .row-list li { border-bottom: 1px solid var(--rule); padding: 14px 4px; display: flex;
                  justify-content: space-between; align-items: baseline; gap: 16px; }
@@ -125,6 +139,11 @@ STYLE = """<style>
   }
 </style>"""
 
+RENDERER = MarkdownIt("commonmark", {"html": True}).enable(["table", "strikethrough"])
+TAG_RE = re.compile(r"<[^>]+>")
+HEADING_RE = re.compile(r"<h([1-4])>(.*?)</h\1>", re.S)
+HREF_RE = re.compile(r'href="([^"]+)"')
+
 
 def gh_slugify(text: str) -> str:
     text = re.sub(r"[`*_]", "", text).strip().lower()
@@ -133,25 +152,54 @@ def gh_slugify(text: str) -> str:
 
 
 def preprocess(md_text: str) -> str:
-    """Turn mermaid fences into pass-through <pre class="mermaid"> blocks,
-    let markdown render inside <details>, and add the blank line GitHub
-    tolerates omitting before a list (python-markdown does not)."""
+    """Turn mermaid fences into pass-through <pre class="mermaid"> blocks."""
     def mermaid_repl(m):
         return '<pre class="mermaid">\n' + html.escape(m.group(1)) + "\n</pre>"
-    md_text = re.sub(r"```mermaid\n(.*?)\n```", mermaid_repl, md_text, flags=re.DOTALL)
-    md_text = md_text.replace("<details>", '<details markdown="1">')
+    return re.sub(r"```mermaid\n(.*?)\n```", mermaid_repl, md_text, flags=re.DOTALL)
 
-    out, in_fence, prev = [], False, ""
-    item = re.compile(r"^\s*(?:[-*+] |\d+\. )")
-    for line in md_text.split("\n"):
-        if line.lstrip().startswith("```"):
-            in_fence = not in_fence
-        elif (not in_fence and item.match(line) and prev.strip()
-              and not item.match(prev) and not prev.lstrip().startswith(("#", ">", "<"))):
-            out.append("")
-        out.append(line)
-        prev = line
-    return "\n".join(out)
+
+def add_heading_ids(body: str) -> str:
+    """GitHub's anchor rule, including -1, -2 suffixes for repeated headings."""
+    seen: dict[str, int] = {}
+
+    def repl(m):
+        level, inner = m.group(1), m.group(2)
+        slug = gh_slugify(html.unescape(TAG_RE.sub("", inner)))
+        n = seen.get(slug, 0)
+        seen[slug] = n + 1
+        if n:
+            slug = f"{slug}-{n}"
+        return f'<h{level} id="{slug}">{inner}</h{level}>'
+    return HEADING_RE.sub(repl, body)
+
+
+def rewrite_links(body: str, source: Path) -> str:
+    """Relative links: Markdown targets become their rendered pages; anything
+    else (starter code, folders) becomes a link to the file on GitHub."""
+    src_dir = source.parent.as_posix()
+
+    def repl(m):
+        href = m.group(1)
+        if re.match(r"^(?:[a-z]+:|#|/|//)", href):
+            return m.group(0)
+        path, sep, frag = href.partition("#")
+        if not path:
+            return m.group(0)
+        if path.endswith("README.md"):
+            new = path[: -len("README.md")] or "./"
+        elif path.endswith(".md"):
+            new = path[:-3] + ".html"
+        else:
+            target = posixpath.normpath(posixpath.join(src_dir, path))
+            kind = "tree" if path.endswith("/") or "." not in posixpath.basename(path) else "blob"
+            new = f"{REPO_URL}/{kind}/main/{target}"
+        return f'href="{new}{sep}{frag}"'
+    return HREF_RE.sub(repl, body)
+
+
+def render(md_text: str, source: Path) -> str:
+    body = RENDERER.render(preprocess(md_text))
+    return rewrite_links(add_heading_ids(body), source)
 
 
 def page(title: str, kicker_html: str, body_html: str, needs_mermaid: bool,
@@ -177,6 +225,30 @@ def page(title: str, kicker_html: str, body_html: str, needs_mermaid: bool,
             f"</div>\n{hljs}{mermaid}</body>\n</html>\n")
 
 
+def title_of(text: str, fallback: str) -> str:
+    m = re.match(r"#\s+(.+)", text)
+    return m.group(1).strip() if m else fallback
+
+
+def write_page(source: Path, dest: Path, kicker: str, banner: str = "") -> str:
+    text = source.read_text(encoding="utf-8")
+    body = render(text, source)
+    title = title_of(text, source.stem.replace("_", " ").title())
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(
+        page(html.escape(title), kicker, body, "```mermaid" in text or 'class="mermaid"' in body,
+             banner, needs_hljs="language-python" in body),
+        encoding="utf-8", newline="\n")
+    return title
+
+
+def dest_for(source: Path, root: Path, out: Path) -> Path:
+    rel = source.relative_to(root)
+    if rel.name == "README.md":
+        return out / rel.parent / "index.html"
+    return out / rel.with_suffix(".html")
+
+
 def scheduled_labs() -> list[tuple[str, str]]:
     """(week number, lab slug) for every scheduled lab, in teaching order.
 
@@ -185,22 +257,24 @@ def scheduled_labs() -> list[tuple[str, str]]:
     (module/schedule.json, via scripts/schedule.py) knows which week teaches
     which lab; read it so the labs page reads in the same order as the decks.
     """
-    import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from schedule import load
     return [(r.week, r.lab) for r in load().rows if r.lab]
 
 
 def main() -> None:
-    out_root = Path(sys.argv[1] if len(sys.argv) > 1 else "build") / "labs"
-    out_root.mkdir(parents=True, exist_ok=True)
+    out = Path(sys.argv[1] if len(sys.argv) > 1 else "build")
+    out_labs = out / "labs"
+    out_labs.mkdir(parents=True, exist_ok=True)
 
-    labs = []
-    for readme in sorted(LABS.glob("*/README.md")):
-        slug = readme.parent.name
+    labs, pages = [], 0
+    for lab_dir in sorted(p for p in LABS.iterdir() if p.is_dir()):
+        slug = lab_dir.name
+        readme = lab_dir / "README.md"
+        if not readme.is_file():
+            continue
         text = readme.read_text(encoding="utf-8")
-        heading = re.match(r"#\s+(.+)", text)
-        if heading is None:
+        if not re.match(r"#\s+(.+)", text):
             # A lab README's first `# ` line is the page title and the
             # labs-index entry. Without this guard it was an AttributeError on
             # None, which says nothing about which file is wrong or why.
@@ -208,26 +282,30 @@ def main() -> None:
                 f"build_lab_pages: {readme} does not start with a `# ` "
                 f"heading, so it has no title. Every lab README must open "
                 f"with a level-1 heading on its first line.")
-        title = heading.group(1).strip()
-        labs.append((slug, title))
-
-        md = markdown.Markdown(
-            extensions=["fenced_code", "tables", "md_in_html", "toc"],
-            extension_configs={"toc": {"slugify": lambda v, s: gh_slugify(v)}})
-        body = md.convert(preprocess(text))
-
         banner = (f'<div class="copy-banner">Read-only preview. To <strong>do</strong> '
                   f'this lab: <a href="{REPO_URL}/generate">make your own copy of the '
                   f'repo</a> ("Use this template"), open a Codespace on it, and work '
                   f'in <code>labs/{slug}/</code>.</div>')
-        kicker = '<a href="./..">labs</a> · ai-assisted programming'
-        dest = out_root / slug
-        dest.mkdir(parents=True, exist_ok=True)
-        (dest / "index.html").write_text(
-            page(html.escape(title), kicker, body, "```mermaid" in text or
-                 'class="mermaid"' in body, banner,
-                 needs_hljs='language-python' in body),
-            encoding="utf-8", newline="\n")
+        for source in sorted(lab_dir.rglob("*.md")):
+            if any(part.startswith(".") for part in source.relative_to(lab_dir).parts):
+                continue   # .pytest_cache and friends ship a README of their own
+            dest = dest_for(source, LABS, out_labs)
+            depth = len(source.relative_to(lab_dir).parts) - 1
+            up = "../" * depth
+            if source == readme:
+                title = write_page(source, dest, '<a href="./..">labs</a> · ai-assisted programming', banner)
+                labs.append((slug, title))
+            else:
+                write_page(source, dest, f'<a href="{up}./">{html.escape(slug)}</a> · '
+                                         f'<a href="{up}../">labs</a> · ai-assisted programming')
+            pages += 1
+
+    mcq_pages = 0
+    if MCQ.is_dir():
+        for source in sorted(MCQ.glob("*/README.md")):
+            write_page(source, dest_for(source, MCQ, out / "mcq"),
+                       '<a href="../../">ai-assisted programming</a> · assessment')
+            mcq_pages += 1
 
     # Teaching order, like the lecture index; anything not in the schedule
     # (optional extra material, should there ever be any) goes under its own
@@ -264,10 +342,11 @@ def main() -> None:
                   f"Verification can take a few days, so do it early.</p>\n"
                   f"<ul class=\"row-list\">\n{rows}</ul>\n{optional}"
                   f'<p class="kicker"><a href="../">back to the lecture decks</a></p>')
-    (out_root / "index.html").write_text(
+    (out_labs / "index.html").write_text(
         page("AIAP Labs", "ai-assisted programming", index_body, False),
         encoding="utf-8", newline="\n")
-    print(f"wrote {len(labs)} lab pages + labs index under {out_root}")
+    print(f"wrote {len(labs)} lab pages ({pages} pages in all) + labs index under {out_labs}, "
+          f"{mcq_pages} MCQ pages under {out / 'mcq'}")
 
 
 if __name__ == "__main__":

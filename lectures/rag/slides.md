@@ -148,10 +148,15 @@ questions about them.
 
 <!-- Speaker notes: ~0:12. The reveal and the decision table. This is a
 trade-off table, not a ranking: long context wins on a small corpus with
-conversational questions; retrieval wins on scale, on citation, on
-freshness, and on cost at scale. The cost crossover around a couple of
-thousand pages is worth quoting because it gives them a number to reason
-with rather than a vibe.
+conversational questions; retrieval wins on scale, on freshness, and on
+cost at scale. Citation is not retrieval's alone — a full context whose
+documents are labelled can be cited too — but retrieval hands you the
+source of every answer for free, which is why the row leans that way. The
+cost crossover is a rule of thumb, not a constant: around a couple of
+thousand pages when this deck was written, and it moves with token
+prices, prompt caching and how often the corpus is asked. Quote it as an
+order of magnitude, so they have a number to reason with rather than a
+vibe.
 
 Students tend to read the table as "retrieval wins four rows to one" and
 miss that the first row is the commonest situation they will actually
@@ -163,9 +168,9 @@ meet. -->
 |---|---|
 | Small corpus, conversational questions | **Long context** — just paste it |
 | Too large to fit, or thousands of documents | **Retrieval** |
-| You must cite which source said it | **Retrieval** |
+| You must cite which source said it | **Retrieval** gives it free — a labelled full context can too |
 | Data changes constantly | **Retrieval**, or live search |
-| Cost matters at scale | **Retrieval** — crossover ≈ a couple of thousand pages |
+| Cost matters at scale | **Retrieval** — crossover ≈ a couple of thousand pages, as a rule of thumb |
 
 ---
 

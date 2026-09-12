@@ -76,11 +76,10 @@ Work in `part2_embeddings.py`.
 
 ```text
 Loaded 5 documents
-Produced 34 chunks
-  shortest: 118 words
+Produced 14 chunks (200 words, 40 overlap)
+  shortest: 72 words
   longest:  200 words
-Overlap check: chunk 0 ends "...a variable is a named" /
-               chunk 1 begins "a variable is a named location..."
+Overlap check: chunk 1 begins "in half, eliminating the half..." -- those words also sit inside chunk 0: True
 ```
 
 <details><summary>Hint</summary>
@@ -106,7 +105,7 @@ badly and reads worse when it reaches the prompt.
 **Expected output**
 
 ```text
-Embedded 34 chunks
+Embedded 14 chunks
 Vector dimensionality: 384
 Query vector (first 5): [0.021, -0.114, 0.087, 0.043, -0.009]
 Dimensions match: True
@@ -130,8 +129,9 @@ Use the same model for chunks and queries, always.
 
 Work in `part3_retrieval.py`.
 
-1. Write `search(query, k=3)` returning the `k` closest chunks with their
-   similarity scores.
+1. Complete `semantic_search(query, collection, model, top_k=3)` so it
+   returns the `top_k` closest chunks, each with its similarity score and
+   the file it came from.
 2. Run it for `"what is a variable"`.
 3. Run it for `"how do I store a value under a name"` — **different
    words, same meaning**.
@@ -231,8 +231,14 @@ Everything so far had one setting. Now find out whether it was a good one.
 Work in `part5_experiments.py`, recording results in `results.md`.
 
 1. Rebuild the index at **50 words**, **200 words**, and **800 words**
-   per chunk.
-2. Run the same three questions against each.
+   per chunk — part 2 takes the size as an argument:
+
+   ```bash
+   python part2_embeddings.py --chunk-words 50
+   ```
+
+2. Run `part3_retrieval.py` against each and read what comes back for its
+   three queries.
 3. Record for each size: was the right chunk retrieved, and how much
    irrelevant text came with it?
 4. Write one sentence explaining what goes wrong at each extreme.
@@ -275,7 +281,8 @@ problem justified one.
 1. Concatenate **all five** documents in `data/` into one string.
 2. Count roughly how many tokens that is (words ÷ 0.75 is close enough).
 3. Send the whole thing as context with the same questions — **no
-   retrieval step at all**.
+   retrieval step at all**. `part5_experiments.py` does exactly this, with
+   the same grounding rules your RAG prompt uses, once your part 4 works.
 4. Compare each answer with your RAG answer for the same question.
 5. Record the comparison in `results.md`.
 

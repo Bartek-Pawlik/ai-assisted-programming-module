@@ -1,90 +1,115 @@
+"""Part 1 client: start the calculator server, talk to it, and show the wire.
+
+Every JSON-RPC message that passes between this client and the server is
+printed as it goes by:  ->  is client to server,  <-  is server to client.
+That is the traffic DIY 1 asks you to read. Both streams run through this
+process, so the trace appears in this terminal whichever side sent the
+message, and it is the message exactly as it was sent -- not a summary.
+
+Run it from the lab folder:   python part1/mcp_client.py
+"""
 import asyncio
+import sys
+from pathlib import Path
+
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from mcp.shared.message import SessionMessage
 
-async def main():
-    # This MCP client demonstrates the complete client-server interaction:
-    # 1. Spawns the MCP server with calculator functionality as a subprocess
-    # 2. Performs MCP protocol handshake (initialize)
-    # 3. Discovers available tools (list_tools)
-    # 4. Executes tools with parameters (call_tool)
-    # 5. Handles both successful operations and errors
-    print("🧮 Calculator MCP Server Demo")
-    print("=" * 50)
-    
-    server_params = StdioServerParameters(
-        command="python",
-        args=["mcp_server.py"]
-    )
-    
-    async with stdio_client(server_params) as (read, write):
-        async with ClientSession(read, write) as session:
-            # Initialize
-            print("\n1️⃣  Initializing connection...")
-            # The initialize() method performs the MCP handshake:
-            # 1. Client sends initialization request to server
-            # 2. Server responds with its capabilities (what it can do)
-            # 3. Server info (name, version) and supported features are exchanged
-            # 4. This establishes the MCP session and protocol version
+# The server sits beside this file. Resolve it from here rather than from
+# wherever the command was typed, and start it with the same interpreter.
+SERVER = Path(__file__).resolve().with_name("mcp_server.py")
+
+BLUE, GREEN, RESET = "\033[94m", "\033[92m", "\033[0m"
+
+
+def show(arrow: str, item) -> None:
+    """Print one wire message as the JSON that actually crossed the pipe."""
+    if isinstance(item, SessionMessage):
+        text = item.message.model_dump_json(by_alias=True, exclude_none=True)
+    else:
+        text = repr(item)  # a transport failure arrives here as an exception object
+    colour = BLUE if arrow == "->" else GREEN
+    print(f"{colour}{arrow} {text}{RESET}", file=sys.stderr, flush=True)
+
+
+class Tap:
+    """Wrap one of the session's two message streams and echo what passes.
+
+    The SDK reads the incoming stream with `async for` and writes to the
+    outgoing one with `.send()`, inside `async with` for both. This wrapper
+    forwards all of that to the real stream and prints each message on the
+    way through. Nothing about the protocol changes.
+    """
+
+    def __init__(self, stream, arrow: str):
+        self._stream = stream
+        self._arrow = arrow
+
+    async def __aenter__(self):
+        await self._stream.__aenter__()
+        return self
+
+    async def __aexit__(self, *exc):
+        return await self._stream.__aexit__(*exc)
+
+    def __aiter__(self):
+        return self._echo()
+
+    async def _echo(self):
+        async for item in self._stream:
+            show(self._arrow, item)
+            yield item
+
+    async def send(self, item):
+        show(self._arrow, item)
+        await self._stream.send(item)
+
+    async def aclose(self):
+        await self._stream.aclose()
+
+
+def say(text: str) -> None:
+    print(text, flush=True)
+
+
+async def main() -> None:
+    say("Calculator MCP client")
+    say("Wire traffic below: -> client to server, <- server to client")
+    say("=" * 60)
+
+    params = StdioServerParameters(command=sys.executable, args=[str(SERVER)])
+    async with stdio_client(params) as (read, write):
+        async with ClientSession(Tap(read, "<-"), Tap(write, "->")) as session:
+            say("\n1. Handshake")
+            # initialize() sends the initialize request, waits for the
+            # server's capabilities, then sends the initialized notification.
             await session.initialize()
-            print("   ✅ Connected to server")
-            
-            # List tools
-            print("\n2️⃣  Listing available tools...")
-            # The list_tools() method queries the server for all available tools:
-            # - Server returns tool definitions with names, descriptions, and input schemas
-            # - Client learns what operations the server can perform
-            # - This is like asking "What can you do?" after the handshake
+
+            say("\n2. What can you do?")
             tools = await session.list_tools()
-            print("   Available tools:")
             for tool in tools.tools:
-                print(f"      • {tool.name}: {tool.description}")
-            
-            # Test Addition
-            print("\n3️⃣  Testing: 15 + 7")
-            # The call_tool() method executes a specific tool on the server:
-            # - Sends tool name and parameters to server
-            # - Server validates inputs, executes the tool, and returns results
-            # - This demonstrates the complete request-response cycle
+                say(f"   - {tool.name}: {tool.description}")
+
+            say("\n3. add 15 + 7")
             result = await session.call_tool("add", {"a": 15, "b": 7})
-            print(f"   📊 {result.content[0].text}")
-            
-            # Test Multiplication
-            print("\n4️⃣  Testing: 8 × 6")
+            say(f"   {result.content[0].text}")
+
+            say("\n4. multiply 8 x 6")
             result = await session.call_tool("multiply", {"a": 8, "b": 6})
-            print(f"   📊 {result.content[0].text}")
-            
-            # Test Division
-            print("\n5️⃣  Testing: 100 ÷ 4")
+            say(f"   {result.content[0].text}")
+
+            say("\n5. divide 100 / 4")
             result = await session.call_tool("divide", {"a": 100, "b": 4})
-            print(f"   📊 {result.content[0].text}")
-            
-            # Test Division by Zero
-            print("\n6️⃣  Testing: 10 ÷ 0 (error handling)")
-            # This tests how the server handles invalid inputs:
-            # - Server should validate parameters and handle edge cases
-            # - Demonstrates proper error handling in MCP tools
-            # - Shows that tools can return error messages, not just results
+            say(f"   {result.content[0].text}")
+
+            say("\n6. divide 10 / 0 -- the server decides what an error looks like")
             result = await session.call_tool("divide", {"a": 10, "b": 0})
-            print(f"   📊 {result.content[0].text}")
-            
-            # Test Power Function
-            print("\n7️⃣  Testing: 2 ^ 8 (power function)")
-            # Test the new power tool that calculates x^y
-            # Should return 256 (2^8 = 256)
-            result = await session.call_tool("power", {"x": 2, "y": 8})
-            print(f"   📊 {result.content[0].text}")
-            
-            # Test Power Edge Case
-            print("\n8️⃣  Testing: 0 ^ 0 (edge case)")
-            # Test edge case: 0^0 should return 1 (mathematical convention)
-            result = await session.call_tool("power", {"x": 0, "y": 0})
-            print(f"   📊 {result.content[0].text}")
-            
-            print("\n" + "=" * 50)
-            print("✅ Demo complete!")
-            print("\nCheck the colored output above to see the JSON-RPC traffic.")
-            print("=" * 50 + "\n")
+            say(f"   {result.content[0].text}")
+
+    say("\n" + "=" * 60)
+    say("Done. Scroll up for the trace; DIY 1 asks you to read it.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

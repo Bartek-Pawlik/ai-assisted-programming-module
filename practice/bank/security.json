@@ -234,13 +234,13 @@
       "question": "An existence check confirms that every name in a generated requirements file is on PyPI. What has been established, and what has not?",
       "code": null,
       "options": [
-        "None of the names is an invented one an attacker could register; whether a real package carries a known CVE is a separate question",
+        "Only that each name currently resolves; a squatted, malicious or vulnerable package would pass the same check",
         "The file is safe to install, because a public registry only lists packages that have passed a security review before publication",
         "The assistant did not hallucinate on this run, so the same prompt can be trusted to produce a correct file the next time it is used",
         "The packages are the right choice for the task, because the registry was able to resolve each of them to a real, maintained project"
       ],
       "answer": 0,
-      "explanation": "A registry answers one simple question: does this name exist? That closes off slopsquatting for this file and nothing more. Known CVEs in real packages are what dependency scanning is for, and a clean result on one run says nothing about what the same prompt produces next time."
+      "explanation": "A registry answers one question: does this name exist today? It cannot tell you who registered it. Slopsquatting is exactly an attacker registering a name that assistants keep inventing, so a hallucinated name that now resolves is the dangerous case, not the safe one. Provenance (who publishes it, how long it has existed, how many projects depend on it) and known CVEs are separate checks, and a clean result on one run says nothing about the next."
     },
     {
       "id": "security-017",

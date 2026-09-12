@@ -37,8 +37,9 @@ in **[labs/README.md](labs/README.md)**. Read-only lab pages are also on
 the [site](https://danielcregg.is-a.dev/ai-assisted-programming/labs/),
 always the current version.
 
-One scheduled lab (RAG) needs a free API key of your own, and the CLI
-agents lab needs you to sign in to a coding agent with your GitHub or
+The RAG lab and one step of the CI/CD lab need a free API key of your own
+(the same key, once in a `.env` and once as a repository secret), and the
+CLI agents lab needs you to sign in to a coding agent with your GitHub or
 Google account. Each README says what, and how. Nothing in the module
 costs money. **Never commit a key** — put it
 in a `.env`, which is gitignored and rejected by the repo's safety audit.

@@ -324,11 +324,11 @@ allowed.
    rules.
 2. Open `policy/commands.txt`. **Before running anything**, write ALLOW,
    ASK or DENY beside each line in your notes.
-3. Run the checker:
+3. Run the checker from the lab folder (`cd ..` first if your terminal is
+   still inside `sample-app`):
 
    ```bash
-   cd policy
-   python policy_check.py team-policy.json --file commands.txt
+   python policy/policy_check.py policy/team-policy.json --file policy/commands.txt
    ```
 
 4. Mark every verdict you got wrong.
@@ -358,13 +358,13 @@ in a shell.
 
 ### DIY 6: Close the gaps
 
-1. Copy `team-policy.json` to `my-policy.json`.
+1. Copy `policy/team-policy.json` to `policy/my-policy.json`.
 2. Change its rules so that every gap from DIY 5 comes out ASK or DENY,
    while `git status`, `git diff`, `git log`, `git add`, `git commit`,
    `npm test`, `pytest` and `python -m pytest` all still come out ALLOW —
    with any arguments.
-3. Write `my-commands.txt` with five lines of your own: three the agent
-   should be free to run, and two that break the intent in a way
+3. Write `policy/my-commands.txt` with five lines of your own: three the
+   agent should be free to run, and two that break the intent in a way
    `commands.txt` did not show.
 4. Run both files against `my-policy.json` until every verdict is one you
    would defend.
@@ -392,7 +392,8 @@ look up what `pytest --basetemp` does to the directory you give it.
 The checker is a model of one way to match rules. Find out how your agent
 actually does it — using harmless commands only.
 
-1. Start the agent with one allow rule and one deny rule:
+1. From `sample-app` (`cd sample-app` from the lab folder), start the
+   agent with one allow rule and one deny rule:
 
    ```bash
    copilot --allow-tool='shell(git status)' --deny-tool='shell(git log)'
@@ -444,17 +445,18 @@ advance is refused: every permission is decided before it starts.
 
 ### DIY 8: A script that explains a failure
 
-1. Run a headless check on the sample project:
+1. From `sample-app`, run a headless check on the project:
 
    ```bash
    copilot -p "Run the tests with pytest. If any fail, explain why in three lines." \
      --allow-tool='shell(pytest)' --deny-tool='write'
    ```
 
-   Gemini: pipe the output in, so it needs no tools at all —
+   Gemini: pipe the output in, so it needs no tools — whether it *may*
+   use any is decided by its own allow/deny configuration, not by the pipe:
    `python -m pytest -q 2>&1 | gemini -p "Explain any failing test in three lines."`
-2. Save the command as `sample-app/explain-failures.sh` and run it with
-   `bash explain-failures.sh`.
+2. Save the command as `explain-failures.sh` in `sample-app` and run it
+   there with `bash explain-failures.sh`.
 3. Change the prompt so the job needs something you did not allow — add
    "then fix the bug" — run it again, and record what happens.
 4. Confirm nothing changed: `git status`.
@@ -472,8 +474,10 @@ step 3, and your minimal permission set with its justification.
 command can still write files, which is why the script allows
 `shell(pytest)` and not `shell`.
 
-Piping text in is the safest headless pattern there is: the agent reads
-and answers, and runs nothing.
+Piping the text in is the safest headless pattern there is: everything
+the agent needs is already in the prompt, so it has no reason to reach for
+a tool. But only a policy stops it if it tries — "runs nothing" is a
+property of what you allowed, not of the pipe.
 
 </details>
 
@@ -529,7 +533,7 @@ Optional — the sections above are the two-hour path.
   command starts, not what it does — so allow narrowly, and test a policy
   before you trust it.
 - **Headless** means every permission is decided in advance. The safest
-  headless agent reads what you pipe in and runs nothing.
+  headless agent reads what you pipe in and is allowed to run nothing.
 
 The through-line: configure an agent as if it will do exactly what you
 allowed — because it will.

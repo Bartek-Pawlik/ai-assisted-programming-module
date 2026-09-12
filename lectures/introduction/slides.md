@@ -69,12 +69,16 @@ write. The assistant is fast; your name is on the commit.
 ---
 
 <!-- Speaker notes: ~0:05. The load-bearing pair is rows two and three: 29%
-trust the output and 48% always review it. Those two numbers together say
-that the majority of developers ship code they do not trust and did not
-check — not through carelessness, but because reviewing everything is no
-longer possible at the rate it arrives. The rest of the table is the
-consequence: 1.7x the major issues, ~45% carrying a known vulnerability
-class.
+trust the output and 48% always review it. Keep them separate: most
+developers do not trust what it produces, and fewer than half always
+review it before committing. The surveys do not say the same people do
+both, so do not claim that a majority ships code it neither trusts nor
+checked. The honest reading is that trust is low and review is partial —
+not through carelessness, but because reviewing everything is no longer
+possible at the rate it arrives. The rest of the table is association,
+not proven consequence: in the studies quoted, AI-assisted code carried
+1.7x the major issues and ~45% of samples a known vulnerability class;
+nothing here shows what caused what.
 
 The misconception is that professionals have solved this and there is a
 correct process about to be taught. There is not. The faulty model is that

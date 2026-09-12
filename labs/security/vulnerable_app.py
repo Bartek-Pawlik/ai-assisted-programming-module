@@ -50,7 +50,7 @@ def main() -> None:
 
     add_note(conn, "alice", "Shopping", "milk, bread")
     add_note(conn, "alice", "Passwords", "do not store passwords in notes")
-    add_note(conn, "bob", "Private", "bob's private note")
+    add_note(conn, "bob", "Private", "a note nobody but bob should see")
 
     print("alice searching for 'o':")
     for row in search_notes(conn, "alice", "o"):

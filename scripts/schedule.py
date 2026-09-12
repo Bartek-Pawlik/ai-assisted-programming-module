@@ -139,6 +139,22 @@ def bank_holiday_monday(year: int) -> datetime.date:
     return monday_of(datetime.date(year, 10, 31))
 
 
+def academic_year(day: datetime.date) -> int:
+    """The autumn whose semester-1 calendar is in force on `day`.
+
+    From July onward that is this year's; before July it is still last
+    year's, so in January the banner says the semester finished (and when
+    teaching returns) rather than that a semester nine months away has not
+    started. The site index and the Moodle loader apply the same rule.
+    """
+    return day.year if day.month >= 7 else day.year - 1
+
+
+def today() -> datetime.date:
+    from zoneinfo import ZoneInfo
+    return datetime.datetime.now(ZoneInfo("Europe/Dublin")).date()
+
+
 def _name(w: dict, key: str, url_key: str, prefix: str, week: str) -> str | None:
     """A folder name from `key`, or from a builder-export URL under `prefix`."""
     name = str(w.get(key, "") or "").strip()

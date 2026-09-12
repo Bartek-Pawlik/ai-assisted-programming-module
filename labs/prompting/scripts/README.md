@@ -1,49 +1,26 @@
-# Scripts Directory
+# Scripts
 
-This directory contains helpful scripts for the lab:
+Two helpers for this lab. Both run locally and report nowhere.
 
-## 🎯 `run_and_grade.py`
-**Main script for checking your progress**
-
-Run this anytime to see:
-- Your current score (0-100)
-- Which tasks are complete/incomplete
-- What you need to do next
+## `check_progress.py`
 
 ```bash
-python scripts/run_and_grade.py
+python scripts/check_progress.py
 ```
 
-**Note:** This script generates `pytest-report.json` and `autograde/` files automatically. These are temporary files and should **not** be committed to git (they're in `.gitignore`).
+Runs the lab's tests — they fail until DIY 8 replaces the placeholder test,
+and that is expected — then checks each `lab/prompts/taskN.md` for the
+sections its task asks for, `lab/diffs/task9.diff` for a real diff, and
+`lab/REFLECTION.md` for a real reflection. It does not grade anything: the
+Practical Assessment for this lab is on Moodle and asks about the work
+itself.
 
-## 🔧 `setup_check.py`
-**Environment troubleshooting script**
-
-Run this if you're having any issues with the lab environment:
+## `setup_check.py`
 
 ```bash
 python scripts/setup_check.py
 ```
 
-It will:
-- Check if Python and pip are working
-- Install missing packages automatically
-- Verify the lab directory structure
-- Give you specific instructions to fix any problems
-
-## 📁 Generated Files (Don't Commit These)
-
-The scripts automatically create these files:
-- `pytest-report.json` - Test results in JSON format
-- `autograde/grading-summary.json` - Scoring breakdown
-- `.pytest_cache/` - Pytest cache directory
-
-These are already in `.gitignore` and will be ignored by git.
-
-## Quick Start for Students
-
-1. **First time setup**: The devcontainer should handle everything automatically
-2. **Check your progress**: `python scripts/run_and_grade.py`
-3. **Having issues?**: `python scripts/setup_check.py`
-
-That's it! Focus on the lab tasks, not the environment setup.
+Checks Python and pip, installs this lab's requirements if pytest is
+missing, and confirms the lab folders exist. Run it if the tests will not
+start.

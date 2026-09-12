@@ -1,12 +1,13 @@
 """
-Part 3: Retrieval System
-Atlantic Technological University - RAG Lab
+Part 3: Retrieval -- RAG Lab
 
 In this part, you will:
-1. Implement semantic search
-2. Add relevance filtering
-3. Manage context windows
-4. Test retrieval with queries
+1. Implement semantic search over the chunks you stored in part 2
+2. Show each hit with its score and the file it came from
+3. Filter hits by a score threshold
+4. Fit the winning chunks into a context window
+
+Run it as:   python part3_retrieval.py
 
 Estimated time: 35 minutes
 """
@@ -14,194 +15,141 @@ Estimated time: 35 minutes
 import chromadb
 from sentence_transformers import SentenceTransformer
 
+COLLECTION = "cs_knowledge"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+
 
 def semantic_search(query, collection, model, top_k=3):
     """
-    Search for the most relevant chunks given a query.
-    
+    Return the top_k chunks nearest in meaning to the query.
+
     Args:
-        query: User's question (string)
-        collection: ChromaDB collection
-        model: SentenceTransformer model for embedding
+        query: The question, as a string
+        collection: ChromaDB collection from part 2
+        model: SentenceTransformer model -- the SAME one part 2 used
         top_k: Number of results to return
-        
+
     Returns:
-        List of (chunk_text, distance_score) tuples
+        List of (chunk_text, source, similarity) tuples, best first.
+        ChromaDB reports a DISTANCE (lower is closer); convert it with
+        similarity = 1 / (1 + distance) so that higher means closer.
     """
     # TODO: Exercise 3.1
-    # 1. Generate embedding for the query using model.encode()
-    # 2. Query the ChromaDB collection with the query embedding
-    # 3. Extract and return the results as (text, score) tuples
+    # 1. query_embedding = model.encode(query)
+    # 2. results = collection.query(
+    #        query_embeddings=[query_embedding.tolist()],
+    #        n_results=top_k
+    #    )
+    # 3. Pull out, for each hit:
+    #      results['documents'][0]   -> the chunk texts
+    #      results['metadatas'][0]   -> dicts with the 'source' filename
+    #      results['distances'][0]   -> distances (lower = closer)
+    # 4. Return [(text, source, 1 / (1 + distance)), ...]
     #
-    # ChromaDB query usage:
-    # results = collection.query(
-    #     query_embeddings=[query_embedding.tolist()],
-    #     n_results=top_k
-    # )
-    #
-    # Results structure:
-    # results['documents'][0] = list of document texts
-    # results['distances'][0] = list of distance scores (lower = more similar)
-    #
-    # GitHub Copilot Prompt: "Query ChromaDB collection with embedding and return top k results"
-    
+    # GitHub Copilot Prompt: "Query a ChromaDB collection with an embedding and return text, metadata source and similarity for the top k hits"
+
     # YOUR CODE HERE
     pass  # Remove this line when you add your code
 
 
-def filter_by_relevance(results, min_score=0.5):
+def filter_by_relevance(results, min_similarity=0.5):
     """
-    Filter search results by minimum relevance score.
-    
+    Keep only the hits whose similarity clears a threshold.
+
     Args:
-        results: List of (chunk, distance) tuples
-        min_score: Minimum similarity score threshold
-        
+        results: List of (chunk_text, source, similarity) tuples
+        min_similarity: Lowest similarity worth keeping
+
     Returns:
-        Filtered list of results
-        
-    Note: ChromaDB returns DISTANCE scores (lower = more similar)
-          We'll convert to similarity: similarity = 1 / (1 + distance)
-          Then filter by min_score
+        The filtered list, same tuple shape
+
+    Nearest-neighbour search ALWAYS returns something (DIY 4). The score is
+    the only signal that nothing relevant was found, and this threshold is
+    where you act on it.
     """
     # TODO: Exercise 3.2
-    # 1. Convert distance scores to similarity scores using: 1 / (1 + distance)
-    # 2. Filter results where similarity >= min_score
-    # 3. Return filtered results as (chunk, similarity_score) tuples
+    # Return the tuples whose similarity >= min_similarity
     #
-    # GitHub Copilot Prompt: "Convert distance scores to similarity and filter by threshold"
-    
+    # GitHub Copilot Prompt: "Filter a list of (text, source, score) tuples by a minimum score"
+
     # YOUR CODE HERE
     pass  # Remove this line when you add your code
 
 
-def manage_context_window(chunks, max_tokens=1500):
+def manage_context_window(results, max_tokens=1500):
     """
-    Combine chunks while staying within token limit.
-    
+    Join chunk texts into one context string that fits a token budget.
+
     Args:
-        chunks: List of text chunks
-        max_tokens: Maximum tokens to use (approximate)
-        
+        results: List of (chunk_text, source, similarity) tuples, best first
+        max_tokens: Approximate budget (4 characters is roughly 1 token)
+
     Returns:
-        Combined context string that fits within token limit
+        One string: the chunks that fit, each prefixed with its source and
+        separated by a blank line and a rule
     """
     # TODO: Exercise 3.3
-    # 1. Combine chunks with clear separators (e.g., "\n\n---\n\n")
-    # 2. Estimate token count (rough estimate: 4 characters ≈ 1 token)
-    # 3. If exceeds max_tokens, truncate to fit
-    # 4. Return the combined context
+    # 1. Start with an empty list of pieces
+    # 2. For each hit, build "[source: <file>]\n<text>"
+    # 3. Add it only if the total length in characters // 4 stays within max_tokens
+    # 4. Join the pieces with "\n\n---\n\n" and return the string
     #
-    # Algorithm:
-    # - Start with empty context
-    # - Add chunks one by one with separator
-    # - Check token estimate after each addition
-    # - Stop when max_tokens would be exceeded
-    #
-    # GitHub Copilot Prompt: "Combine text chunks with separators staying within token limit"
-    
+    # GitHub Copilot Prompt: "Combine labelled text chunks with separators while staying within a token budget"
+
     # YOUR CODE HERE
     pass  # Remove this line when you add your code
 
 
 def display_results(query, results):
-    """Display search results in a nice format."""
-    print("=" * 70)
-    print(f"🔍 Query: {query}")
-    print("=" * 70)
-    print()
-    
+    """Print hits the way the README shows them: score, source, preview."""
+    print(f'Query: "{query}"')
     if not results:
-        print("❌ No results found")
+        print("  no results -- check your semantic_search() function")
         return
-    
-    for i, (chunk, score) in enumerate(results, 1):
-        # Convert distance to similarity for display
-        similarity = 1 / (1 + score) if isinstance(score, float) else score
-        
-        print(f"Result #{i}")
-        print(f"Similarity Score: {similarity:.3f}")
-        print(f"Text Preview: {chunk[:200]}...")
-        print("-" * 70)
-        print()
+    for text, source, similarity in results:
+        preview = " ".join(text.split()[:6])
+        print(f'  {similarity:.2f}  {source:<34} "{preview}..."')
 
 
 def main():
-    """Run retrieval system tests."""
+    """Run retrieval against the index from part 2."""
     print("=" * 70)
-    print("Part 3: Retrieval System")
+    print("Part 3: Retrieval")
     print("=" * 70)
     print()
-    
-    # Load the embedding model
-    print("🧮 Loading embedding model...")
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    print("✅ Model loaded")
-    print()
-    
-    # Connect to ChromaDB
-    print("💾 Connecting to ChromaDB...")
+
+    model = SentenceTransformer(EMBEDDING_MODEL)
     client = chromadb.PersistentClient(path="./chroma_db")
-    
     try:
-        collection = client.get_collection(name="cs_knowledge")
-        print(f"✅ Connected to collection with {collection.count()} chunks")
-    except:
-        print("❌ Collection not found. Run part2_embeddings.py first!")
+        collection = client.get_collection(name=COLLECTION)
+    except Exception:
+        print("Collection not found. Run part2_embeddings.py first.")
         return
+    print(f"Connected to collection with {collection.count()} chunks")
     print()
-    
-    # Test queries
-    test_queries = [
-        "What is a variable in programming?",
-        "How do linked lists work?",
-        "Explain sorting algorithms",
-        "What are databases used for?",
-        "What is HTML?"
+
+    # DIY 3: same meaning, different words. DIY 4: nothing relevant at all.
+    queries = [
+        "what is a variable",
+        "how do I store a value under a name",
+        "how do I bake sourdough",
     ]
-    
-    print("🔍 Testing semantic search...")
-    print()
-    
-    for query in test_queries:
-        # Perform search
+
+    for query in queries:
         results = semantic_search(query, collection, model, top_k=3)
-        
+        display_results(query, results)
         if results:
-            # Display results
-            display_results(query, results)
-            
-            # Test relevance filtering
-            filtered = filter_by_relevance(results, min_score=0.5)
-            print(f"   After filtering (min_score=0.5): {len(filtered)} results")
-            
-            # Test context window management
-            chunks_only = [chunk for chunk, _ in results]
-            context = manage_context_window(chunks_only, max_tokens=500)
-            
+            kept = filter_by_relevance(results, min_similarity=0.5)
+            if kept is not None:
+                print(f"  kept after threshold 0.50: {len(kept)} of {len(results)}")
+            context = manage_context_window(results, max_tokens=500)
             if context:
-                token_estimate = len(context) // 4
-                print(f"   Context window: ~{token_estimate} tokens")
-            
-            print()
-            print("─" * 70)
-            print()
-        else:
-            print(f"❌ No results for: {query}")
-            print("   Check your semantic_search() function")
-            print()
-    
-    # Final summary
+                print(f"  context window: ~{len(context) // 4} tokens")
+        print()
+
     print("=" * 70)
-    print("🎉 Part 3 Complete!")
+    print("Part 3 complete. Next: python part4_generation.py")
     print("=" * 70)
-    print()
-    print("Your retrieval system can:")
-    print("  ✅ Perform semantic search")
-    print("  ✅ Filter by relevance")
-    print("  ✅ Manage context windows")
-    print()
-    print("Next step: Run 'python part4_generation.py' to integrate with an LLM")
 
 
 if __name__ == "__main__":

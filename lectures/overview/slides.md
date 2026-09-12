@@ -168,16 +168,23 @@ You ask for a function using `pandas.read_excel_fast()`.
 
 ---
 
-<!-- Speaker notes: ~0:15. The reveal and the name. It writes the code
-because a confident continuation is more plausible than an admission of
-ignorance; the mechanism worked exactly as designed.
+<!-- Speaker notes: ~0:15. The reveal and the name. It usually writes the
+code, because a confident continuation is more plausible than an
+admission of ignorance; the mechanism worked exactly as designed.
+
+"Usually" is deliberate. An assistant that says the function does not
+exist is not the raw mechanism being honest: it is a product layer — a
+search, a refusal tuned in — doing what prediction alone does not, and a
+student whose tool said so has met that layer, not a more honest model.
+The point survives either way: nothing in the mechanism checks, so where
+no check has been added, this is what you get.
 
 Name it — hallucination — and plant one forward reference without
 elaborating: attackers can register the names it invents, so this
 behaviour is also an attack surface. Part 2's ranked-list slide explains
 why the same prompt tends to land on the same invention. -->
 
-## It writes the code
+## Usually: it writes the code
 
 <p class="prompt">Write a function that loads a spreadsheet using
 pandas.read_excel_fast()</p>

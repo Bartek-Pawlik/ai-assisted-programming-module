@@ -89,8 +89,7 @@ topic covers.
 (32%) everything after it; both are sat in person during the lab slot.
 
 Nine **Practical Assessments** (4% each) make up the remaining 36%: one
-for each lab in weeks 2–6 and 8–11, on Moodle, each open for its lab's
-week.
+for each lab, on Moodle, each open for its lab's week.
 
 ## Calendar
 

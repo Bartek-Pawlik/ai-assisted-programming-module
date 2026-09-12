@@ -961,9 +961,11 @@ The faulty model is that a passing suite is evidence of quality, which is how
 deterministic tests behave and is exactly wrong for an eval set: a
 deterministic test that always passes is guarding an invariant, but an
 eval case that always passes is one the feature never found hard, and a
-whole set of them has stopped telling you anything. The repair is to add
-the case that fails today — the reversed figure, the prose-wrapped JSON —
-and the try-it-now probably produced one. -->
+whole set of them has stopped telling you anything NEW. It still guards
+against regression — which is why those cases stay — but it cannot tell a
+good change from a neutral one. The repair is to add the case that fails
+today — the reversed figure, the prose-wrapped JSON — and the try-it-now
+probably produced one. -->
 
 ## Predict: 20 of 20, ten changes in a row. Good news?
 
@@ -971,25 +973,28 @@ Your eval set has passed every case on each of the last ten prompt changes.
 
 * Yes — the feature is solid
 * Yes, as long as the cases were realistic
-* No — the set has stopped measuring anything
+* No — the set has stopped measuring anything new
 * You cannot know without a judge
 
 ---
 
 <!-- Speaker notes: ~1:43. The reveal. A rate is information only if it
-can move; when it stops moving, the set is too easy for the feature, and
-the fix is to add cases from real failures — the ones this part produced.
-The goal was never a hundred percent: it is a number that goes up when you
-improve something and down when you break something, because that is the
-only kind of number that can catch a regression. -->
+can move; when it stops moving, the set is too easy for the feature. Keep
+the passing cases — a case that once failed and now passes is a regression
+guard, and dropping it is how a fixed bug comes back — and add cases from
+real failures, the ones this part produced. The goal was never a hundred
+percent: it is a number that goes up when you improve something and down
+when you break something, because that is the only kind of number that
+can catch a regression. -->
 
-## A set everything passes has stopped telling you anything
+## A set everything passes has stopped telling you anything new
 
 * Ten changes, ten perfect scores: you cannot tell the change that helped
   from the one that did nothing
 
-* A rate is information only if it can **move**. When it stops moving, add
-  the case that fails today
+* A rate is information only if it can **move**. When it stops moving,
+  keep the passing cases as the regression guard and add the case that
+  fails today
 
 * The best new cases are real failures: the reversed figure, the JSON
   wrapped in prose, the run that dropped the number

@@ -26,6 +26,7 @@ import argparse
 import py_compile
 import re
 import subprocess
+import os
 import sys
 from pathlib import Path
 
@@ -160,6 +161,14 @@ def check_placeholders(lab: Path) -> list[str]:
                 f"{lab.as_posix()}/{rel}: placeholder test PASSES — it is "
                 f"meant to fail until the student writes it. A solution may "
                 f"have been committed to the public repo.")
+        elif r.returncode != 1 or "failed" not in out:
+            # Exit 1 is "tests failed". Anything else (2 interrupted, 3
+            # internal, 4 usage, 5 nothing collected) is broken scaffolding
+            # that would look red for the wrong reason.
+            findings.append(
+                f"{lab.as_posix()}/{rel}: placeholder test could not be "
+                f"judged — pytest exited {r.returncode} rather than failing "
+                f"the assertion the student is meant to satisfy.")
     return findings
 
 
@@ -206,6 +215,10 @@ def main() -> int:
             rows.append((name, n_py, f"tests passed — {summary}{note}"))
         elif status == "deps":
             rows.append((name, n_py, f"tests not run — {summary}"))
+            if os.environ.get("CI"):
+                # Locally a missing package is a note; in CI every lab's
+                # requirements were just installed, so it is a broken lab.
+                failures.append(f"{lab.as_posix()}: {summary}")
         else:
             rows.append((name, n_py, f"TESTS FAILED — {summary}"))
             failures.append(f"{lab.as_posix()}: pytest failed — {summary}")

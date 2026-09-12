@@ -14,9 +14,12 @@ Your job in DIY 5 is to change SYSTEM_PROMPT and build_messages() so the
 document is treated as data and not as orders -- then to try to defeat
 your own fix.
 
-No API key is needed. `--offline` (the default when no key is set) uses a
-deliberately naive stand-in model so the injection is visible without
-anyone paying for tokens.
+No API key is needed. The stand-in model below is deliberately naive so
+the injection is visible without anyone paying for tokens. It is also
+deliberately SMALL: it understands exactly the things listed in
+naive_model()'s docstring and nothing else, so you can reason about it.
+A real model understands far more, less predictably -- and still falls
+for well-built injections.
 """
 import os
 import sys
@@ -26,6 +29,23 @@ import sys
 # document starts and ends, and never tells the model what to do when the
 # document tries to give it orders.
 SYSTEM_PROMPT = "Summarise the document the user gives you in one sentence."
+
+# The delimiters the stand-in model recognises when the system prompt tells
+# it the document is data. Real prompts use shapes like these too.
+DELIMITERS = (
+    ("<document>", "</document>"),
+    ("---BEGIN DOCUMENT---", "---END DOCUMENT---"),
+    ('"""', '"""'),
+)
+
+# Phrases that tell the stand-in model the document is data, not orders.
+DATA_WORDS = ("untrusted", "as data", "is data", "not instructions",
+              "never instructions", "not an instruction", "never an instruction",
+              "do not follow", "never follow", "ignore any instruction")
+
+INJECTION_MARKERS = ("ignore all previous instructions",
+                     "ignore your previous instructions",
+                     "disregard the above")
 
 
 def build_messages(document: str) -> list[dict]:
@@ -45,25 +65,57 @@ def build_messages(document: str) -> list[dict]:
 def naive_model(messages: list[dict]) -> str:
     """A stand-in that mimics an instruction-following model.
 
+    What it understands, in full:
+
+    1. It scans the user turn for an injected instruction (one of
+       INJECTION_MARKERS) and obeys the LAST one it finds. Otherwise it
+       "summarises": it returns the document's first non-empty line.
+    2. If the system prompt says the document is data (any phrase in
+       DATA_WORDS) AND the user turn wraps the document in one of the
+       DELIMITERS, it treats everything INSIDE the delimiters as data: an
+       instruction in there is ignored.
+    3. Anything OUTSIDE the delimiters is still read as instructions. That
+       is where a bypass lives: a document that contains the closing
+       delimiter itself steps outside the fence, exactly as real
+       injections do to real prompts.
+
     Real models are far better than this, and still fall for well-built
-    injections. This one is exaggerated on purpose so the failure is
-    unmistakable without needing a key: it scans the text for anything
-    that looks like an instruction and obeys the last one it finds.
+    injections. This one is exaggerated on purpose so the failure -- and
+    the shape of the fix, and the shape of the bypass -- are all visible.
     """
-    document = messages[-1]["content"]
-    lowered = document.lower()
-    for marker in ("ignore all previous instructions",
-                   "ignore your previous instructions",
-                   "disregard the above"):
-        if marker in lowered:
-            after = document[lowered.index(marker) + len(marker):].strip()
-            return f"[model obeyed the document] {after.splitlines()[0][:120]}"
+    system = next((m["content"] for m in messages if m["role"] == "system"), "")
+    user = messages[-1]["content"]
+
+    document = user            # what gets summarised
+    instructions_from = user   # what the model takes orders from
+    if any(word in system.lower() for word in DATA_WORDS):
+        for opener, closer in DELIMITERS:
+            start = user.find(opener)
+            if start < 0:
+                continue
+            start += len(opener)
+            end = user.find(closer, start)
+            if end < 0:
+                continue
+            document = user[start:end]
+            instructions_from = user[:start] + user[end + len(closer):]
+            break
+
+    lowered = instructions_from.lower()
+    hits = [(lowered.rfind(marker), marker) for marker in INJECTION_MARKERS
+            if marker in lowered]
+    if hits:
+        position, marker = max(hits)
+        after = instructions_from[position + len(marker):].strip()
+        first_line = after.splitlines()[0] if after else ""
+        return f"[model obeyed the document] {first_line[:120]}"
+
     first = next((ln for ln in document.splitlines() if ln.strip()), "")
-    return f"[summary] {first[:120]}"
+    return f"[summary] {first.strip()[:120]}"
 
 
 def summarise(document: str) -> str:
-    if os.environ.get("OPENAI_API_KEY"):
+    if os.environ.get("LLM_API_KEY") or os.environ.get("OPENAI_API_KEY"):
         # Left for you if you want to try it against a real model. The
         # injection behaves the same way; it is just less obvious.
         print("(a real key is set, but this lab runs offline by design)",

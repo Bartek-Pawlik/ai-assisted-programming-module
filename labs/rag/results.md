@@ -1,171 +1,85 @@
-# RAG Lab - Experiment Results
+# RAG Lab - results
 
-**Name:** _[Your Name]_  
-**Date:** _[Date]_  
-**Module:** AI Assisted Programming  
-**Institution:** Atlantic Technological University, Galway
+**Name:** _[Your name]_
+**Date:** _[Date]_
 
----
-
-## Part 2: Document Processing & Embeddings
-
-### Documents Loaded
-- Number of documents: ___
-- Total chunks created: ___
-- Average chunk size: ___ characters
-- Embedding dimensions: ___
-
-### Observations
-_What did you learn about chunking and embeddings?_
+Fill this in as you go. The README says what each section is for.
 
 ---
 
-## Part 3: Retrieval System
+## Part 1: chunking and embeddings (DIY 1 and 2)
 
-### Test Query Results
+- Documents loaded: ___
+- Chunks produced at 200 words: ___ (shortest ___ words, longest ___ words)
+- Vector dimensionality: ___
+- Did the query vector have the same dimensionality as the chunks? ___
 
-**Query 1:** "What is a variable in programming?"
-- Number of results retrieved: ___
-- Top similarity score: ___
-- Quality of results (1-5): ___
-
-**Query 2:** "How do linked lists work?"
-- Number of results retrieved: ___
-- Top similarity score: ___
-- Quality of results (1-5): ___
-
-### Observations
-_How well did semantic search work? Were the results relevant?_
+_What did the overlap check show?_
 
 ---
 
-## Part 4: RAG Generation
+## Part 2: retrieval (DIY 3 and 4)
 
-### Questions Tested
+**"what is a variable"** - top hit, score and source: ___
 
-**Question 1:** _[Your question]_
-- Answer quality (1-5): ___
-- Sources used: ___
-- Observations:
+**"how do I store a value under a name"** - top hit, score and source: ___
 
-**Question 2:** _[Your question]_
-- Answer quality (1-5): ___
-- Sources used: ___
-- Observations:
+_Same meaning, different words: did both queries find the same chunk?_
 
-### Overall RAG Performance
-_How did the complete RAG system perform? Was it accurate?_
+**"how do I bake sourdough"** - what came back, and with what scores: ___
+
+_One sentence on what a retrieval system does when nothing is relevant:_
 
 ---
 
-## Part 5: Experiments
+## Part 3: grounding (DIY 5)
 
-### Experiment 1: Parameter Tuning
+**Q:** What is a variable?
+**A:** ___
+**Source it cited:** ___
 
-#### Top-K Variation
-| top_k | Chunks Retrieved | Context Size (chars) | Avg Distance Score |
-|-------|-----------------|---------------------|-------------------|
-| 1     |                 |                     |                   |
-| 3     |                 |                     |                   |
-| 5     |                 |                     |                   |
-
-**Best value:** ___  
-**Reasoning:** ___
+**Q:** How do I bake sourdough?
+**A:** ___ (did it decline?)
 
 ---
 
-### Experiment 2: RAG vs Non-RAG Comparison
+## Part 4: chunk size (DIY 6)
 
-#### Test Question 1: "What is a variable in programming?"
+| Chunk size | Right chunk found? | Noise | Notes |
+|------------|--------------------|-------|-------|
+| 50 words   |                    |       |       |
+| 200 words  |                    |       |       |
+| 800 words  |                    |       |       |
 
-**Without RAG:**
-_[LLM response]_
-
-**With RAG:**
-_[RAG response]_
-
-**Comparison:**
-- Accuracy: RAG ___ | No RAG ___
-- Specificity: RAG ___ | No RAG ___
-- Source citation: RAG ✅ | No RAG ❌
+_One sentence on what goes wrong at each extreme:_
 
 ---
 
-#### Test Question 2: "How do sorting algorithms work?"
+## Part 5: long context versus retrieval (DIY 7)
 
-**Without RAG:**
-_[LLM response]_
+```text
+Whole corpus size: ................. [approx tokens]
+Question asked: .................... [your question]
+  RAG answer: ...................... [response]
+  Whole-corpus answer: ............. [response]
+Which was better? .................. [RAG / long context / no difference]
+At what corpus size would this flip? [your reasoning]
+```
 
-**With RAG:**
-_[RAG response]_
+Repeat for each of the three questions if the answers differed.
 
-**Comparison:**
-- Accuracy: RAG ___ | No RAG ___
-- Specificity: RAG ___ | No RAG ___
-- Source citation: RAG ✅ | No RAG ___
+**The question the corpus cannot answer** (sourdough):
 
----
+- No context: ___
+- Whole corpus: ___
+- RAG: ___
 
-### Experiment 3: Hallucination Prevention
-
-**Out-of-Domain Question:** "What is quantum computing?"
-
-**Without RAG:**
-_[Did it provide an answer? Was it confident?]_
-
-**With RAG:**
-_[Did it admit lack of information?]_
-
-**Observation:**
-_Did RAG prevent hallucination?_
-
----
-
-## Overall Learnings
-
-### What Worked Well
-1. 
-2. 
-3. 
-
-### Challenges Encountered
-1. 
-2. 
-3. 
-
-### Key Insights
-_What are the main benefits of RAG?_
-
-_When would you use RAG vs fine-tuning?_
-
-_What are the limitations you observed?_
-
----
-
-## Extension Challenges (Optional)
-
-### Challenge Attempted: ___
-
-**Description:**
-
-**Results:**
-
-**Code/Screenshots:**
+_Which of the three declined, and what made the difference?_
 
 ---
 
 ## Reflection
 
-### Most Interesting Discovery
-_What surprised you most about RAG?_
+_When would you build retrieval, and when would you just paste everything?_
 
-### Real-World Applications
-_Where could you apply RAG in real projects?_
-
-### Next Steps
-_What would you like to explore further?_
-
----
-
-**Lab Completed:** ___/___/___  
-**Total Time Spent:** ___ hours
+_What surprised you?_

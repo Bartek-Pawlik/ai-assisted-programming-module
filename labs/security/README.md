@@ -13,7 +13,8 @@ place so it stops being your problem.
 - Verify that every dependency in a project **actually exists** before
   installing it, and explain why that check is now necessary
 - Defend an AI feature against prompt injection from untrusted input
-- Turn on the free automated scanning GitHub already gives you
+- Put automated scanning in front of every push, using what is free
+  for your repository
 
 ## Table of Contents
 
@@ -130,6 +131,11 @@ Look for anywhere a value taken from a request is used without being
 examined first: written straight into a data structure, concatenated into
 a query, or returned in a response body.
 
+A quick probe: add a note whose title contains an apostrophe — `O'Brien`
+— and run it. The whole program falls over with a SQL syntax error. That
+crash is the tell that the input reached the query unescaped, and the
+hole an attacker uses is the same one.
+
 "Validate" means decide what you *will* accept and reject everything else
 — a length limit, a type, an allowed character set. A blocklist of bad
 inputs is not validation; there is always another bad input.
@@ -211,8 +217,13 @@ is about the failure mode where the assistant helps you do it wrong.
 
 ### DIY 4: Get caught by your own audit
 
-1. In a scratch file, write a config that hardcodes a realistic-looking
-   key, e.g. `OPENAI_API_KEY = "sk-" + "a"*40`. **Use a fake value.**
+1. In a scratch file, write a config line that hardcodes a
+   realistic-looking key as **one string literal**: `OPENAI_API_KEY =`
+   followed by a quoted value made of `sk-` and forty letter `a`s. **A
+   fake value, but typed out in full** — the audit looks for the shape of
+   a key in the text, and a value assembled at run time (`"sk-" + "a"*40`)
+   has no such shape. That is a finding in itself: a scanner reads text,
+   not what the code will do.
 2. Stage it: `git add`.
 3. Run the module's own audit from the repo root:
 
@@ -281,6 +292,11 @@ Separate the roles explicitly. Put the instruction in the system prompt,
 and wrap the untrusted text in a clear delimiter with a statement that
 everything inside is content to be summarised and never an instruction.
 
+The stand-in model is small on purpose: the docstring of `naive_model()`
+lists exactly what it understands — which words tell it the document is
+data, and which delimiters it recognises. Read that before you write the
+fix. It also tells you where the bypass lives.
+
 Step 5 is the honest part of the exercise. Prompt injection is not a
 solved problem, and a defence that reads as watertight often is not — if
 you find a bypass, that is a better answer than a fix you cannot break.
@@ -291,33 +307,66 @@ you find a bypass, that is a better answer than a fix you cannot break.
 
 ## 6. Automating the boring half
 
-None of the above scales by hand. GitHub gives you three checks free on
-public repositories, and they run without being asked.
+None of the above scales by hand. Three kinds of check cover most of it,
+and each can run on every push without being asked:
 
-| Tool | Catches |
-|---|---|
-| **CodeQL** | Injection, unsafe deserialisation, path traversal |
-| **Dependabot** | Dependencies with known CVEs |
-| **Secret scanning** | Committed credentials — many providers auto-revoke |
+| Check | Catches | On your private copy |
+|---|---|---|
+| **Dependency alerts** (Dependabot) | Dependencies with known CVEs | Free — turn it on in Settings |
+| **Secret scanning** | Committed credentials | GitHub's own scanner is for public repos or paid plans; **gitleaks** does the job for free in Actions |
+| **Static analysis** | Injection, unsafe calls, insecure defaults | GitHub's CodeQL likewise; **bandit** does it for Python for free |
+
+Your copy of this repo is private, which is right — it holds your work. So
+the second and third checks run as a workflow you add yourself. On a
+public repository you would turn on GitHub's built-in versions instead;
+the checks are the same, only who runs them changes.
 
 ### DIY 6: Turn them on
 
-1. In **your own copy** of the repo, open **Settings → Code security**.
-2. Enable **Dependabot alerts**, **secret scanning**, and **CodeQL**.
-3. Add a workflow that runs CodeQL on every push, using the starter
-   template GitHub offers.
-4. Push, and watch it run in the **Actions** tab.
-5. Read the first finding, if any, and decide honestly: real, or noise?
+1. In **your own copy** of the repo, open **Settings → Code security** and
+   enable **Dependabot alerts** and **Dependabot security updates**.
+2. Add `.github/workflows/security.yml` with a job that runs gitleaks and
+   bandit on every push:
+
+   ```yaml
+   name: security
+   on: [push, pull_request]
+   jobs:
+     scan:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+           with:
+             fetch-depth: 0
+         - name: Secrets in any commit
+           uses: gitleaks/gitleaks-action@v2
+           env:
+             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         - uses: actions/setup-python@v5
+           with:
+             python-version: "3.12"
+         - name: Static analysis of the Python
+           run: pip install bandit && bandit -r labs/security -ll
+   ```
+
+3. Push, and watch it run in the **Actions** tab.
+4. Read the first finding, if any, and decide honestly: real, or noise?
 
 **What you should have**
 
-A green (or informatively red) CodeQL run in your Actions tab, and in
+A green (or informatively red) `security` run in your Actions tab, and in
 `findings.md` one sentence on the first finding and your judgement of it.
 
 <details><summary>Hint</summary>
 
-Settings → Code security → *Set up* beside CodeQL analysis → **Default**
-is enough; you do not need the advanced configuration.
+`fetch-depth: 0` matters: gitleaks scans every commit, not just the
+latest, because a secret you removed in the next commit is still in the
+history.
+
+`-ll` makes bandit report medium severity and above. Run it on
+`vulnerable_app.py` before and after your DIY 2 fixes and watch what
+changes — and note what it cannot see: nothing scans for the logic flaw
+where the search returns other people's notes.
 
 If it reports nothing, that is a fine outcome — say so. To see it work,
 temporarily reintroduce one of the DIY 2 vulnerabilities on a branch and
@@ -335,9 +384,9 @@ watch it get flagged. Do not merge that branch.
 - **Reviewing in the same conversation that wrote the code.** It has
   already committed to that code being good and will defend it. Start a
   fresh one.
-- **Treating a clean scan as proof.** CodeQL finds the classes it knows.
-  Nothing scans for the logic flaw where your API returns other people's
-  notes.
+- **Treating a clean scan as proof.** A scanner finds the classes it
+  knows. Nothing scans for the logic flaw where your API returns other
+  people's notes.
 - **Blocklisting instead of validating.** Deciding what you accept is
   finite; enumerating what you reject is not.
 - **Installing first and checking later.** With slopsquatting, installing
@@ -355,8 +404,9 @@ watch it get flagged. Do not merge that branch.
   exists before you install it.
 - Untrusted text is **data, never instructions** — that is the whole of
   prompt-injection defence, and it is not fully solved.
-- Turn on CodeQL, Dependabot and secret scanning. They are free and they
-  never get bored.
+- Put dependency alerts, secret scanning and static analysis on every
+  push. What GitHub does not give your private repo for free, gitleaks and
+  bandit do — and none of them ever gets bored.
 
 The through-line: you are accountable for code you did not write, and the
 only thing that scales is making the machine check the machine.

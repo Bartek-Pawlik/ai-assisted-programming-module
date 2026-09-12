@@ -387,10 +387,10 @@
         "Freeze the prompt, because any further change can only lower the rate",
         "Retire the eval script and rely on the unit tests, since the feature is now proven",
         "Switch the scorer to LLM-as-judge so the cases can be graded more finely",
-        "Add harder cases, because a set everything passes has stopped telling you anything"
+        "Keep it as a regression guard and add harder cases, so the rate can move again"
       ],
       "answer": 3,
-      "explanation": "A perfect score is a ceiling, not a verdict. An eval suite everything passes has stopped measuring, so the useful move is to add cases that fail and make the rate informative again."
+      "explanation": "A set everything passes has stopped telling you anything new, but it has not become useless: it still catches a regression, so keep running it. Add the cases that fail today, drawn from real failures rather than invented to move the score, and the rate becomes informative again. A perfect score is a ceiling, not a verdict."
     },
     {
       "id": "cicd-027",

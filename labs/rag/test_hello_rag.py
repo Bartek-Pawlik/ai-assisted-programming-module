@@ -1,6 +1,6 @@
 """
 Hello RAG! - Simple Test Script
-Atlantic Technological University - RAG Lab
+RAG Lab
 
 This script loads and displays a sample document to verify basic file operations work.
 """

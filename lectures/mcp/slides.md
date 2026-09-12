@@ -254,9 +254,12 @@ tools/call names the tool and carries the arguments; the result carries
 content, here a single text block.
 
 The concept: nothing here is AI-specific — it is a remote procedure call.
-The client checks the arguments against the schema before the server
-runs, and hands the result to the model as context afterwards. A student
-who can read this pair can read every message in the lab. -->
+The server checks the arguments against the schema before your handler
+runs — in the SDK the lab uses that check sits in the wrapper around your
+tool, and a bad argument comes back as an error result without reaching
+your code — and the client hands the result to the model as context
+afterwards. A student who can read this pair can read every message in
+the lab. -->
 
 ## A call, on the wire
 
@@ -270,8 +273,8 @@ who can read this pair can read every message in the lab. -->
   "result": { "content": [ { "type": "text", "text": "8" } ] } }
 ```
 
-* The client checks `arguments` against the schema **before** the server
-  runs
+* The server checks `arguments` against the schema **before** your handler
+  runs; a bad call comes back as an error result
 
 * The result is content; the client hands it to the model as context
 
@@ -868,14 +871,23 @@ the middle. -->
 ---
 
 <!-- Speaker notes: ~1:31. What a bad handle should produce: a result
-describing the failure, not a crashed server. Two reasons, both
-mechanical. A result is content the model reads, so it can recover —
-retry, or tell the user. A raised exception kills the process, and over
-stdio the process IS the session, so one bad call ends everything.
+that says what went wrong and what to do next, written by you. Three
+kinds of failure, and students blur them. A TOOL error — a handle that
+does not exist — belongs in the result: the model reads it like any other
+content and can recover, by retrying or telling the user. A PROTOCOL
+error — a malformed request, an unknown method — is a JSON-RPC error
+response, which the SDK produces for you. A PROCESS failure — the server
+exiting — is the only one that ends the session, and over stdio the
+process is the session.
 
-The misconception is that an exception is "handled somewhere"; in a
-server you wrote, nothing above your handler catches it for you. This is
-the failure the lab's build-your-own exercise is built to provoke. -->
+The misconception is that a raised exception is a process failure. In the
+SDK the lab pins it is not: the wrapper around your handler catches the
+exception and returns it as an error result, with the exception text as
+the message, and the server carries on. That is why "return the failure"
+is still the rule — not to keep the server alive, but because the
+automatic version hands the model a stack-trace sentence and yours can
+say what to do next. The lab's build-your-own exercise makes the
+difference visible: raise, and read what the client gets back. -->
 
 ## A failure is a result, not a crash
 
@@ -888,10 +900,12 @@ the failure the lab's build-your-own exercise is built to provoke. -->
 * The model reads that like any other result, and can recover: retry, or
   tell the user
 
-* A handler that raises kills the process — and over stdio, the process
-  **is** the session
+* A handler that raises does **not** kill the server: the SDK returns the
+  exception as an error result. Only a server that exits ends the session
+  — and over stdio, the process is the session
 
-- Return the failure. Never let it take the server with it
+- Return the failure yourself, so the model reads *what to do*, not a
+  stack trace
 
 ---
 

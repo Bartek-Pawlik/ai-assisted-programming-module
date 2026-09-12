@@ -127,6 +127,7 @@ STYLE = """<style>
   .actions .dl:hover { color: var(--blue); text-decoration: underline; }
   .marker { color: var(--muted); font-family: var(--mono); font-size: 15.5px; }
   .marker .comment::before { content: '// '; color: var(--orange); }
+  .marker .comment a { color: var(--slate); }
   .row.current { background: var(--tint); box-shadow: inset 3px 0 0 var(--orange); }
   .row.current .num { color: var(--orange); }
   .now {
@@ -204,7 +205,9 @@ MAIN_FOOT = """</ol>
   if (START) {
     week1 = new Date(START + 'T00:00:00');
   } else {
-    var oct31 = new Date(today.getFullYear(), 9, 31);
+    // Before July the calendar in force is still last autumn's.
+    var year = today.getMonth() < 6 ? today.getFullYear() - 1 : today.getFullYear();
+    var oct31 = new Date(year, 9, 31);
     var reading = new Date(oct31);
     reading.setDate(31 - (oct31.getDay() + 6) % 7);
     week1 = new Date(reading);
@@ -274,7 +277,8 @@ def build_rows(sched: Schedule) -> tuple[str, int, int]:
             lectures += 1
         elif row.mcq:
             note = (row.notes[0].lower() + row.notes[1:]) if row.notes else "held during the lab slot"
-            rows.append(marker_row(row, f"{html.escape(row.assessment)} &middot; {html.escape(note)}"))
+            rows.append(marker_row(row, f"{html.escape(row.assessment)} &middot; {html.escape(note)}"
+                                   f' &middot; <a href="mcq/mcq{row.mcq}/">what it covers</a>'))
             markers += 1
         elif row.is_break:
             rows.append(marker_row(row, READING_LABEL))

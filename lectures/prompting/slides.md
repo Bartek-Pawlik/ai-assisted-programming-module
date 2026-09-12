@@ -393,14 +393,18 @@ practically useful thirty seconds of the two hours.
 The wrong answer to expect is "reword it again" — it is what everyone
 does, and it is why people spend twenty minutes going nowhere. The faulty
 model is that every failure is a phrasing failure, so the fix is always on
-the keyboard. Consistent failure across rewordings is EVIDENCE: the
-problem is missing information, not phrasing, and no amount of rewording
-adds information. The "bigger model" option shares the mistake — it treats
-a missing input as a capacity problem. -->
+the keyboard. Consistent failure across rewordings is EVIDENCE, not
+proof: the likeliest explanation is missing information, because no
+amount of rewording adds any. Name the other explanations when a student
+raises them — the request is genuinely ambiguous, or the task is beyond
+the model — and the diagnostic on the next slide separates them: if you
+can name the fact it lacks, supply it; if you cannot, the problem is not
+context. The "bigger model" option shares the mistake — it treats a
+missing input as a capacity problem. -->
 
 ## Predict: you reworded it three times and it is still wrong
 
-What does that tell you?
+What is that most likely telling you?
 
 * The model is not good enough — try a bigger one
 * Keep rewording, you will find the magic phrasing

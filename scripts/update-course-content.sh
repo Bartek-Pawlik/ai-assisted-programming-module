@@ -20,10 +20,16 @@ set -uo pipefail
 UPSTREAM_URL="https://github.com/danielcregg/ai-assisted-programming.git"
 UPSTREAM_SLUG="danielcregg/ai-assisted-programming"
 BRANCH="main"
-QUIET="${1:-}"                       # --quiet: say nothing unless something changed
+QUIET=""; STRICT=""
+for arg in "$@"; do
+  case "$arg" in
+    --quiet)  QUIET="--quiet" ;;   # say nothing unless something changed
+    --strict) STRICT=1 ;;          # exit 1 on any problem: the nightly workflow. By hand and
+  esac                             # on Codespace attach the default is to never block.
+done
 
 say() { [ "$QUIET" = "--quiet" ] || printf '%s\n' "$*"; }
-die() { printf '%s\n' "$*" >&2; exit 0; }   # exit 0: never block a Codespace from starting
+die() { printf '%s\n' "$*" >&2; [ "$STRICT" = 1 ] && exit 1; exit 0; }   # never block a Codespace
 
 command -v git >/dev/null || die "git not found."
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || die "Not a git repository."
@@ -55,81 +61,109 @@ fi
 # module/ (the schedule and overview) and .devcontainer/, plus the README.
 #
 # Starter code is included so that a fix to a lab you have not started yet
-# still reaches you. The rule further down keeps every file you have edited,
-# created or deleted, which is what makes that safe: a starter file you are
-# working in is yours from your first edit onward and stays as you left it.
+# still reaches you. is_yours below keeps every file you have edited,
+# staged, created or deleted, which is what makes that safe: a starter file
+# you are working in is yours from your first edit onward and stays as you
+# left it.
 #
 # Deliberately NOT included: this script (bash reads a script while it runs,
 # so overwriting it mid-run misbehaves), the workflows (a push made with the
 # Actions token may not change them, so the nightly run would fail every
 # night after the first change), and the theme, practice bank and build
 # scripts (the module site serves what those produce).
-mapfile -t PATHS < <(
-  git ls-tree -r --name-only "upstream/$BRANCH" | grep -E \
-    '^(README\.md|lectures/.*|mcq/.*|labs/.*|module/.*|\.devcontainer/.*)$' || true
-)
+#
+# Plain while-read loops rather than mapfile: the default bash on macOS is
+# 3.2, which has no mapfile, and this script is also run by hand on laptops.
+COURSE_RE='^(README\.md|lectures/.*|mcq/.*|labs/.*|module/.*|\.devcontainer/.*)$'
+PATHS=()
+while IFS= read -r p; do
+  [ -n "$p" ] && PATHS+=("$p")
+done < <(git ls-tree -r --name-only "upstream/$BRANCH" | grep -E "$COURSE_RE" || true)
 
 # Baseline = the content as you last received it: the commit recorded by the
 # previous run, or the initial template commit on the first run. Comparing
 # against HEAD would be wrong -- you are told to COMMIT your work, so an
 # edit you committed looks "clean" against HEAD and would be overwritten.
+#
+# The baseline is remembered twice: in the gitignored file .course-sync (a
+# Codespace or your laptop) and in the ref refs/course-sync/baseline, which
+# the nightly course-sync workflow pushes to your repo on GitHub. The ref is
+# fetched here so a Codespace opened after a nightly run knows what that run
+# already delivered; otherwise last night's updates would look like your
+# own edits and never refresh again. Of the two, the NEWER wins (the one the
+# other is an ancestor of); if they are unrelated, the ref -- it was set by
+# the run that actually delivered files to your repo.
 MARKER=".course-sync"
-# The baseline is remembered twice: in this gitignored file (a Codespace or
-# your laptop) and in the ref refs/course-sync/baseline, which the nightly
-# course-sync workflow pushes to your repo so a fresh checkout on GitHub
-# remembers it too. Whichever exists wins; the file is preferred.
-LAST="$(cat "$MARKER" 2>/dev/null || git rev-parse -q --verify refs/course-sync/baseline 2>/dev/null || true)"
+git fetch --quiet origin '+refs/course-sync/baseline:refs/course-sync/baseline' 2>/dev/null || true
+FILE_BASE="$(cat "$MARKER" 2>/dev/null || true)"
+REF_BASE="$(git rev-parse -q --verify refs/course-sync/baseline 2>/dev/null || true)"
+LAST="$FILE_BASE"
+if [ -n "$REF_BASE" ]; then
+  if [ -z "$FILE_BASE" ] || git merge-base --is-ancestor "$FILE_BASE" "$REF_BASE" 2>/dev/null; then
+    LAST="$REF_BASE"
+  fi
+fi
 ROOT="$(git rev-list --max-parents=0 HEAD | tail -1)"
+UPSTREAM="$(git rev-parse "upstream/$BRANCH")"
 
-skipped=0
-touched=()
-for p in "${PATHS[@]}"; do
-  [ -n "$p" ] || continue
-  base="$ROOT"
+# Only the files the module repo has changed since the baseline need a look;
+# every other course file is either exactly what you received, or yours.
+CANDIDATES=()
+while IFS= read -r p; do
+  [ -n "$p" ] && CANDIDATES+=("$p")
+done < <(git diff --name-only --no-renames "${LAST:-$ROOT}" "$UPSTREAM" -- 2>/dev/null | grep -E "$COURSE_RE" || true)
+
+# Is this path yours? It is NOT yours only if you received it from the module
+# repo and have not touched it since -- in the working tree or in the index.
+# Edited, staged, deleted, or created by you: yours, and left alone.
+is_yours() {
+  local p="$1" base="$ROOT"
   if [ -n "$LAST" ] && git cat-file -e "$LAST:$p" 2>/dev/null; then base="$LAST"; fi
   if git cat-file -e "$base:$p" 2>/dev/null; then
-    # You received this file. Untouched since? Safe to refresh. Edited, or
-    # deleted? It is yours -- and a file you deleted stays deleted.
-    if ! git diff --quiet "$base" -- "$p" 2>/dev/null; then
-      say "  kept your version: $p"
-      skipped=$((skipped + 1))
-      continue
+    if git diff --quiet "$base" -- "$p" 2>/dev/null \
+       && git diff --quiet --cached "$base" -- "$p" 2>/dev/null; then
+      return 1
     fi
-  elif [ -e "$p" ]; then
-    # New upstream, but something already sits at that path here: you
-    # created it, so it stays, whatever the module repo has put there.
-    say "  kept your file (the module repo has a new file of the same name): $p"
+    return 0    # edited, staged or deleted since you received it
+  fi
+  [ -e "$p" ]   # never received; if something is there, you created it
+}
+
+skipped=0
+failed=0
+touched=()
+for p in "${CANDIDATES[@]}"; do
+  if is_yours "$p"; then
+    say "  kept your version: $p"
     skipped=$((skipped + 1))
     continue
   fi
-  git checkout --quiet "upstream/$BRANCH" -- "$p" 2>/dev/null && touched+=("$p")
+  # A path the module repo has removed is handled by the pass below.
+  git cat-file -e "$UPSTREAM:$p" 2>/dev/null || continue
+  if git checkout --quiet "$UPSTREAM" -- "$p" 2>/dev/null; then
+    touched+=("$p")
+  else
+    printf 'could not update %s\n' "$p" >&2
+    failed=$((failed + 1))
+  fi
 done
 
 # Course-owned pages that upstream has since removed or renamed (a deck folder
 # under its new name, a retired MCQ page) — drop our copy too, or the old and
 # the new sit side by side. Same rule as above: a file you edited is yours and
-# stays. Only lectures/ and mcq/ are scanned; lab folders hold your own code
-# and worksheets, so a retired lab file is left in place rather than risk
+# stays, and so is a file you created there, which was never ours to remove.
+# Only lectures/ and mcq/ are scanned; lab folders hold your own code and
+# worksheets, so a retired lab file is left in place rather than risk
 # deleting your work.
 while IFS= read -r p; do
   [ -n "$p" ] || continue
   case " ${PATHS[*]} " in *" $p "*) continue;; esac
-  base="$ROOT"
-  if [ -n "$LAST" ] && git cat-file -e "$LAST:$p" 2>/dev/null; then base="$LAST"; fi
-  if git cat-file -e "$base:$p" 2>/dev/null && ! git diff --quiet "$base" -- "$p" 2>/dev/null; then
-    say "  kept your version (retired upstream): $p"
+  if is_yours "$p"; then
+    say "  kept your file (not in the module repo any more, or never from it): $p"
     continue
   fi
   git rm -q -- "$p" 2>/dev/null && touched+=("$p") && say "  removed (retired upstream): $p"
 done < <(git ls-files -- 'lectures/*' 'mcq/*')
-
-# Local bookkeeping only -- gitignored, never committed, never pushed.
-git rev-parse "upstream/$BRANCH" > "$MARKER"
-# ...and pin that commit with a ref. The nightly course-sync workflow pushes
-# this ref to your repo and reads it back on the next run, which is how a
-# fresh checkout on GitHub knows what you last received; without it every
-# file a previous run refreshed would look edited-by-you and stop updating.
-git update-ref refs/course-sync/baseline "$(git rev-parse "upstream/$BRANCH")"
 
 # Commit ONLY the content paths this script rewrote. A bare `git commit`
 # would sweep in anything you happened to have staged -- and this runs
@@ -141,7 +175,9 @@ if [ ${#touched[@]} -gt 0 ]; then
   # --no-renames: a folder that moved upstream is a delete plus an add here,
   # and rename detection would print only the new name, leaving the old
   # file staged but never committed.
-  mapfile -t changed < <(git diff --cached --name-only --no-renames -- "${touched[@]}")
+  while IFS= read -r p; do
+    [ -n "$p" ] && changed+=("$p")
+  done < <(git diff --cached --name-only --no-renames -- "${touched[@]}")
 fi
 
 if [ ${#changed[@]} -eq 0 ]; then
@@ -149,10 +185,25 @@ if [ ${#changed[@]} -eq 0 ]; then
 else
   printf 'Updated:\n'
   printf '  %s\n' "${changed[@]}"
-  git -c user.name="course-update" -c user.email="course-update@local" \
-      commit --quiet -m "chore: update course content from the module repo" \
-      -- "${changed[@]}"
-  printf 'Done - your own work was not touched.\n'
+  if git -c user.name="course-update" -c user.email="course-update@local" \
+       commit --quiet -m "chore: update course content from the module repo" \
+       -- "${changed[@]}"; then
+    printf 'Done - your own work was not touched.\n'
+  else
+    printf 'The update could not be committed; it is staged, not committed.\n' >&2
+    failed=$((failed + 1))
+  fi
+fi
+
+# Bookkeeping only after everything was applied and committed: advancing
+# the baseline past an update that did not land would make that update look
+# like your own edit next time, and it would never be retried.
+if [ "$failed" -eq 0 ]; then
+  git rev-parse "$UPSTREAM" > "$MARKER"     # local, gitignored, never pushed
+  git update-ref refs/course-sync/baseline "$UPSTREAM"   # pushed by the nightly workflow
+else
+  printf '%s problem(s) above; the baseline was not advanced, so the next run will try again.\n' "$failed" >&2
 fi
 [ "$skipped" -gt 0 ] && printf '(%s file(s) left alone because you had edited them.)\n' "$skipped"
+if [ "$failed" -gt 0 ] && [ "$STRICT" = 1 ]; then exit 1; fi
 exit 0

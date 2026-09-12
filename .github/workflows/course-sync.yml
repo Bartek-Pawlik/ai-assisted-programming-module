@@ -44,7 +44,7 @@ jobs:
           git fetch --quiet upstream main
 
       - name: Sync the course content
-        run: bash scripts/update-course-content.sh
+        run: bash scripts/update-course-content.sh --strict
 
       - name: Push the sync commit and the baseline
         run: |

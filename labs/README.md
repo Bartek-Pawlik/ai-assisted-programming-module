@@ -32,17 +32,20 @@ after half an hour idle). The free allowance is generous, not infinite.
 
 ## The labs
 
-| Week | Lab | What you build | Needs |
-|---|---|---|---|
-| 2 | [setup](setup/) | Your environment, verified | |
-| 3 | [prompting](prompting/) | SPEC prompts, personas, chain-of-thought, few-shot, context engineering | |
-| 4 | [rag](rag/) | A retrieval pipeline — and when not to build one | a free API key, for the generation half |
-| 5 | [mcp](mcp/) | An MCP server and client, then your own | |
-| 6 | [agents](agents/) | The ladder of autonomy: ask → edit → act | |
-| 8 | [security](security/) | Break it, then find the break: injection, slopsquatting, prompt injection | |
-| 9 | [cli-agents](cli-agents/) | A terminal coding agent, configured: instructions, commands, permissions | a sign-in (GitHub or Google) |
-| 10 | [cicd](cicd/) | A GitHub Actions pipeline with AI in it | |
-| 11 | [vibe-coding](vibe-coding/) | The same app three ways — then spec-first | |
+In teaching order. The [schedule](../README.md#module-schedule) says which
+week each one falls in.
+
+| Lab | What you build | Needs |
+|---|---|---|
+| [setup](setup/) | Your environment, verified | |
+| [prompting](prompting/) | SPEC prompts, personas, chain-of-thought, few-shot, context engineering | |
+| [rag](rag/) | A retrieval pipeline — and when not to build one | a free API key, for the generation half |
+| [mcp](mcp/) | An MCP server and client, then your own | |
+| [agents](agents/) | The ladder of autonomy: ask → edit → act | |
+| [security](security/) | Break it, then find the break: injection, slopsquatting, prompt injection | |
+| [cli-agents](cli-agents/) | A terminal coding agent, configured: instructions, commands, permissions | a sign-in (GitHub or Google) |
+| [cicd](cicd/) | A GitHub Actions pipeline with AI in it | the RAG lab's free key again, as a repository secret, for the review step |
+| [vibe-coding](vibe-coding/) | The same app three ways — then spec-first | |
 
 There is no lab in the introduction week or in the two MCQ weeks; the
 [schedule](../README.md#module-schedule) says which weeks those are. Each lab has a short Practical Assessment on Moodle, worth
@@ -52,7 +55,9 @@ There is no lab in the introduction week or in the two MCQ weeks; the
 
 The RAG lab's generation half calls a hosted model and needs an API key;
 the default is the Gemini API's free tier, and its README says where to
-get one. Nothing else needs a key: the MCP lab's weather
+get one. The CI/CD lab's review step (its section 3) reuses that same free
+key, stored as a repository secret so GitHub Actions can read it; the rest
+of that lab runs offline. Nothing else needs a key: the MCP lab's weather
 server uses a free service without one, and the security lab runs
 offline by design. The CLI agents lab needs you to sign in to a coding
 agent with your GitHub or Google account — a sign-in, never a key in a

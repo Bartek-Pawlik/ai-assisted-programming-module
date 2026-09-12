@@ -33,10 +33,10 @@ second one is invisible until you have felt the first one stop working.
    ```
 
 3. Check your progress at any point — this runs locally and reports
-   nowhere:
+   nowhere (its tests fail until DIY 8, and that is expected):
 
    ```bash
-   python scripts/run_and_grade.py
+   python scripts/check_progress.py
    ```
 
 You record your work in `lab/prompts/taskN.md`, which are blank templates.
@@ -198,7 +198,9 @@ than to accept a list.
 
 Record in `lab/prompts/task6.md`.
 
-1. Take a function with a subtle bug — `lab/code/domains.py` has one.
+1. Take a function with a subtle bug — `lab/code/batches.py` has one. It
+   passes the obvious example in its docstring, which is the point.
+   (`lab/code/domains.py` is the empty stub for DIY 8; leave it.)
 2. Ask it to reason step by step: what the code does, what it should do,
    and where those diverge, **before** proposing a fix.
 3. Record the reasoning it produced.

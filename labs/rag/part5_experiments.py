@@ -1,259 +1,166 @@
 """
-Part 5: Experimentation & Analysis
-Atlantic Technological University - RAG Lab
+Part 5: Experiments -- RAG Lab
 
-In this part, you will:
-1. Compare RAG vs non-RAG responses
-2. Experiment with different parameters
-3. Document your observations
-4. Test hallucination prevention
+Four experiments, in the order the README's DIY 6 and DIY 7 want them:
 
-Estimated time: 10 minutes
+1. top-k: how much context each k retrieves            (no key needed)
+2. chunk size: how to rebuild the index at 50/200/800   (no key needed)
+3. long context versus retrieval: the same questions answered from the
+   retrieved chunks and from the WHOLE corpus            (key needed)
+4. hallucination: a question the corpus cannot answer, asked with no
+   context, with the whole corpus, and with retrieval    (key needed)
+
+Run it as:   python part5_experiments.py
+
+Estimated time: 20 minutes
 """
 
-import chromadb
-from sentence_transformers import SentenceTransformer
-from part4_generation import rag_query, initialize_llm, llm_settings
 import os
+
+import chromadb
 from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+
+from part2_embeddings import load_documents
+from part4_generation import GROUNDING_RULES, call_llm, initialize_llm, rag_query
+
+COLLECTION = "cs_knowledge"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+
+# The same three questions for every experiment, so the answers compare.
+QUESTIONS = [
+    "What is a variable?",
+    "How do linked lists work?",
+    "What is HTML?",
+]
+OUT_OF_CORPUS = "How do I bake sourdough?"
 
 
-def query_without_rag(question, llm_client, max_tokens=300):
-    """
-    Query the LLM without RAG (no context provided).
-
-    Args:
-        question: User's question
-        llm_client: OpenAI client (from initialize_llm)
-        max_tokens: Maximum response tokens
-
-    Returns:
-        LLM response text
-    """
-    try:
-        _, _, model = llm_settings()
-        response = llm_client.chat.completions.create(
-            model=model,
-            max_tokens=max_tokens,
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"You are a computer science teaching assistant. Answer this question briefly: {question}"
-                }
-            ]
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"Error: {e}"
+def approx_tokens(text):
+    """Words / 0.75 is close enough for English prose."""
+    return int(len(text.split()) / 0.75)
 
 
-def compare_responses(question, rag_response, no_rag_response):
-    """Display side-by-side comparison of RAG vs no-RAG."""
-    print("\n" + "━" * 80)
-    print(f"❓ Question: {question}")
-    print("━" * 80)
-    print()
-    
-    print("🤖 WITHOUT RAG (Standard LLM):")
-    print("─" * 80)
-    print(no_rag_response)
-    print("─" * 80)
-    print()
-    
-    print("✅ WITH RAG (Context-Enhanced):")
-    print("─" * 80)
-    print(rag_response.get('answer', 'No answer'))
-    print("─" * 80)
-    print()
-    
-    if rag_response.get('sources'):
-        print(f"📚 Sources Used: {len(rag_response['sources'])} chunks from knowledge base")
-    print()
-    print("━" * 80)
+def whole_corpus_prompt(question, documents):
+    """The same grounding rules as the RAG prompt, over every document at once."""
+    labelled = "\n\n".join(f"[source: {name}]\n{text}" for name, text in documents)
+    return f"{GROUNDING_RULES}\n\nCONTEXT:\n{labelled}\n\nQUESTION: {question}\n\nANSWER:"
 
 
-def test_hallucination_prevention():
-    """Test if RAG prevents hallucinations on out-of-domain questions."""
-    print("\n" + "=" * 80)
-    print("🧪 Experiment: Hallucination Prevention")
-    print("=" * 80)
-    print()
-    print("Testing with a question NOT covered in our documents...")
-    print()
-    
-    # Initialize systems
-    load_dotenv()
-    llm_client = initialize_llm()
-    
-    if not llm_client:
-        print("⚠️  No API key - skipping this experiment")
-        return
-    
-    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-    client = chromadb.PersistentClient(path="./chroma_db")
-    collection = client.get_collection(name="cs_knowledge")
-    
-    # Question NOT in our knowledge base
-    out_of_domain_question = "What is quantum computing and how does it work?"
-    
-    print(f"Question: {out_of_domain_question}")
-    print()
-    
-    # Get both responses
-    print("Querying standard LLM...")
-    no_rag = query_without_rag(out_of_domain_question, llm_client)
-    
-    print("Querying RAG system...")
-    with_rag = rag_query(
-        out_of_domain_question,
-        collection,
-        embedding_model,
-        llm_client,
-        top_k=3
-    )
-    
-    # Compare
-    compare_responses(out_of_domain_question, with_rag, no_rag)
-    
-    print("💡 Observation:")
-    print("  - Standard LLM: Likely provides a confident answer from training data")
-    print("  - RAG system: Should indicate insufficient information in knowledge base")
+def query_with_whole_corpus(question, llm_client, documents, max_tokens=300):
+    """No retrieval step: the model reads everything, labelled by file."""
+    return call_llm(llm_client, whole_corpus_prompt(question, documents), max_tokens=max_tokens)
+
+
+def query_without_context(question, llm_client, max_tokens=300):
+    """No context at all: whatever the model believes from training."""
+    return call_llm(llm_client, f"Answer this question briefly: {question}", max_tokens=max_tokens)
+
+
+def show(label, text):
+    print(f"  {label}")
+    for line in str(text or "(nothing came back - check call_llm and rag_query)").splitlines():
+        print(f"     {line}")
+
+
+def topk_experiment(collection, model):
+    print("Experiment 1: how much context does each top-k retrieve?")
+    print("-" * 70)
+    question = QUESTIONS[0]
+    query_embedding = model.encode(question)
+    for k in (1, 3, 5):
+        results = collection.query(query_embeddings=[query_embedding.tolist()], n_results=k)
+        texts = results["documents"][0]
+        sources = [m["source"] for m in results["metadatas"][0]]
+        words = sum(len(t.split()) for t in texts)
+        print(f"  top_k={k}: {len(texts)} chunks, ~{int(words / 0.75)} tokens, from "
+              f"{', '.join(dict.fromkeys(sources))}")
+    print("  More chunks means more context and more tokens - and past some k, more noise.")
     print()
 
 
-def parameter_experiments():
-    """Run experiments with different RAG parameters."""
-    print("\n" + "=" * 80)
-    print("🔬 Experiment: Parameter Tuning")
-    print("=" * 80)
+def chunk_size_note():
+    print("Experiment 2: chunk size (DIY 6)")
+    print("-" * 70)
+    print("  The index is rebuilt by part 2. Run each of these, then part 3, and")
+    print("  record in results.md whether the right chunk came back and how much")
+    print("  unrelated text came with it:")
+    print("     python part2_embeddings.py --chunk-words 50")
+    print("     python part2_embeddings.py --chunk-words 200")
+    print("     python part2_embeddings.py --chunk-words 800")
+    print("  Rebuild at 200 when you are done, so parts 4 and 5 use the setting")
+    print("  the README expects.")
     print()
-    
-    # Initialize
-    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-    client = chromadb.PersistentClient(path="./chroma_db")
-    collection = client.get_collection(name="cs_knowledge")
-    llm_client = initialize_llm()
-    
-    test_question = "What is a linked list?"
-    
-    # Experiment 1: Different top-k values
-    print("📊 Experiment 1: Number of Retrieved Chunks (top-k)")
-    print("-" * 80)
-    
-    for k in [1, 3, 5]:
-        print(f"\nTesting with top_k={k}...")
-        
-        # Generate query embedding
-        query_embedding = embedding_model.encode(test_question)
-        
-        # Query database
-        results = collection.query(
-            query_embeddings=[query_embedding.tolist()],
-            n_results=k
-        )
-        
-        num_results = len(results['documents'][0])
-        total_chars = sum(len(doc) for doc in results['documents'][0])
-        avg_score = sum(results['distances'][0]) / len(results['distances'][0])
-        
-        print(f"  Retrieved: {num_results} chunks")
-        print(f"  Total context: {total_chars} characters (~{total_chars // 4} tokens)")
-        print(f"  Average distance score: {avg_score:.3f}")
-    
+
+
+def long_context_vs_retrieval(collection, model, llm_client, documents):
+    print("Experiment 3: long context versus retrieval (DIY 7)")
+    print("-" * 70)
+    corpus = "\n\n".join(text for _, text in documents)
+    print(f"  Whole corpus: {len(documents)} documents, ~{approx_tokens(corpus)} tokens - "
+          f"it fits in one prompt.")
     print()
-    print("💡 Observation: More chunks = more context but also more tokens used")
+    for question in QUESTIONS:
+        print(f"Q: {question}")
+        rag = rag_query(question, collection, model, llm_client, top_k=3)
+        show("RAG (retrieved chunks):", rag.get("answer") if rag else None)
+        if rag and rag.get("sources"):
+            print(f"     retrieved from: {', '.join(rag['sources'])}")
+        show("Whole corpus (no retrieval):", query_with_whole_corpus(question, llm_client, documents))
+        print()
+
+
+def hallucination_test(collection, model, llm_client, documents):
+    print("Experiment 4: a question the corpus cannot answer")
+    print("-" * 70)
+    print(f"Q: {OUT_OF_CORPUS}")
+    show("No context at all:", query_without_context(OUT_OF_CORPUS, llm_client))
+    show("Whole corpus:", query_with_whole_corpus(OUT_OF_CORPUS, llm_client, documents))
+    rag = rag_query(OUT_OF_CORPUS, collection, model, llm_client, top_k=3)
+    show("RAG:", rag.get("answer") if rag else None)
     print()
-    
-    # Experiment 2: Chunk size impact (would require re-running Part 2)
-    print("📊 Experiment 2: Chunk Size Impact")
-    print("-" * 80)
-    print("Note: To test this, you would re-run Part 2 with different chunk_size values")
-    print("  - Smaller chunks (200-300): More precise retrieval, less context per chunk")
-    print("  - Medium chunks (500): Good balance (our current setting)")
-    print("  - Larger chunks (1000+): More context per chunk, but less precise")
+    print("  With no context the model answers from training, confidently. With")
+    print("  either kind of grounding it should decline - the permission to say")
+    print("  'I don't know' is doing the work, not the retrieval step.")
     print()
 
 
 def main():
-    """Run all experiments."""
-    print("=" * 80)
-    print("Part 5: Experimentation & Analysis")
-    print("=" * 80)
+    print("=" * 70)
+    print("Part 5: Experiments")
+    print("=" * 70)
     print()
-    
-    # Check if we have everything we need
-    if not os.path.exists("./chroma_db"):
-        print("❌ Vector database not found. Run part2_embeddings.py first!")
-        return
-    
-    load_dotenv()
-    api_key = os.getenv("LLM_API_KEY")
 
-    if not api_key:
-        print("⚠️  No LLM_API_KEY found in .env file")
-        print("Some experiments need a hosted model to run.")
-        print()
-        print("To get a free key:")
-        print("1. Go to https://aistudio.google.com/apikey and create an API key")
-        print("2. Copy .env.example to .env in this folder")
-        print("3. Put the key in LLM_API_KEY (leave the base URL and model as they are)")
-        print()
-        response = input("Continue with limited experiments? (y/n): ")
-        if response.lower() != 'y':
-            return
-        print()
-    
-    # Run experiments
-    try:
-        # Experiment 1: Parameter tuning (doesn't require API key)
-        parameter_experiments()
-        
-        # Experiment 2: RAG comparison (requires API key)
-        if api_key:
-            print("\n" + "=" * 80)
-            print("🆚 Experiment: RAG vs Non-RAG Comparison")
-            print("=" * 80)
-            print()
-            
-            llm_client = initialize_llm()
-            embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-            client = chromadb.PersistentClient(path="./chroma_db")
-            collection = client.get_collection(name="cs_knowledge")
-            
-            # Test questions
-            test_questions = [
-                "What is a variable in programming?",
-                "How do sorting algorithms work?",
-            ]
-            
-            for question in test_questions:
-                # Get both responses
-                no_rag = query_without_rag(question, llm_client)
-                with_rag = rag_query(question, collection, embedding_model, llm_client)
-                
-                # Compare
-                compare_responses(question, with_rag, no_rag)
-            
-            # Test hallucination prevention
-            test_hallucination_prevention()
-        
-        # Final summary
-        print("\n" + "=" * 80)
-        print("🎉 All Experiments Complete!")
-        print("=" * 80)
-        print()
-        print("Key Takeaways:")
-        print("  ✅ RAG provides context-grounded responses")
-        print("  ✅ Standard LLMs rely on training data (may be outdated)")
-        print("  ✅ RAG can prevent hallucinations by refusing to answer without context")
-        print("  ✅ Parameter tuning (top-k, chunk size) affects quality and cost")
-        print()
-        print("📝 Next step: Document your findings in results.md")
-        print()
-        
-    except Exception as e:
-        print(f"\n❌ Error during experiments: {e}")
-        print("Check your implementation and try again")
+    if not os.path.exists("./chroma_db"):
+        print("Index not found. Run part2_embeddings.py first.")
+        return
+
+    model = SentenceTransformer(EMBEDDING_MODEL)
+    client = chromadb.PersistentClient(path="./chroma_db")
+    collection = client.get_collection(name=COLLECTION)
+    documents = load_documents("data")
+    if not documents:
+        print("load_documents() returned nothing - finish part 2 first.")
+        return
+
+    topk_experiment(collection, model)
+    chunk_size_note()
+
+    load_dotenv()
+    llm_client = initialize_llm()
+    if llm_client is None:
+        print("Experiments 3 and 4 need a hosted model and there is no LLM_API_KEY in .env.")
+        print("  1. Create a free key at https://aistudio.google.com/apikey")
+        print("  2. Copy .env.example to .env in this folder")
+        print("  3. Put the key in LLM_API_KEY (leave the base URL and model as they are)")
+        return
+
+    long_context_vs_retrieval(collection, model, llm_client, documents)
+    hallucination_test(collection, model, llm_client, documents)
+
+    print("=" * 70)
+    print("Record the comparison in results.md. The README says what to look for.")
+    print("=" * 70)
 
 
 if __name__ == "__main__":

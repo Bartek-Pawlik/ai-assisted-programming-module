@@ -340,9 +340,14 @@ Precision moves from the **route** to the **destination**. Vague about
 ---
 
 <!-- Speaker notes: ~0:35. Terminal agents, for scope only: the distinction
-that matters is reach, not capability. An editor agent works in the files
-you opened; a terminal agent has your shell and the whole repository, so
-the same instruction has a very different blast radius. How one is
+that matters is what each is GRANTED, not which window it lives in. An
+editor agent in chat mode reads the file you opened; in its agent mode it
+can navigate the workspace, edit many files and run commands, if you let
+it. A terminal agent has your shell and the whole repository by default.
+So the same instruction has a very different blast radius only because the
+grants differ: which tools, what filesystem scope, whether commands run
+and who approves them. The misconception is that the editor is a sandbox.
+It is not; the grant is, and the grant is a setting. How a grant is
 configured — standing instructions, permissions — is a subject of its own
 and deliberately not covered here; what carries over unchanged is the
 discipline on the next slide. -->
@@ -351,12 +356,12 @@ discipline on the next slide. -->
 
 | | Editor agent | Terminal agent |
 |---|---|---|
-| Sees | The files you opened | The whole repository |
-| Can run | Limited, sandboxed | Your shell |
+| Reaches | What you grant: one file, or the whole workspace | The whole repository, and your shell |
+| Runs commands | Only if granted — usually asking first | Yes, under a policy you set |
 | Good for | A change you can picture | A change spread across many files |
-| Blast radius | The file | Everything |
+| Blast radius | Whatever you granted | Whatever the policy allows |
 
-* Same instruction. Very different consequences
+* Same instruction. The consequences follow the **grant**, not the window
 
 ---
 

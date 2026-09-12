@@ -51,22 +51,22 @@ jobs:
           # pyyaml: verify_snippets parses ```yaml fences. Without it every
           # yaml fence is reported as a failure rather than skipped, which is
           # deliberate -- a missing parser must not look like a clean run.
-          # markdown: build_lab_pages renders lab READMEs.
+          # markdown-it-py: build_lab_pages renders lab READMEs (CommonMark, so
+          # fenced code inside numbered steps renders as it does on GitHub).
           # pytest: verify_labs runs the labs' own tests.
-          python -m pip install --quiet pyyaml markdown pytest
+          python -m pip install --quiet pyyaml markdown-it-py pytest
 
       - name: Install lab dependencies
         run: |
           set -euo pipefail
-          # Best-effort, and deliberately non-fatal: verify_labs reports a lab
-          # whose dependencies are absent as "tests not run", which is honest,
-          # rather than failing the build for a lab that needs a live API key
-          # nobody has in CI. A lab whose requirements install cleanly gets its
-          # tests actually run.
+          # Every lab's requirements must install: a lab that cannot be set up is
+          # a red build, not a quietly skipped test. (A lab that needs a live API
+          # key still has its tests skipped by verify_labs; that is a separate,
+          # named exception, not an install failure.)
           for req in labs/*/requirements.txt labs/*/*/requirements.txt; do
             [ -f "$req" ] || continue
             echo "::group::$req"
-            python -m pip install --quiet -r "$req" || echo "skipped: $req"
+            python -m pip install --quiet -r "$req"
             echo "::endgroup::"
           done
 

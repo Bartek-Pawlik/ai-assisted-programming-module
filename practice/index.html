@@ -256,6 +256,7 @@ function renderPicker(){
   const worst=TOPICS.map(t=>({t,m:mastery(t.slug)})).filter(x=>x.m!=null).sort((a,b)=>a.m-b.m)[0];
   $('nudge').innerHTML = worst && worst.m<75 ? 'Suggestion: your weakest topic is <b>'+esc(worst.t.title)+' ('+worst.m+'%)</b> — worth a practice round.' : '';
   renderHist();
+  updateStart();
 }
 function selectedSlugs(){ return [...document.querySelectorAll('.topic-card input:checked')].map(i=>i.closest('.topic-card').dataset.slug); }
 function updateStart(){ $('start').disabled = selectedSlugs().length===0; }
@@ -289,13 +290,15 @@ $('reset').addEventListener('click',()=>{
 /* ── build & start quiz ───────────────────────────────── */
 $('start').addEventListener('click',()=>{
   const slugs=selectedSlugs();
+  if(!slugs.length){ updateStart(); return; }   // the picker was rebuilt with nothing ticked
   const want= mode==='exam'?30:plen;
-  const pools=slugs.map(s=>shuffle([...BANK[s]]).map(q=>({...q,topic:s})));
+  const pools=slugs.map(s=>shuffle([...(BANK[s]||[])]).map(q=>({...q,topic:s})));
   const qs=[]; let i=0;
   while(qs.length<want && pools.some(p=>p.length)){
     const p=pools[i%pools.length]; i++;
     if(p.length) qs.push(p.pop());
   }
+  if(!qs.length){ updateStart(); return; }      // no questions in the chosen topics
   shuffle(qs);
   qs.forEach(q=>{
     const order=shuffle([0,1,2,3]);

@@ -98,7 +98,7 @@ def install_requirements():
 def check_lab_structure():
     """Check if lab directory structure exists."""
     required_dirs = ["lab", "lab/prompts", "lab/code", "lab/tests", "lab/diffs"]
-    required_files = ["lab/code/domains.py", "lab/tests/test_extract_domain.py"]
+    required_files = ["lab/code/domains.py", "lab/code/batches.py", "lab/tests/test_extract_domain.py"]
     
     print("\\n📁 Checking lab structure...")
     all_good = True
@@ -154,7 +154,7 @@ def main():
     print(f"\n{'='*40}")
     if all_checks_passed:
         print(f"{C.G}{C.BOLD}🎉 Environment setup is complete!{C.D}")
-        print(f"\nYou can now run: {C.B}python scripts/run_and_grade.py{C.D}")
+        print(f"\nYou can now run: {C.B}python scripts/check_progress.py{C.D}")
     else:
         print(f"{C.R}{C.BOLD}❌ Some setup issues found{C.D}")
         print("\nPlease fix the issues above and run this script again.")

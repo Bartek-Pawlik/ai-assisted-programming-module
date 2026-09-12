@@ -397,8 +397,10 @@ offers — removes the asking entirely.
 Tools agree on that shape and differ in the detail of matching: one
 matches a command name plus a git subcommand, another a text prefix,
 another the exact command unless the rule ends in a wildcard. So a policy
-is something to test, not something to assume. Part 1 states the shape;
-part 2 shows the matching word by word and why deny has to win. -->
+is something to test, not something to assume. The flag spelling on the
+slide is as of September 2026 and will change; the three answers, deny
+winning, and unlisted meaning ask are what to carry. Part 1 states the
+shape; part 2 shows the matching word by word and why deny has to win. -->
 
 ## Three answers: allow, ask, deny
 
@@ -414,6 +416,8 @@ copilot --allow-tool='shell(git)' --deny-tool='shell(git push)'
 
 - A rule names how a command **starts**: `shell(git push)` also covers
   `git push --force`
+
+<span class="kicker">// flag names as of September 2026 — the three answers outlast the spelling</span>
 
 ---
 
@@ -855,11 +859,14 @@ the test files contain, so an agent that may run the tests may run
 anything it can put in a test — an argument for the narrow allow, not
 against running tests.
 
-The safest headless shape closes the question entirely: pipe the text in,
-and the agent needs no tools at all. It reads a diff or a test log and
-answers. Nothing to allow, nothing to deny, nothing to refuse. The
-misconception to correct is that "headless" means more permissions,
-because nobody can approve things. It means fewer, decided earlier. -->
+The safest headless shape: pipe the text in, so the job needs no tools —
+it reads a diff or a test log and answers. But piping takes nothing away:
+whatever tools the agent is configured with are still there, so the
+policy has to say so — allow nothing, or deny the shell — for a job that
+needs no tools to also have none. The misconception to correct is that
+"headless" means more permissions, because nobody can approve things. It
+means fewer, decided earlier — and "fewer" is a setting, not a side
+effect of stdin. -->
 
 ## The same job, one rule looser
 
@@ -874,8 +881,8 @@ because nobody can approve things. It means fewer, decided earlier. -->
 git diff --staged | gemini -p "Summarise what this diff changes"
 ```
 
-* The safest headless shape: pipe the text in. The agent reads, answers,
-  and **runs nothing**
+* The safest headless shape: pipe the text in, so the job **needs no
+  tools** — and say so in the policy, because the pipe takes none away
 
 ---
 

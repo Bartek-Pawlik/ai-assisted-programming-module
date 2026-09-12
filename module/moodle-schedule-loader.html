@@ -87,7 +87,9 @@
           var p = data.startDate.split("-");
           return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
         }
-        var reading = mondayOf(new Date(today.getFullYear(), 9, 31));   // last Monday of October
+        // Before July the calendar in force is still last autumn's.
+        var year = today.getMonth() < 6 ? today.getFullYear() - 1 : today.getFullYear();
+        var reading = mondayOf(new Date(year, 9, 31));   // last Monday of October
         reading.setDate(reading.getDate() - 7 * (data.readingWeekIndex || 0));
         return reading;
       }

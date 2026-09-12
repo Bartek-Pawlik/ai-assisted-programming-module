@@ -81,16 +81,16 @@
       "id": "agents-006",
       "difficulty": "easy",
       "type": "concept",
-      "question": "What is the main difference between an agent running inside the editor and an agent running in the terminal?",
+      "question": "Two agents receive the same instruction. What actually decides how much damage a bad run can do?",
       "code": null,
       "options": [
-        "The terminal agent uses a larger model, so it handles harder tasks",
-        "The terminal agent sees the whole repository and can run your shell",
-        "The terminal agent cannot edit files; it only runs commands and reports",
-        "The terminal agent asks for confirmation before every change it makes"
+        "Which tools it may call, which files it may touch, and whether commands need your approval",
+        "Whether it runs inside the editor or in a terminal window, since the terminal is the more powerful surface",
+        "The size of the model behind it, since a larger model makes bolder changes",
+        "How long the instruction was, since a short prompt leaves it more freedom"
       ],
-      "answer": 1,
-      "explanation": "The distinction is scope, not capability. An editor agent works in the files you opened and runs in a limited sandbox; a terminal agent has your whole repository and your shell, so the same instruction has a very different blast radius."
+      "answer": 0,
+      "explanation": "Blast radius is a matter of grants, not of user interface. An editor agent given the workspace and a terminal has the same reach as a terminal agent; a terminal agent with a deny on writes has less. Read the permission policy (allow, ask, deny) and the folder it is allowed to touch, and you know what a bad run can cost before it starts."
     },
     {
       "id": "agents-007",
@@ -381,16 +381,16 @@
       "id": "agents-026",
       "difficulty": "hard",
       "type": "code",
-      "question": "An agent was asked to make `parse()` reject malformed input and add a test. It reports success, and `git status` shows this. Where should your review start?",
+      "question": "An agent was asked to make `parse()` reject malformed input and add a test. It reports success and `git status` shows this. Which diff do you read first?",
       "code": "$ git status --short\n M src/parse.py\n M tests/test_parse.py\n M tests/conftest.py\n M src/config.py\n M requirements.txt",
       "options": [
-        "With the agent's report, to check that the two expected files match what it says it did",
-        "With `src/parse.py`, since that is where the change you actually asked for lives",
-        "With `tests/test_parse.py`, since the passing test is the definition of done",
-        "With `conftest.py`, `config.py` and `requirements.txt`, the files you did not expect"
+        "The agent's report, to check that the two files you expected to change are the ones it says it changed",
+        "`src/parse.py`, since that is where the change you asked for lives",
+        "`tests/test_parse.py` and `tests/conftest.py`: a changed test or fixture redefines what \"passing\" means",
+        "`src/config.py` and `requirements.txt`, the files you did not expect to see touched"
       ],
-      "answer": 3,
-      "explanation": "The request touches a parser and its test; a shared test fixture, a config module and the dependency list were not part of it. The files you were not expecting are where the surprises live — a fixture edited to make a test pass, or a new dependency — so read those diffs first. The report is a story, not evidence."
+      "answer": 2,
+      "explanation": "Order the review by what each step can invalidate. A changed test or fixture moves the goalposts, so until you have read those diffs the passing suite is evidence of nothing; conftest.py is a shared fixture, exactly the place a test gets made to pass. The unexpected files come next (config.py and requirements.txt were not part of the request), then run it yourself, and read the intended change in parse.py last, because it is the only part the report already described. The report itself is a story, not evidence."
     },
     {
       "id": "agents-027",
