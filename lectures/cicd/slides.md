@@ -502,12 +502,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4        # 03: fetch the code
+      - uses: actions/checkout@v4        # 01: fetch the code
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt   # 02: it has nothing
-      - run: python -m pytest            # 04: the exit code decides
+      - run: python -m pytest            # 03: the exit code decides
 ```
 
 <span class="kicker">// it starts in the repository root, not in your folder</span>

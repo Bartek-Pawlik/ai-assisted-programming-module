@@ -185,7 +185,7 @@ that every row points the same way. -->
 | …who always review before committing | **48%** |
 | Major issues vs human-written code | **1.7×** |
 | Samples with an OWASP Top-10 vulnerability | **~45%** |
-| Sprint capacity on AI-traceable bugs by day 90 | **20–30%** |
+| Sprint capacity on AI-traceable bugs, a quarter in | **a fifth to a third** |
 
 <span class="kicker">// treat these as direction, not decimal points</span>
 
@@ -260,7 +260,7 @@ is the other wrong answer, from the model that running is evidence. -->
 precisely what makes it dangerous: the feedback signal arrives long after
 the decision that caused it, so nothing at decision time feels wrong.
 
-The 20–30% figure lands here: by day 90, teams report a fifth to a third
+The capacity figure lands here: within a quarter, teams report a fifth to a third
 of sprint capacity going on bugs traceable to generated code. Direction,
 not decimals. Part 2 gives the mechanism — every unstated decision is
 made silently, and every later change inherits it. -->
@@ -275,7 +275,7 @@ made silently, and every later change inherits it. -->
 
 <div class="callout">
 
-By **day 90**, teams report 20–30% of sprint capacity going on bugs
+Within a **quarter**, teams report a fifth to a third of sprint capacity going on bugs
 traceable to AI-generated code.
 
 </div>

@@ -242,7 +242,7 @@ trace like this is the first thing the lab asks for. -->
 ```
 
 * Same `id` on the request and its answer — plain JSON-RPC, an envelope
-  that predates all of this by twenty years
+  that predates all of this by well over a decade
 
 * What comes back is the declaration, word for word. The client puts it in
   front of the model
@@ -401,7 +401,7 @@ them. -->
 | **Start of a connection** | `initialize` / `initialized` handshake | None. Every request stands alone |
 | **Session** | `Mcp-Session-Id`; the server remembers you | None. Version and identity travel in each request's `_meta` |
 | **State a tool needs** | The server's memory | An explicit handle the model passes back |
-| **Old HTTP+SSE transport** | Accepted | Deprecated, year-long offramp |
+| **Old HTTP+SSE transport** | Deprecated in 2025, still tolerated | Deprecated, year-long offramp |
 
 <span class="kicker">// the same release also added header-based routing and Multi Round-Trip Requests — names to recognise, not taught here</span>
 
@@ -621,8 +621,9 @@ The model emits a call with no `city`:
   "params": { "name": "get_weather", "arguments": {} } }
 ```
 
-* `city` is `required`, so the client checks it against the schema and
-  refuses — it **never reaches your code**
+* `city` is `required`, so the **server** checks the arguments against the
+  schema before your handler runs and returns an error result — it **never
+  reaches your code**
 
 * The model sees the failure as context and can try again with what was
   missing
@@ -648,8 +649,8 @@ two of them ever execute anything. -->
 | Party | Sees | Does |
 |---|---|---|
 | **Model** | The listing, the conversation | Emits a request — tool name and arguments — as text. Holds no permissions |
-| **Client** | The request, the schema, its own policy | Checks the arguments, decides (often by asking you), invokes, returns the result as context |
-| **Server** | The checked arguments | The real work, with whatever access it was wired up with — locally, yours |
+| **Client** | The request, its own policy | Decides (often by asking you), invokes, returns the result as context |
+| **Server** | The request's arguments | Checks them against the schema, then the real work, with whatever access it was wired up with — locally, yours |
 
 <span class="kicker">// three programs, and only two of them ever execute anything</span>
 

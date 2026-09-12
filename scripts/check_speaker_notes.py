@@ -94,7 +94,7 @@ def check(deck: Path) -> list[str]:
                     f"{rel}: slide {i}: timing ~{hrs}:{mins} is not ~H:MM "
                     f"cumulative elapsed — twenty minutes in is ~0:20 and an "
                     f"hour and ten is ~1:10, not ~70:00")
-        if "~" in note and not GOOD_TIMING_RE.search(note):
+        if re.search(r"~\d+:\d", note) and not GOOD_TIMING_RE.search(note):
             findings.append(
                 f"{rel}: slide {i}: timing marker is malformed — expected "
                 f"~H:MM cumulative elapsed")

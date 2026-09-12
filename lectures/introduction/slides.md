@@ -439,7 +439,7 @@ correction and their copy may not. -->
 - **The module site** — every lecture, every lab and the MCQ practice, in
   a browser
 <div style="text-align: center; font-size: 1.5em;">
-  <a href="http://danielcregg.is-a.dev/ai-assisted-programming">http://danielcregg.is-a.dev/ai-assisted-programming</a>
+  <a href="https://danielcregg.is-a.dev/ai-assisted-programming">https://danielcregg.is-a.dev/ai-assisted-programming</a>
 </div>
 <br>
 

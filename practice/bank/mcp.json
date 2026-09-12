@@ -420,7 +420,7 @@
         "It sidesteps the schema validation that would reject the next call after an exception"
       ],
       "answer": 2,
-      "explanation": "A tool that kills the server process ends every tool for that session, not just the one that failed. Returning an error as an ordinary result keeps the server up and gives the model something it can reason about. The client still sees the failure, which is the point."
+      "explanation": "A tool that kills the server process takes down every tool that server offered, not just the one that failed, until it is restarted. Returning an error as an ordinary result keeps the server up and gives the model something it can reason about. The client still sees the failure, which is the point."
     },
     {
       "id": "mcp-029",

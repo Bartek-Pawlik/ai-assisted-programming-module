@@ -34,8 +34,9 @@ is asked -- but they differ from each other, and between versions, in the
 details of matching: a command name and subcommand in one, a text prefix
 in another, the exact command unless the rule ends in a wildcard in a
 third. That is the reason to test a policy before you trust one. This
-checker does NOT look inside command substitution ($(...) or backticks);
-a real policy has to reckon with it.
+checker does NOT look inside command substitution ($(...) or backticks),
+and it treats every & as a separator, so a redirection such as 2>&1 is
+split into two commands; a real policy has to reckon with both.
 """
 import json
 import re

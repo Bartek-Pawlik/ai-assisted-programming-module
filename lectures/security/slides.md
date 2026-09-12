@@ -25,9 +25,9 @@ on its own — let the numbers do the work. -->
 
 ---
 
-<!-- Speaker notes: ~0:02. The hook: a package an assistant invented and an
-attacker then made real, which is the mechanism the whole lecture returns
-to. It is a true story — give the dates: January 2026, npm,
+<!-- Speaker notes: ~0:02. The hook: a package an assistant invented, which
+then appeared on npm — the mechanism the whole lecture returns to. It is a
+true story — give the dates: January 2026, npm,
 `react-codeshift`, 237 repositories. Play it as a puzzle: the package did
 not exist, then it did. Let someone in the room work out the mechanism
 before the reveal; it lands far harder when a student says it out loud.
@@ -35,7 +35,11 @@ before the reveal; it lands far harder when a student says it out loud.
 The wrong answer to expect is "someone typo-squatted a real package" —
 the familiar attack, where you fat-finger `requsts` for `requests`.
 That's not this. Nobody mistyped anything: the name was never real, an
-assistant invented it, and an attacker went and made it real. -->
+assistant invented it, and someone registered it. Be accurate about who:
+a security researcher (Charlie Eriksen at Aikido) took the name as an
+empty placeholder before an attacker could, and said so. That is the
+point, not a loophole: anyone could have got there first, and the 237
+repositories would have pulled whatever they published. -->
 
 ## A package that did not exist
 
@@ -105,7 +109,7 @@ attack with no pre-AI equivalent; the other four failures all have one. -->
 ---
 
 <!-- Speaker notes: ~0:08. The number of the lecture, and the condition on
-it is the whole point — say the condition twice. 44% is not a fixed
+it is the whole point — say the condition twice. ~45% is not a fixed
 property of the tool. It is what happens WHEN NOBODY ASKS. That reframes
 the room's job from "avoid the dangerous tool" to "stop omitting the
 requirement", which is a thing they can actually do. Teach the figure as
@@ -117,7 +121,7 @@ activity has the room test that condition on itself. Pause on it. -->
 
 <div class="callout">
 
-**44%** of AI code-generation tasks introduced at least one known
+**~45%** of AI code-generation tasks introduced at least one known
 vulnerability — *when no security instruction was given.*
 
 </div>
@@ -220,7 +224,7 @@ invisible in a demo because the demo had no attacker.
 The prompt pair is the lever: name the input as untrusted and say what
 you accept, and the completion changes. The misconception to head off is
 that this is a quality problem a better model fixes. It is a
-specification problem, and the 44% condition is the evidence. This sets up
+specification problem, and the ~45% condition is the evidence. This sets up
 DIY 1 and DIY 2, where the unframed prompt produces the unframed code. -->
 
 ## It wrote the happy path
@@ -294,8 +298,10 @@ Of the package names it hallucinates, how many come back
 <!-- Speaker notes: ~0:29. The exploit, stated plainly. This is the
 sentence to land: predictable means registrable.
 
-Then back to the hook — react-codeshift was exactly this, and now they
-have the mechanism to explain it themselves. Ask the person who guessed
+Then back to the hook — react-codeshift was exactly this shape, with one
+difference to say out loud: step 03 was done by a researcher, as a
+placeholder, not by an attacker. That was luck, not a defence; the
+mechanism is identical. Now they have it to explain it themselves. Ask the person who guessed
 at the start whether they'd revise their answer. -->
 
 ## Predictable means registrable
@@ -844,7 +850,7 @@ Then, in a **new** conversation, the same prompt with one sentence added:
 <!-- Speaker notes: ~1:31. The debrief closes the loop on the number from
 the start. If the room split — some got the shell, some got the list —
 the split is the finding: safety was a roll of the dice, which is what a
-44%-when-nobody-asks figure looks like from the inside. If one sentence
+~45%-when-nobody-asks figure looks like from the inside. If one sentence
 changed the code, that sentence is the condition on the number, and the
 room has just tested it.
 
@@ -859,7 +865,7 @@ is why the callout says state it, then review anyway. -->
   some the list — the split is the finding: safety was a **roll**
 
 * One sentence changed the code. That sentence is the **condition** on
-  the number from the start: 44% is what happens when nobody says it
+  the number from the start: ~45% is what happens when nobody says it
 
 * "Untrusted input" is not magic. It changed what the model was
   completing: a reviewed function instead of a demo
@@ -1131,7 +1137,7 @@ design for it failing. -->
 
 <!-- Speaker notes: ~1:46. Summary and close. Return to react-codeshift:
 they now have every piece needed to explain it — the invented name, the
-repetition, the registration, and now what the install actually ran — so
+repetition, the registration, and what an install would have run — so
 ask THEM to explain it back rather than restating it yourself. The one
 sentence to leave up: every consumer has a parser, and the model is the
 one with no second channel.
@@ -1142,7 +1148,7 @@ Leave the callout up while questions run. -->
 
 ## Summary
 
-- Generated code is **not neutral** — 44% of tasks carried a known
+- Generated code is **not neutral** — ~45% of tasks carried a known
   vulnerability *when nobody asked for security*. Asking is the lever
 - The dominant failures are ordinary: validation, injection, secrets,
   defaults. The **volume** is what changed

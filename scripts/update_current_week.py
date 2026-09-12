@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from schedule import Row, Schedule, load  # noqa: E402
+from schedule import Row, Schedule, academic_year, load  # noqa: E402
 
 README = Path("README.md")
 BANNER_RE = re.compile(r"<!-- current-week:start -->.*?<!-- current-week:end -->", re.DOTALL)
@@ -41,7 +41,7 @@ def banner(sched: Schedule, today: datetime.date) -> tuple[str, Row | None]:
             return (f"> 🗓️ **Semester has not started yet** — teaching begins the "
                     f"week of {sched.start:%d %b %Y}."), None
         if sched.derived:
-            nxt = load(year=today.year + 1).start
+            nxt = load(year=academic_year(today) + 1).start
             return (f"> 🗓️ **Semester finished** — teaching returns the week of "
                     f"{nxt:%d %b %Y}."), None
         return "> 🗓️ **Semester finished** — no more lectures or labs this semester.", None
@@ -92,7 +92,7 @@ def main() -> None:
         from zoneinfo import ZoneInfo
         today = datetime.datetime.now(ZoneInfo("Europe/Dublin")).date()
 
-    sched = load(year=today.year)
+    sched = load(year=academic_year(today))
     line, current = banner(sched, today)
     text = README.read_text(encoding="utf-8")
     for name, rx in (("current-week", BANNER_RE), ("schedule-table", TABLE_RE)):

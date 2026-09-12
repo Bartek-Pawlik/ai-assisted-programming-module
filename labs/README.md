@@ -101,4 +101,7 @@ tells you so.
 The same update also runs **in your repo on GitHub every night**, so you
 may see a commit called *update course content* appear that you did not
 make. That is expected. If `git push` is ever rejected because of it, run
-`git pull` first, then push again.
+`git pull --rebase` first, then push again: a rebase drops a sync commit
+that both sides made, where a plain pull would keep a merge of two
+identical copies. When the module is over you can switch Actions off in
+your copy (Settings → Actions) so the nightly run stops.

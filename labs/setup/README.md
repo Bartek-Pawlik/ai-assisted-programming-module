@@ -209,7 +209,7 @@ is permitted to touch.
 
 **What you should have**
 
-A four-row table in `REFLECTION.md`:
+A four-row table in a new file, `REFLECTION.md`, in this folder:
 
 ```text
 | Shape      | Allowed to change | What I reviewed |

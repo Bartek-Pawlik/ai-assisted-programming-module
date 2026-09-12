@@ -200,7 +200,7 @@ Record in `lab/prompts/task6.md`.
 
 1. Take a function with a subtle bug — `lab/code/batches.py` has one. It
    passes the obvious example in its docstring, which is the point.
-   (`lab/code/domains.py` is the empty stub for DIY 8; leave it.)
+   (`lab/code/domains.py` is the DIY 8 stub; leave it.)
 2. Ask it to reason step by step: what the code does, what it should do,
    and where those diverge, **before** proposing a fix.
 3. Record the reasoning it produced.

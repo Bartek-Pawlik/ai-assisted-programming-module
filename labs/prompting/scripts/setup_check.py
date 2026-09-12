@@ -63,7 +63,7 @@ def check_pip():
 
 def check_requirements():
     """Check if required packages are installed."""
-    required_packages = ["pytest", "pytest_jsonreport"]  # Note: pytest-json-report imports as pytest_jsonreport
+    required_packages = ["pytest"]
     missing = []
     
     for package in required_packages:

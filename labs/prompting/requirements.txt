@@ -1,11 +1,2 @@
-# Core testing framework
+# The lab's own tests (DIY 8) run under pytest; nothing else is needed.
 pytest>=7.4.0
-pytest-json-report>=1.5.0
-
-# Additional utilities for better development experience
-pytest-cov>=4.1.0
-pytest-xdist>=3.3.0
-
-# Code quality tools (optional but helpful)
-black>=23.0.0
-flake8>=6.0.0

@@ -201,8 +201,7 @@ def load(path: Path = SCHEDULE, year: int | None = None) -> Schedule:
         derived = False
     else:
         if year is None:
-            from zoneinfo import ZoneInfo
-            year = datetime.datetime.now(ZoneInfo("Europe/Dublin")).year
+            year = academic_year(today())
         start = bank_holiday_monday(year) - datetime.timedelta(weeks=breaks[0])
         derived = True
     return Schedule(start=start, derived=derived, rows=tuple(rows), raw=raw)
