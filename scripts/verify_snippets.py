@@ -253,6 +253,9 @@ def main() -> int:
     if yaml is None:
         print("warning: PyYAML missing — yaml fences will be reported as "
               "failures. pip install pyyaml", file=sys.stderr)
+    if not BASH:
+        print("warning: bash not found — bash fences are not checked on this "
+              "machine; CI checks them", file=sys.stderr)
     findings, checked, skipped = [], 0, 0
     by_lang: dict[str, int] = {}
 

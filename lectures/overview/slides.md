@@ -419,7 +419,9 @@ The wrong answer to expect is a large single number, usually "10x". The
 faulty model is that a tool has a fixed speed-up, absorbed from marketing.
 Controlled studies find smaller and highly task-dependent effects, and
 some find experienced developers on familiar code get SLOWER while feeling
-faster. The perception gap is the finding worth remembering. -->
+faster — the 2025 METR randomised trial of experienced open-source
+developers is the best-known example. The perception gap is the finding
+worth remembering. -->
 
 ## Predict: how much faster does this make you?
 

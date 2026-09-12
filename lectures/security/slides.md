@@ -280,6 +280,12 @@ scatter. They do not. The faulty model is that randomness in generation
 means randomness in output; in fact the same prompt lands in the same
 place repeatedly, and that stability is what makes this exploitable.
 
+Provenance for this slide and the last: Spracklen et al., "We Have a
+Package for You!" (USENIX Security 2025) — 19.7% of suggested packages
+did not exist, and of the invented names 43% recurred in all ten repeated
+runs, 58% more than once. Direction, not decimals, as with every figure
+in these decks.
+
 Let them answer before revealing 43%. -->
 
 ## Predict: how often does it invent the *same* name?

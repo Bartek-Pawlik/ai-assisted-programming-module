@@ -108,6 +108,11 @@ you something.
 5. Ask the assistant: *"Does pandas.read_excel_fast actually exist?"* and
    record what it says now.
 
+   If it refused at step 1 and told you the function does not exist,
+   record that instead: it is a checking layer the product added, not the
+   model being more careful. Ask it to write the function anyway, then
+   carry on.
+
 **What you should have**
 
 `hallucination.py`, the real error from running it, and a note of whether
