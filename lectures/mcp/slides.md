@@ -17,6 +17,13 @@ it is the frame every later slide returns to — the 2026 change, in
 particular, is pure distributed-systems engineering with nothing
 AI-specific in it. -->
 
+<style>
+/* bespoke to this deck: the two-versions table is the one five-row
+   reference table; the theme's 24px table text does not fit six lines */
+section.versions table { font-size: 20px; margin: 6px 0 12px 0; }
+section.versions table th, section.versions table td { padding: 5px 14px 5px 6px; }
+</style>
+
 <!-- _class: lead -->
 
 <span class="kicker">// how an assistant reaches the outside world</span>
@@ -397,15 +404,15 @@ further additions from the same release — header-based routing and Multi
 Round-Trip Requests — so the words are recognisable in a changelog; this
 lecture deliberately does not teach them. -->
 
-<!-- _class: dense -->
+<!-- _class: versions -->
 
 ## Two versions, side by side
 
 | | Until mid-2026 | 2026-07-28 spec |
 |---|---|---|
 | **Start of a connection** | `initialize` / `initialized` handshake | None. Every request stands alone |
-| **Session** | `Mcp-Session-Id`; the server remembers you | None. Version and identity travel in each request's `_meta` |
-| **What the server supports** | Learned once, in the handshake reply | Asked for on demand: `server/discover` |
+| **Session** | `Mcp-Session-Id`; the server remembers you | None. Version and identity ride in each request's `_meta` |
+| **What the server supports** | Learned once, in the handshake reply | Asked when needed: `server/discover` |
 | **State a tool needs** | The server's memory | An explicit handle the model passes back |
 | **Old HTTP+SSE transport** | Deprecated in 2025, still tolerated | Removal on a year-long offramp |
 
