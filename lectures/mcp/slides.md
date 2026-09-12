@@ -397,6 +397,8 @@ further additions from the same release — header-based routing and Multi
 Round-Trip Requests — so the words are recognisable in a changelog; this
 lecture deliberately does not teach them. -->
 
+<!-- _class: dense -->
+
 ## Two versions, side by side
 
 | | Until mid-2026 | 2026-07-28 spec |
