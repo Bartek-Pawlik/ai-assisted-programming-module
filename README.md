@@ -74,7 +74,7 @@ only.
 <!-- schedule-table:start -->
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
-| **➡️ 1** | Module Introduction | [slides](lectures/introduction/slides.md) | _No lab in week 1_ |
+| **➡️ 1** | Module Introduction | [slides](lectures/introduction/slides.md) | _No labs week 1. Labs start week 2._ |
 | 2 | AIAP Overview | [slides](lectures/overview/slides.md) | [lab](labs/setup/) |
 | 3 | Prompting & Context Engineering | [slides](lectures/prompting/slides.md) | [lab](labs/prompting/) |
 | 4 | Retrieval & Grounding | [slides](lectures/rag/slides.md) | [lab](labs/rag/) |
