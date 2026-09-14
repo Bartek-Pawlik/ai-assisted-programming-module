@@ -68,13 +68,13 @@ only.
 ## Module schedule
 
 <!-- current-week:start -->
-> 🗓️ **Semester has not started yet** — teaching begins the week of 14 Sep 2026.
+> 🗓️ **Current teaching week: 1 — Module Introduction** (week beginning 14 Sep 2026).
 <!-- current-week:end -->
 
 <!-- schedule-table:start -->
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
-| 1 | Module Introduction | [slides](lectures/introduction/slides.md) | _No lab in week 1_ |
+| **➡️ 1** | Module Introduction | [slides](lectures/introduction/slides.md) | _No lab in week 1_ |
 | 2 | AIAP Overview | [slides](lectures/overview/slides.md) | [lab](labs/setup/) |
 | 3 | Prompting & Context Engineering | [slides](lectures/prompting/slides.md) | [lab](labs/prompting/) |
 | 4 | Retrieval & Grounding | [slides](lectures/rag/slides.md) | [lab](labs/rag/) |
