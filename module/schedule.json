@@ -2,7 +2,7 @@
   "scheduleType": "sem1",
   "_comment": "The module's ONLY schedule. Every table (README, module overview, the site, the labs page, the Moodle course page) is generated from this file; nothing else in the repo may state a week number or a semester date. There is deliberately no startDate: week 1 is derived each year as six weeks before the Irish October bank holiday (the reading week, row X). Add \"startDate\": \"YYYY-MM-DD\" (a Monday) only if a year breaks that rule. lecture = lectures/<name>/slides.md, lab = labs/<name>/; an export from the module-schedule-table-builder app (lectureUrl/labUrl) is accepted too.",
   "weeks": [
-    { "week": "1",  "topic": "Module Introduction",            "lecture": "introduction", "lab": "",            "assessment": "",            "notes": "No lab in week 1" },
+    { "week": "1",  "topic": "Module Introduction",            "lecture": "introduction", "lab": "",            "assessment": "",            "notes": "No labs week 1. Labs start week 2." },
     { "week": "2",  "topic": "AIAP Overview",                  "lecture": "overview",     "lab": "setup",       "assessment": "PA1 (4%)",    "notes": "" },
     { "week": "3",  "topic": "Prompting & Context Engineering", "lecture": "prompting",   "lab": "prompting",   "assessment": "PA2 (4%)",    "notes": "" },
     { "week": "4",  "topic": "Retrieval & Grounding",          "lecture": "rag",          "lab": "rag",         "assessment": "PA3 (4%)",    "notes": "" },
