@@ -2,6 +2,8 @@
   "markdown.marp.themes": ["./themes/aiap.css"],
   "markdown.marp.html": "all",
   "python.analysis.extraPaths": ["labs"],
+  "editor.minimap.enabled": false,
+  "git.autofetch": true,
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true
