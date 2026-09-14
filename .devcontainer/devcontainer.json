@@ -15,7 +15,6 @@
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "GitHub.copilot",
         "GitHub.copilot-chat",
         "marp-team.marp-vscode"
       ],
