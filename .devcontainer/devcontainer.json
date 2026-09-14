@@ -19,7 +19,38 @@
         "marp-team.marp-vscode"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python"
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        // A student opens this repo to do the labs, so the explorer shows the
+        // labs and the things the labs tell them to create — and nothing else.
+        // Two rules govern what may go in here:
+        //   1. files.exclude also removes a path from quick-open and from
+        //      search, so anything a lab asks the student to CREATE or EDIT
+        //      must stay visible. .github stays for that reason: cicd builds
+        //      ci.yml and review.yml in it, and security adds security.yml.
+        //      AGENTS.md stays because cli-agents teaches that exact format
+        //      and the root file is the worked example.
+        //   2. Patterns are workspace-root-relative, so a bare name hides only
+        //      the root copy. That matters: labs/prompting/scripts exists, so
+        //      "**/scripts" would hide part of a lab. Bare names below are
+        //      deliberate, not shorthand for "**/".
+        "files.exclude": {
+          "**/.devcontainer": true,
+          "**/.vscode": true,
+          "**/.gitignore": true,
+          "**/.gitattributes": true,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "build": true,
+          "docs": true,
+          "project": true,
+          "practice": true,
+          "scripts": true,
+          "themes": true,
+          "package.json": true,
+          "package-lock.json": true,
+          "CLAUDE.md": true,
+          "CLAUDE.local.md": true
+        }
       }
     }
   },
