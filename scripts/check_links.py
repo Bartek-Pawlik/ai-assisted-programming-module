@@ -45,7 +45,7 @@ def slugify(heading: str) -> str:
 
     Must stay in step with gh_slugify in scripts/build_lab_pages.py, which
     generates the same anchors for the published lab pages. Deliberately
-    duplicated rather than imported: build_lab_pages imports `markdown`, and
+    duplicated rather than imported: build_lab_pages imports `markdown_it`, and
     this gate runs before CI installs it.
     """
     text = re.sub(r"[`*_]", "", heading).strip().lower()
@@ -54,12 +54,21 @@ def slugify(heading: str) -> str:
 
 
 def anchors_of(path: Path) -> set[str]:
-    return {slugify(h) for h in HEADING_RE.findall(path.read_text(encoding="utf-8"))}
+    """The anchors a file offers: its headings, ignoring fenced code, where a
+    line starting with # is a comment or an example, not a heading."""
+    headings, in_fence = [], False
+    for line in path.read_text(encoding="utf-8").split("\n"):
+        if FENCE_RE.match(line):
+            in_fence = not in_fence
+            continue
+        if not in_fence and (m := HEADING_RE.match(line)):
+            headings.append(m.group(1))
+    return {slugify(h) for h in headings}
 
 
 def tracked_markdown() -> list[str]:
     out = subprocess.run(["git", "ls-files", "*.md"],
-                         capture_output=True, text=True, check=True)
+                         capture_output=True, text=True, encoding="utf-8", check=True)
     return [p for p in out.stdout.splitlines() if p]
 
 
@@ -88,6 +97,10 @@ def broken_links() -> list[str]:
         if not path.is_file():
             continue  # tracked-but-deleted in the working tree
         for lineno, target in links_outside_code(path.read_text(encoding="utf-8")):
+            if target == "#":
+                findings.append(f"{rel_path}:{lineno}: empty link target (#) goes "
+                                f"nowhere; name a heading or drop the link")
+                continue
             if target.startswith(NON_PATH_PREFIXES):
                 continue
             file_part, _, fragment = target.partition("#")

@@ -3,7 +3,9 @@
 # BEFORE running the checker, write ALLOW, ASK or DENY beside each one in
 # your notes -- what you think team-policy.json decides. Then run:
 #
-#     python policy_check.py team-policy.json --file commands.txt
+#     python policy/policy_check.py policy/team-policy.json --file policy/commands.txt
+#
+# (from the lab folder, as the README does)
 #
 # Lines starting with # are ignored.
 

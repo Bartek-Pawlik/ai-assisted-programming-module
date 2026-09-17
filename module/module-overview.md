@@ -7,7 +7,7 @@ contact hours (2 hour lecture + 2 hour lab per week).
 ## The argument
 
 The module is not a tour of AI coding tools. Tools change every few months
-and the ones taught in week 11 will not be the ones a graduate uses in
+and the ones taught this semester will not be the ones a graduate uses in
 2028. What transfers is the judgement: how to direct an assistant, how to
 supply it with the right context, and how to evaluate what comes back.
 
@@ -95,7 +95,7 @@ for each lab, on Moodle, each open for its lab's week.
 
 The semester is derived, not stored: reading week is the week of the Irish
 October bank holiday (the last Monday of October), week 1 begins six weeks
-before it, and six teaching weeks sit each side. Nothing needs editing
+before it, and six weeks sit each side. Nothing needs editing
 year to year.
 
 The everyday uses — explaining code you did not write, debugging from a

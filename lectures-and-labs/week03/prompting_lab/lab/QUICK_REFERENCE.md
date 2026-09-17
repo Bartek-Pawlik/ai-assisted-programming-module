@@ -4,14 +4,14 @@
 
 | I need to... | Use this pattern | Jump to |
 |--------------|------------------|---------|
-| Get specific working code | SPEC framework | [Task 1-2](#) |
-| Prevent AI from adding extra features | Constraints + Non-Goals | [Task 3](#) |
-| Understand requirements before coding | Clarifying Questions | [Task 4](#) |
-| Get expert-level feedback | Persona prompting | [Task 5](#) |
-| Debug complex logic | Chain-of-Thought | [Task 6](#) |
-| Control exact output format | Few-Shot examples | [Task 7](#) |
-| Avoid over-engineering | Tests-First | [Task 8](#) |
-| Make surgical code changes | Patch/Diff request | [Task 9](#) |
+| Get specific working code | SPEC framework | [DIY 1](../README.md#diy-1-make-the-same-request-twice), [DIY 2](../README.md#diy-2-spec-on-something-with-a-real-trap) |
+| Prevent AI from adding extra features | Constraints + Non-Goals | [DIY 3](../README.md#diy-3-stop-it-helping) |
+| Understand requirements before coding | Clarifying Questions | [DIY 4](../README.md#diy-4-ask-for-questions-first) |
+| Get expert-level feedback | Persona prompting | [DIY 5](../README.md#diy-5-persona) |
+| Debug complex logic | Chain-of-Thought | [DIY 6](../README.md#diy-6-chain-of-thought-on-a-real-bug) |
+| Control exact output format | Few-Shot examples | [DIY 7](../README.md#diy-7-few-shot-for-exact-format) |
+| Avoid over-engineering | Tests-First | [DIY 8](../README.md#diy-8-tests-first) |
+| Make surgical code changes | Patch/Diff request | [DIY 9](../README.md#diy-9-ask-for-a-patch-not-a-file) |
 
 ---
 
@@ -70,7 +70,7 @@
 | Reject suggestion | `Esc` | `Esc` |
 | Next suggestion | `Alt+]` | `Option+]` |
 | Previous suggestion | `Alt+[` | `Option+[` |
-| Open Chat | `Ctrl+Shift+I` | `Cmd+Shift+I` |
+| Open Chat | `Ctrl+Alt+I` | `Ctrl+Cmd+I` |
 | Inline Chat | `Ctrl+I` | `Cmd+I` |
 
 ---

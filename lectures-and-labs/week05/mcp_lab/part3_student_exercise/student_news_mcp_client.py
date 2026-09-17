@@ -159,10 +159,7 @@ async def validate_student_server(server_file: str):
     else:
         print(f"{GREEN}🎉 Congratulations!{RESET}")
         print("  Your server implementation is working correctly!")
-        print("  Don't forget to:")
-        print("  • Take a screenshot of the JSON-RPC traffic")
-        print("  • Write your WRITEUP.md file")
-        print("  • Consider attempting the bonus challenges\n")
+        print("  Every test passed. Back to the lab README for what comes next.\n")
     
     print(f"{BOLD}{BLUE}{'='*60}{RESET}\n")
     

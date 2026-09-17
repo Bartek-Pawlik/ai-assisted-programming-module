@@ -1,4 +1,7 @@
 import asyncio
+import sys
+from pathlib import Path
+
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
@@ -13,9 +16,12 @@ async def main():
     print("🌤️  Weather MCP Server Demo")
     print("=" * 50)
 
+    # The server lives beside this file, so the client works from any folder;
+    # sys.executable is the interpreter this client itself runs under.
+    server = Path(__file__).resolve().with_name("mcp_server_weather.py")
     server_params = StdioServerParameters(
-        command="python",
-        args=["mcp_server_weather.py"]
+        command=sys.executable,
+        args=[str(server)]
     )
 
     async with stdio_client(server_params) as (read, write):

@@ -55,7 +55,7 @@ SCHEDULE = {
         r"(?i)\b(last|next|previous|earlier|later)\s+(week|lecture)\b"),
     "refers to the module as a container": re.compile(
         r"(?i)\b(this|the)\s+module\b"),
-    "links to another week's folder": re.compile(r"\.\./week-\d"),
+    "links to another week's folder": re.compile(r"\.\./week-?\d"),
 }
 
 # Frontmatter `week:` is structural metadata the site build reads, not

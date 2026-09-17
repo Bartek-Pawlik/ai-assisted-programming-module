@@ -59,9 +59,10 @@ after half an hour idle). The free allowance is generous, not infinite.
 
 ## Doing a lab
 
-Open the week's lab folder (for example `week03/prompting_lab/`) and follow
-its `README.md`. Its first step is to `cd` into the folder in the terminal
-and install the lab's requirements, if it has any. Every exercise ends with
+Open the week's lab folder (for example
+`lectures-and-labs/week03/prompting_lab/`) and follow its `README.md`. Its
+first step is to `cd` into the folder in the terminal and install the lab's
+requirements, if it has any. Every exercise ends with
 **What you should have** or an **Expected output** block, so you can check
 yourself before asking, and every exercise has a **Hint** you can expand.
 

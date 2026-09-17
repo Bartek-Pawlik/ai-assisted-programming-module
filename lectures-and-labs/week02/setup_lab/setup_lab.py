@@ -33,7 +33,7 @@ def run(*cmd: str) -> str | None:
     if not exe:
         return None
     try:
-        r = subprocess.run([exe, *cmd[1:]], capture_output=True, text=True, timeout=15)
+        r = subprocess.run([exe, *cmd[1:]], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=15)
     except (OSError, subprocess.TimeoutExpired):
         return None
     return r.stdout.strip() if r.returncode == 0 else None

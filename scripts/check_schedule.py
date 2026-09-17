@@ -27,6 +27,7 @@ Usage:
 """
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -37,6 +38,7 @@ from schedule import MCQ, ROOT, load  # noqa: E402
 import update_current_week  # noqa: E402
 
 OVERVIEW = Path("module/module-overview.md")
+VSCODE = Path(".vscode/settings.json")
 README = Path("README.md")
 TABLE_RE = re.compile(r"<!-- schedule-table:start -->\n(.*?)<!-- schedule-table:end -->", re.S)
 TOPIC_RE = re.compile(r'(?m)^topic:\s*"?([^"\n]+?)"?\s*$')
@@ -192,6 +194,20 @@ def main() -> None:
             findings.append(f"{OVERVIEW.as_posix()}: '{t}' is out of schedule order")
         else:
             last = idx
+
+    # The editor's import search path lists every lab folder, so Pylance can
+    # resolve a lab's own packages (`from lab.code...`, `from hello_app...`)
+    # without the student opening that folder as a workspace of its own.
+    want_paths = [r.lab_dir.as_posix() for r in sched.rows if r.lab]
+    try:
+        have_paths = json.loads(VSCODE.read_text(encoding="utf-8")).get(
+            "python.analysis.extraPaths", [])
+    except (OSError, ValueError) as e:
+        findings.append(f"{VSCODE.as_posix()}: unreadable ({e})")
+        have_paths = want_paths
+    if have_paths != want_paths:
+        findings.append(f"{VSCODE.as_posix()}: python.analysis.extraPaths must list the "
+                        f"lab folders in schedule order: {want_paths}")
 
     if findings:
         print("\n".join("check_schedule: " + f for f in findings))

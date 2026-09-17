@@ -34,7 +34,7 @@ def node_major() -> int | None:
         return None
     try:
         out = subprocess.run([node, "--version"], capture_output=True,
-                             text=True, timeout=10).stdout
+                             text=True, encoding="utf-8", errors="replace", timeout=10).stdout
     except (OSError, subprocess.TimeoutExpired):
         return None
     m = re.match(r"v(\d+)", out.strip())

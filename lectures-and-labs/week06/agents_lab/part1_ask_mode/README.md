@@ -92,7 +92,7 @@ What are context managers and when should I use them?
 **Steps:**
 1. Open `buggy_code.py`
 2. Read the code and try to spot bugs
-3. Right-click → **Generate Code** → **Review**
+3. Right-click → **Copilot** → **Review and Comment**
 
 4. Compare Copilot's findings with yours
 5. Ask follow-up questions:
@@ -101,10 +101,10 @@ What are context managers and when should I use them?
    How should I fix [specific bug]?
    What testing would catch these bugs?
    ```
-6. Right-click → **Generate Code** → **Fix**
+6. Right-click → **Copilot** → **Fix This**
 7. In the Terminal, run the code. 
     ```
-    cd lectures-and-labs/week06/agents_lab/part1_ask_mode
+    cd part1_ask_mode    # from the lab folder, lectures-and-labs/week06/agents_lab
     python buggy_code.py
    ```
 

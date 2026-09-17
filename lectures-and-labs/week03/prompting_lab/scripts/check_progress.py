@@ -40,7 +40,7 @@ PLACEHOLDERS = ["# paste", "paste the", "paste your", "todo", "fill in", "placeh
 
 def git(*args: str) -> str | None:
     try:
-        proc = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, check=False)
+        proc = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
     except OSError:
         return None
     return proc.stdout if proc.returncode == 0 else None
@@ -114,7 +114,7 @@ def run_tests() -> tuple[bool, str]:
     """Run the lab's tests. Returns (all passed, one-line summary)."""
     cmd = [sys.executable, "-m", "pytest", "lab/tests", "-q", "--no-header", "-p", "no:cacheprovider"]
     try:
-        proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
+        proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
     except OSError as e:
         return False, f"could not start pytest: {e}"
     if "No module named pytest" in proc.stderr:

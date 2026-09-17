@@ -137,7 +137,7 @@
 
     <h2>Mode</h2>
     <div class="modes" id="modes">
-      <button class="mode-btn on" data-mode="exam">Exam — 30 questions · 60:00 · results at the end</button>
+      <button class="mode-btn on" data-mode="exam">Exam — 30 questions (or the whole topic, if smaller) · 60:00 · results at the end</button>
       <button class="mode-btn" data-mode="practice">Practice — untimed · instant feedback</button>
       <button class="mode-btn hidden lenbtn" data-len="10">10 Qs</button>
       <button class="mode-btn hidden lenbtn on" data-len="20">20 Qs</button>
@@ -291,7 +291,8 @@ $('reset').addEventListener('click',()=>{
 $('start').addEventListener('click',()=>{
   const slugs=selectedSlugs();
   if(!slugs.length){ updateStart(); return; }   // the picker was rebuilt with nothing ticked
-  const want= mode==='exam'?30:plen;
+  const available=slugs.reduce((n,s)=>n+(BANK[s]||[]).length,0);
+  const want=Math.min(mode==='exam'?30:plen, available);   // one small topic cannot fill 30
   const pools=slugs.map(s=>shuffle([...(BANK[s]||[])]).map(q=>({...q,topic:s})));
   const qs=[]; let i=0;
   while(qs.length<want && pools.some(p=>p.length)){

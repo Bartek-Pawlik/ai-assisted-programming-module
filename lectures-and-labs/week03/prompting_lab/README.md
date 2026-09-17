@@ -172,7 +172,8 @@ hashable. Any of those, answered wrongly and silently, is a bug.
 
 Record in `lab/prompts/task5.md`.
 
-1. Take the function in `lab/code/domains.py`.
+1. Take `scripts/check_progress.py`, the progress checker you ran in
+   Getting started.
 2. Ask for a plain review: *"review this code"*. Save the response.
 3. Ask again with a persona: a senior engineer specialising in security
    and performance, reviewing for production.
@@ -261,8 +262,9 @@ which is the larger half.
 Work in `lab/tests/test_extract_domain.py`.
 
 1. That file is a **placeholder that fails on purpose**. Read it.
-2. Write real tests for `extract_domain` first: a normal address, a
-   multi-part suffix like `.co.uk`, and a malformed input.
+2. Write real tests for `extract_domain` first — the placeholder's docstring
+   lists the four cases: a normal address, a multi-part suffix like
+   `.co.uk`, and two malformed inputs that must raise.
 3. Only then ask an assistant for an implementation that passes them.
 4. Run the tests.
 5. Record whether it passed first time, and what you changed if not.
@@ -270,8 +272,8 @@ Work in `lab/tests/test_extract_domain.py`.
 **Expected output**
 
 ```text
-lab/tests/test_extract_domain.py ...                             [100%]
-3 passed
+lab/tests/test_extract_domain.py ....                            [100%]
+4 passed in 0.03s
 ```
 
 <details><summary>Hint</summary>

@@ -3,8 +3,9 @@ name: course-sync
 # Runs in a STUDENT's copy of the template, every night, so corrections to
 # the lectures, lab instructions, README, Codespace configuration and lab
 # starter files reach their repo whether or not they ever open a Codespace.
-# It runs the same script a Codespace runs on attach
-# (scripts/update-course-content.sh): a file the student edited, created or
+# It runs the module repo's CURRENT copy of the same script a Codespace runs
+# on attach (scripts/update-course-content.sh), so a fix to the sync itself
+# reaches every student's repo the same night. A file the student edited, created or
 # deleted themselves is always kept, so their own work is never touched.
 #
 # The script's "what did you last receive" baseline lives in a gitignored
@@ -44,7 +45,13 @@ jobs:
           git fetch --quiet upstream main
 
       - name: Sync the course content
-        run: bash scripts/update-course-content.sh --strict
+        # scripts/ is outside the sync (a bash script must not be overwritten
+        # while it runs), so the copy frozen into this repo when it was created
+        # is never used here: the module repo's current copy is.
+        run: |
+          set -euo pipefail
+          git show upstream/main:scripts/update-course-content.sh > "$RUNNER_TEMP/update-course-content.sh"
+          bash "$RUNNER_TEMP/update-course-content.sh" --strict
 
       - name: Push the sync commit and the baseline
         run: |

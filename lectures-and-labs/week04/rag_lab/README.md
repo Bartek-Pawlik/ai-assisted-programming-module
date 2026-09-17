@@ -239,8 +239,8 @@ Work in `part5_experiments.py`, recording results in `results.md`.
    python part2_embeddings.py --chunk-words 50 --overlap-words 20
    ```
 
-2. Run `part3_retrieval.py` against each and read what comes back for its
-   three queries.
+2. After each rebuild, run `part3_retrieval.py` and read what comes back
+   for its three queries.
 3. Record for each size: was the right chunk retrieved, and how much
    irrelevant text came with it?
 4. Write one sentence explaining what goes wrong at each extreme.

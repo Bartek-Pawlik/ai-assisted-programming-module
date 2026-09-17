@@ -40,7 +40,7 @@ rather than look up, and that what you show them changes what you get.
 ## 1. Get set up
 
 Everything after this assumes a working environment, so prove it before
-you go on rather than discovering a problem in week 5.
+you go on rather than discovering a problem weeks later.
 
 ### DIY 1: Prove the environment works
 
@@ -90,7 +90,7 @@ account with the student developer pack applied.
 
 ## 2. Make it hallucinate
 
-The most useful thing you can do in the first week is see this failure
+The most useful thing you can do in the first lab week is see this failure
 deliberately, in a safe place, so you recognise it later when it costs
 you something.
 

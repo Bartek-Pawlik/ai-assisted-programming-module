@@ -109,9 +109,6 @@ Add a method to extract the domain from an email address
 
 ---
 
-## Best Practices for Edit Mode
-
-✅ **DO:**
 ## Edit Mode vs Agent Mode
 
 **Use Edit Mode (`Ctrl+I`) when:**

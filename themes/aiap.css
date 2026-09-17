@@ -153,7 +153,7 @@ section.side p:has(img) {
 section.side img { max-width: 100%; max-height: 460px; object-fit: contain; }
 
 /* ── shared deck components ──────────────────────────────────────
-   Defined once here instead of in all nine decks' <style> blocks: the
+   Defined once here instead of in all ten decks' <style> blocks: the
    kicker, the callout, the figure legend, and the memory-cell strip.
    A deck that needs a different look still overrides these locally --
    its own <style> block comes after the theme in the cascade. */

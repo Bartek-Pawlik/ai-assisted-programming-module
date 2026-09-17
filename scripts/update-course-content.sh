@@ -41,6 +41,15 @@ if git remote get-url origin 2>/dev/null | grep -qi "$UPSTREAM_SLUG"; then
   exit 0
 fi
 
+# A student copy's origin is always their own GitHub repository (the
+# template flow makes it so). A local mirror or a clone of a clone is not a
+# student copy, and treating it as one would add a remote and rewrite course
+# files there: refuse.
+case "$(git remote get-url origin 2>/dev/null)" in
+  *github.com*) ;;
+  *) die "origin is not a GitHub repository, so this is not a copy of the template. Nothing changed." ;;
+esac
+
 git remote get-url upstream >/dev/null 2>&1 || {
   say "Adding the module repo as 'upstream'."
   git remote add upstream "$UPSTREAM_URL"
@@ -58,8 +67,9 @@ fi
 # The course files, listed one by one (not as directories) so that editing
 # one file never blocks the rest from updating: every tracked file under
 # lectures-and-labs/ (the lectures, the lab instructions, worksheets AND
-# starter code), mcq/, module/ (the schedule and overview) and
-# .devcontainer/, plus the README.
+# starter code), mcq/, module/ (the schedule and overview), .devcontainer/
+# and .vscode/ (the Codespace and editor configuration), plus the README and
+# the AGENTS.md / CLAUDE.md briefs an assistant reads.
 #
 # Starter code is included so that a fix to a lab you have not started yet
 # still reaches you. is_yours below keeps every file you have edited,
@@ -68,14 +78,15 @@ fi
 # left it.
 #
 # Deliberately NOT included: this script (bash reads a script while it runs,
-# so overwriting it mid-run misbehaves), the workflows (a push made with the
+# so overwriting it mid-run misbehaves; the nightly workflow runs the module
+# repo's current copy of it instead), the workflows (a push made with the
 # Actions token may not change them, so the nightly run would fail every
 # night after the first change), and the theme, practice bank and build
 # scripts (the module site serves what those produce).
 #
 # Plain while-read loops rather than mapfile: the default bash on macOS is
 # 3.2, which has no mapfile, and this script is also run by hand on laptops.
-COURSE_RE='^(README\.md|lectures-and-labs/.*|mcq/.*|module/.*|\.devcontainer/.*)$'
+COURSE_RE='^(README\.md|AGENTS\.md|CLAUDE\.md|lectures-and-labs/.*|mcq/.*|module/.*|\.devcontainer/.*|\.vscode/.*)$'
 # The course-owned PAGES a retirement upstream may remove here (see the pass
 # below): the lectures, the guide and the week explainers under
 # lectures-and-labs/, and everything under mcq/ and module/. Never a lab
@@ -105,9 +116,16 @@ FILE_BASE="$(cat "$MARKER" 2>/dev/null || true)"
 REF_BASE="$(git rev-parse -q --verify refs/course-sync/baseline 2>/dev/null || true)"
 LAST="$FILE_BASE"
 if [ -n "$REF_BASE" ]; then
-  if [ -z "$FILE_BASE" ] || git merge-base --is-ancestor "$FILE_BASE" "$REF_BASE" 2>/dev/null; then
-    LAST="$REF_BASE"
+  if [ -z "$FILE_BASE" ] || ! git merge-base --is-ancestor "$REF_BASE" "$FILE_BASE" 2>/dev/null; then
+    LAST="$REF_BASE"    # the ref, unless the file is strictly newer than it
   fi
+fi
+# A remembered baseline that is no longer a commit the module repo has (a
+# rewritten history, a hand-edited marker) would make every diff below fail
+# quietly and nothing would update: start over from the template instead.
+if [ -n "$LAST" ] && ! git cat-file -e "$LAST^{commit}" 2>/dev/null; then
+  say "The remembered baseline is no longer in the module repo's history; comparing against the template's first commit instead."
+  LAST=""
 fi
 ROOT="$(git rev-list --max-parents=0 HEAD | tail -1)"
 UPSTREAM="$(git rev-parse "upstream/$BRANCH")"

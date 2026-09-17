@@ -3,7 +3,7 @@
 Source-of-truth repo for the AI-Assisted Programming module (ATU, semester
 1). This is the one instructions file for every AI assistant (Codex, Cursor,
 Gemini, Copilot, Claude Code, ...); `CLAUDE.md` only imports it. Editable
-sources are Markdown, Python, TypeScript, JSON and HTML.
+sources are Markdown, Python, JSON and HTML.
 
 ## First: whose repo is this, yours or a student's?
 

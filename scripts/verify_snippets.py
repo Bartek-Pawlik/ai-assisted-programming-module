@@ -75,7 +75,7 @@ ROOTS = ("lectures-and-labs", "mcq", "module", "practice")
 
 def tracked_markdown() -> list[Path]:
     out = subprocess.run(["git", "ls-files", "*.md"],
-                         capture_output=True, text=True, check=True)
+                         capture_output=True, text=True, encoding="utf-8", check=True)
     paths = []
     for rel in out.stdout.splitlines():
         if not rel:

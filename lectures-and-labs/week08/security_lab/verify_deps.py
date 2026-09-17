@@ -75,7 +75,7 @@ def main() -> int:
 
     print()
     if missing:
-        print(f"{len(missing)} package could not be found on PyPI. "
+        print(f"{len(missing)} package(s) could not be found on PyPI. "
               f"Do not install this file.")
         return 1
     print("Every package exists. That is necessary, not sufficient -- a real "

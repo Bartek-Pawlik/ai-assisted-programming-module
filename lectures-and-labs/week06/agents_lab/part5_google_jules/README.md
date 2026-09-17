@@ -54,7 +54,8 @@ graph TB
    - Click the **+** icon → **New repository**
    - Name: `simple-todo-app`
    - Description: `A simple todo application for testing Jules`
-   - Make it **Public** (Jules needs access)
+   - Public or Private both work: Jules asks for access to your repositories
+     when you connect your GitHub account
    - Check **Add a README file**
    - Add Python `.gitignore`
    - Choose a license (MIT recommended)
@@ -158,9 +159,7 @@ graph TB
    - You can monitor its progress on the jules.google.com interface
    - You'll see it cloning, installing dependencies, making changes
 
-**Note:** Jules is experimental and may not be available to all users. If you can't access Jules, use the alternative exercise below.
-
-**Note:** Jules availability may vary by organization. If Jules is not available, use the alternative exercise below.
+**Note:** Jules is experimental and availability varies by user and organisation. If you cannot access it, use the alternative exercise below.
 
 ---
 

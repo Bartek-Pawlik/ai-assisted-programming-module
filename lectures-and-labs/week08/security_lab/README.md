@@ -131,8 +131,8 @@ Look for anywhere a value taken from a request is used without being
 examined first: written straight into a data structure, concatenated into
 a query, or returned in a response body.
 
-A quick probe: add a note whose title contains an apostrophe — `O'Brien`
-— and run it. The whole program falls over with a SQL syntax error. That
+A quick probe: in `main()`, add a note whose title contains an apostrophe
+— `add_note(conn, "alice", "O'Brien", "x")` — and run it. The whole program falls over with a SQL syntax error. That
 crash is the tell that the input reached the query unescaped, and the
 hole an attacker uses is the same one.
 
@@ -228,12 +228,14 @@ is about the failure mode where the assistant helps you do it wrong.
 3. Run the module's own audit from the repo root:
 
    ```bash
+   cd "$(git rev-parse --show-toplevel)"
    python scripts/safety_audit.py
    ```
 
 4. Read what it prints. Note that it **redacts** the value rather than
    echoing it.
-5. Unstage and delete the file. Then write the correct version, reading
+5. Unstage the file (`git restore --staged` it) and delete it. Then write
+   the correct version, reading
    the key from the environment.
 
 **What you should have**
@@ -325,7 +327,8 @@ the checks are the same, only who runs them changes.
 
 1. In **your own copy** of the repo, open **Settings → Code security** and
    enable **Dependabot alerts** and **Dependabot security updates**.
-2. Add `.github/workflows/security.yml` with a job that runs gitleaks and
+2. At the root of your repo, add `.github/workflows/security.yml` with a job
+   that runs gitleaks and
    bandit on every push:
 
    ```yaml
@@ -365,8 +368,8 @@ history.
 
 `-ll` makes bandit report medium severity and above. Run it on
 `vulnerable_app.py` before and after your DIY 2 fixes and watch what
-changes — and note what it cannot see: nothing scans for the logic flaw
-where the search returns other people's notes.
+changes — and note what it cannot see: a logic flaw, such as a search
+that forgot to filter by owner, never shows up in a scanner's output.
 
 If it reports nothing, that is a fine outcome — say so. To see it work,
 temporarily reintroduce one of the DIY 2 vulnerabilities on a branch and
@@ -385,8 +388,8 @@ watch it get flagged. Do not merge that branch.
   already committed to that code being good and will defend it. Start a
   fresh one.
 - **Treating a clean scan as proof.** A scanner finds the classes it
-  knows. Nothing scans for the logic flaw where your API returns other
-  people's notes.
+  knows. Nothing scans for a logic flaw, such as an endpoint that returns
+  other people's notes.
 - **Blocklisting instead of validating.** Deciding what you accept is
   finite; enumerating what you reject is not.
 - **Installing first and checking later.** With slopsquatting, installing

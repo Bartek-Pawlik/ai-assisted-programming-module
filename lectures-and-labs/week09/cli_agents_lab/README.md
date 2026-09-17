@@ -248,8 +248,8 @@ the agents load from. Installing one is part of the exercise:
 
 1. Read the example for your agent **before** installing it. Write down
    what it will run on your machine, and when.
-2. Install it where your agent looks (see the table), then start a new
-   session. Copilot: `/skills` lists what it found. Gemini:
+2. Install it where your agent looks (see the table; `mkdir -p` the folder
+   first), then start a new session. Copilot: `/skills` lists what it found. Gemini:
    `/commands reload`.
 3. Add a comment to `stats.py`, then run it: `/review-diff` in Copilot,
    `/review` in Gemini.

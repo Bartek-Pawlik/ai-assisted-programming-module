@@ -205,8 +205,9 @@ cannot happen.
 
 ### DIY 4: Watch assertEqual fail on a good answer
 
-1. Write a test asserting the summary of `samples/article_1.txt` equals a
-   fixed string you got from one run.
+1. In `tests/test_summary.py`, write `test_exact`: a test asserting the
+   summary of `samples/article_1.txt` equals a fixed string you got from
+   one run.
 2. Run it. It passes.
 3. Run it again. And again.
 4. Record what happens and why.

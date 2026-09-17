@@ -62,8 +62,8 @@ does not survive being skipped.
 Work in `part1_ask_mode/`.
 
 1. Open `mystery_code.py`. **Do not run it yet.**
-2. Ask the assistant to explain what it does, then predict its output for
-   the input `[3, 1, 4, 1, 5]` **before** running anything.
+2. Ask the assistant to explain what it does, then write down what it will
+   print **before** running anything.
 3. Run it. Compare the real output with your prediction.
 4. Open `buggy_code.py`. It processes `grades.csv` and happens to get the
    right answer on that file; its bugs bite on data it has not seen yet.
@@ -79,8 +79,8 @@ justify.
 
 <details><summary>Hint</summary>
 
-For step 2, ask "walk me through this line by line with the input
-`[3, 1, 4, 1, 5]`" rather than "what does this do". The trace forces
+For step 2, ask "walk me through this line by line and tell me what each
+print produces" rather than "what does this do". The trace forces
 specifics; the summary invites hand-waving.
 
 For step 4, if you are stuck, ask what assumptions the code makes about
@@ -199,7 +199,8 @@ lab is actually building is picking one deliberately.
 
 ### DIY 5: Write your own rule
 
-1. Fill in the table below for yourself, in `REFLECTION.md`.
+1. Create `REFLECTION.md` in this folder and fill in the table below for
+   yourself.
 2. For each row, give a concrete task from this lab or your own work.
 3. Add one row of your own for a task you would give **no** assistant.
 
