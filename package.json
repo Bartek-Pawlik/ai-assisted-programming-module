@@ -7,7 +7,7 @@
   },
   "scripts": {
     "preview": "marp -s --html . --theme-set themes/aiap.css",
-    "preview:intro": "marp --preview --html --allow-local-files lectures/introduction/slides.md --theme-set themes/aiap.css",
-    "export:intro": "marp --html --allow-local-files lectures/introduction/slides.md -o build/introduction/slides.pdf --theme-set themes/aiap.css"
+    "preview:intro": "marp --preview --html --allow-local-files lectures-and-labs/week01/introduction-lecture.md --theme-set themes/aiap.css",
+    "export:intro": "marp --html --allow-local-files lectures-and-labs/week01/introduction-lecture.md -o build/introduction/slides.pdf --theme-set themes/aiap.css"
   }
 }

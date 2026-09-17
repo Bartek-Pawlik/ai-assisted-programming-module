@@ -70,7 +70,7 @@ LANGS = {
 }
 
 # Scanned trees. Anything tracked outside these is prose, not teaching code.
-ROOTS = ("lectures", "mcq", "labs", "module", "practice")
+ROOTS = ("lectures-and-labs", "mcq", "module", "practice")
 
 
 def tracked_markdown() -> list[Path]:

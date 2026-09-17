@@ -57,8 +57,9 @@ fi
 
 # The course files, listed one by one (not as directories) so that editing
 # one file never blocks the rest from updating: every tracked file under
-# lectures/, mcq/, labs/ (instructions, worksheets AND starter code),
-# module/ (the schedule and overview) and .devcontainer/, plus the README.
+# lectures-and-labs/ (the lectures, the lab instructions, worksheets AND
+# starter code), mcq/, module/ (the schedule and overview) and
+# .devcontainer/, plus the README.
 #
 # Starter code is included so that a fix to a lab you have not started yet
 # still reaches you. is_yours below keeps every file you have edited,
@@ -74,7 +75,12 @@ fi
 #
 # Plain while-read loops rather than mapfile: the default bash on macOS is
 # 3.2, which has no mapfile, and this script is also run by hand on laptops.
-COURSE_RE='^(README\.md|lectures/.*|mcq/.*|labs/.*|module/.*|\.devcontainer/.*)$'
+COURSE_RE='^(README\.md|lectures-and-labs/.*|mcq/.*|module/.*|\.devcontainer/.*)$'
+# The course-owned PAGES a retirement upstream may remove here (see the pass
+# below): the lectures, the guide and the week explainers under
+# lectures-and-labs/, and everything under mcq/ and module/. Never a lab
+# folder: those hold your own code.
+RETIRE_RE='^(lectures-and-labs/(README\.md|[^/]+/([^/]+-lecture\.md|README\.md))|mcq/.*|module/.*)$'
 PATHS=()
 while IFS= read -r p; do
   [ -n "$p" ] && PATHS+=("$p")
@@ -152,9 +158,9 @@ done
 # under its new name, a retired MCQ page) — drop our copy too, or the old and
 # the new sit side by side. Same rule as above: a file you edited is yours and
 # stays, and so is a file you created there, which was never ours to remove.
-# Only lectures/, mcq/ and module/ are scanned; lab folders hold your own code and
-# worksheets, so a retired lab file is left in place rather than risk
-# deleting your work.
+# Only the lectures, the week pages, mcq/ and module/ are scanned (RETIRE_RE);
+# lab folders hold your own code and worksheets, so a retired lab file is
+# left in place rather than risk deleting your work.
 while IFS= read -r p; do
   [ -n "$p" ] || continue
   case " ${PATHS[*]} " in *" $p "*) continue;; esac
@@ -163,7 +169,7 @@ while IFS= read -r p; do
     continue
   fi
   git rm -q -- "$p" 2>/dev/null && touched+=("$p") && say "  removed (retired upstream): $p"
-done < <(git ls-files -- 'lectures/*' 'mcq/*' 'module/*')
+done < <(git ls-files -- lectures-and-labs mcq module | grep -E "$RETIRE_RE")
 
 # Commit ONLY the content paths this script rewrote. A bare `git commit`
 # would sweep in anything you happened to have staged -- and this runs

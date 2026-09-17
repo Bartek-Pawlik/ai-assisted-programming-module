@@ -51,12 +51,13 @@ withholding — by teaching while you help:
   from lecture and lab material.
 - If they ask for a whole feature, build it — then walk them through it.
 
-**Where the content is.** Lectures: `lectures/<topic>/slides.md`
+**Where the content is.** One folder per week under `lectures-and-labs/`
+(`week01` … `week12`, plus `week06b-reading-week`), listed with links in
+`lectures-and-labs/README.md`. A week's lecture is `<topic>-lecture.md`
 (Marp markdown — the teaching is in the prose, the fenced code, and the
-`<!-- Speaker notes: ... -->` comments). Labs:
-`labs/<topic>/README.md` beside the code the student edits. A rendered,
-easier-to-read version of everything is at
-https://danielcregg.is-a.dev/ai-assisted-programming/.
+`<!-- Speaker notes: ... -->` comments); its lab is `<topic>_lab/README.md`
+beside the code the student edits. A rendered, easier-to-read version of
+everything is at https://danielcregg.is-a.dev/ai-assisted-programming/.
 
 **Their work is theirs.** Edit the files they are working in. Leave decks,
 scripts, workflows and the practice bank alone.
@@ -84,28 +85,39 @@ that sign-in lives in the agent's own configuration, never in the repo.
   carries no start date: week 1 is derived each year from the Irish October
   bank holiday, the reading week. Nothing else in the repo may state a week
   number.
-- `lectures/<topic>/slides.md` — Marp deck, THE canonical lecture. Folder
-  names carry no week number and decks declare none; the schedule does.
-  Lecture folders hold the lecture only; labs live under `labs/`.
-- `labs/<topic>/` — THE canonical labs: `README.md` (the instructions
-  students follow) plus starter code. Students copy the repo from the
-  template and work here; a devcontainer provides Python 3.12, Node 22 and
-  the `gh` CLI in one image (Node because `labs/cli-agents` installs
-  npm-distributed coding agents that need Node 22 or newer).
+- `lectures-and-labs/weekNN/` — one folder per schedule row, named from its
+  week number (`week01` … `week12`; the reading week is
+  `weekNNb-reading-week`, right after week NN, so it sorts in place). A
+  teaching week holds `<topic>-lecture.md` (the Marp deck, THE canonical
+  lecture; `<topic>` is the row's `lecture` name, which is also the deck's
+  site address) and, in a lab week, `<topic>_lab/` (the row's `lab` name
+  with hyphens as underscores, so it is an importable Python package
+  name): `README.md` (the instructions students follow) plus the starter
+  code. MCQ weeks and the reading week hold only a `README.md` explainer.
+  Decks declare no week; the folder name does. Students copy the repo from
+  the template and work in these folders; a devcontainer provides Python
+  3.12, Node 22 and the `gh` CLI in one image (Node because the
+  cli-agents lab installs npm-distributed coding agents that need Node 22
+  or newer).
+- `lectures-and-labs/README.md` — the students' guide and route through
+  the weeks: getting a copy, the generated week table, keys and sign-ins,
+  running a lab's tests, pulling corrections. The Codespace opens it first.
   The repo is a TEMPLATE, not a fork source: a fork of a public repo
   cannot be made private, which would publish every student's work and
   list the class on the fork network. Workflows are guarded with
   `if: github.repository == '<this repo>'` because a template copy has
   Actions ENABLED (a fork does not) and would otherwise run this CI, and
   in `current-week.yml`'s case commit to the student's own README.
-- **Labs are addressed by TOPIC, never by week number.** Week numbers move
-  between years — this module went from 13 weeks to 12 — and student
-  instructions should not follow them. The schedule names each week's lab
-  by folder, so the one week whose lab is not its lecture's topic (the
-  overview lecture with the setup lab) is just a row like any other.
+- **The site addresses lectures and labs by TOPIC, never by week number**
+  (`/<lecture>/` and `/labs/<lab>/`, both from the schedule), so a
+  renumbered year changes folder names but no link, Moodle page or
+  redirect. The one week whose lab is not its lecture's topic (the
+  overview lecture with the setup lab) is just a row like any other: the
+  schedule names both.
 - `mcq/mcq1/README.md`, `mcq/mcq2/README.md` — the pages the schedule's
   MCQ rows link to (what each covers, how to prepare). Their titles carry
-  no week number. The reading week is a schedule row only, no page. MCQ
+  no week number. The reading week and each MCQ week also keep a short
+  `README.md` in their week folder, which the week tables link to. MCQ
   question content lives in Moodle only — never commit it here.
 - `practice/` — the MCQ practice web app (`index.html`, self-contained
   vanilla JS) plus its bank (`bank/<topic>.json`). Bank questions are
@@ -176,10 +188,13 @@ that caveat attached, and do not sharpen these into false precision.
 
 ## Conventions (guaranteed repo-wide)
 
-- Folder/file names: kebab-case, no spaces.
-- Every `slides.md` starts with YAML frontmatter: `title`, `topic` (kebab
-  slug), `type` (`lecture`), `source` (`authored`), `marp: true`,
-  `theme: aiap`, `paginate` — and no `week:`, which the schedule states and
+- Folder/file names: kebab-case, no spaces. Week folders are `weekNN` (two
+  digits, so they sort) and `weekNNb-reading-week`; lab folders are
+  `<topic>_lab` (underscores: a Python package name).
+- Every `<topic>-lecture.md` starts with YAML frontmatter: `title`, `topic`
+  (the row's `lecture` name — `check_schedule.py` fails if they differ),
+  `type` (`lecture`), `source` (`authored`), `marp: true`, `theme: aiap`,
+  `paginate` — and no `week:`, which the folder name states and
   `check_schedule.py` rejects. Lab READMEs carry no
   frontmatter — they are read as plain markdown on GitHub and on the site.
 - Slides are separated by `---` on its own line; slide 1 uses `#`, the rest `##`.
@@ -346,20 +361,23 @@ produces; never omit both, or the student has no way to self-check.
 
 ## Editing rules
 
-- To change a lecture: edit its `lectures/<topic>/slides.md` and push —
+- To change a lecture: edit its week's `<topic>-lecture.md` and push —
   CI re-renders the deck and republishes the site.
-- To add a lab: create `labs/<topic>/` with a `README.md` to the formula
-  above plus starter code, and add `"<topic>"` to `CONFORMING` in
+- To add a lab: create `<topic>_lab/` in its week's folder with a
+  `README.md` to the formula above plus starter code, name it in the row's
+  `lab`, and add `"<topic>"` to `CONFORMING` in
   `scripts/check_lab_structure.py`. If its tests need a live key, add it to
   `NEEDS_KEY` in `scripts/verify_labs.py`; if it ships a test meant to stay
   red until the student writes it, add it to `PLACEHOLDER_TESTS`.
 - To add, move or drop a teaching week: edit `module/schedule.json` (the
-  order, the week numbers, each row's `lecture` and `lab` folders and
-  `assessment` label), add or remove `lectures/<topic>/`, then run
-  `python scripts/update_current_week.py` to regenerate the README's table.
-  `check_schedule.py` fails on any disagreement; nothing else may state a
-  week number. When a deck folder is renamed, add the old name to
-  `OLD_FOLDERS` in `build_index.py` so its old URL still resolves.
+  order, the week numbers, each row's `lecture` and `lab` names and
+  `assessment` label), create, rename or remove the `weekNN/` folders to
+  match (a renumber is a `git mv` of the folders; the files inside keep
+  their names), then run `python scripts/update_current_week.py` to
+  regenerate both week tables. `check_schedule.py` fails on any
+  disagreement; nothing else may state a week number. When a deck's site
+  name changes, add the old name to `OLD_FOLDERS` in `build_index.py` so
+  its old URL still resolves.
 - Never edit the published HTML — it is generated. Edit the Markdown source
   and let CI rebuild.
 

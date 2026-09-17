@@ -51,8 +51,8 @@
       "id": "cicd-004",
       "difficulty": "medium",
       "type": "code",
-      "question": "The tests live in `labs/cicd/tests/`, and locally `python -m pytest tests/` passes. In this workflow the same step fails with `file or directory not found: tests/`. What is the most likely cause?",
-      "code": "on: push\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r labs/cicd/requirements.txt\n      - run: python -m pytest tests/",
+      "question": "The tests live in `myapp/tests/`, and locally `python -m pytest tests/` passes. In this workflow the same step fails with `file or directory not found: tests/`. What is the most likely cause?",
+      "code": "on: push\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r myapp/requirements.txt\n      - run: python -m pytest tests/",
       "options": [
         "The `on: push` trigger fires only for the default branch, so the checkout was skipped",
         "The `run` steps all start at the repository root, where there is no `tests/` directory",
@@ -60,7 +60,7 @@
         "The `pip install` step needs `--user` on a hosted runner, so `pytest` never installed"
       ],
       "answer": 1,
-      "explanation": "Every `run` step starts at the repository root, not where you were when you ran the tests locally, so `tests/` does not exist there. Use `labs/cicd/tests/` or set the step's working directory. If a run cannot find your tests, check the working directory before suspecting anything else."
+      "explanation": "Every `run` step starts at the repository root, not where you were when you ran the tests locally, so `tests/` does not exist there. Use `myapp/tests/` or set the step's working directory. If a run cannot find your tests, check the working directory before suspecting anything else."
     },
     {
       "id": "cicd-005",

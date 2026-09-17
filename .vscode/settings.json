@@ -1,7 +1,7 @@
 {
   "markdown.marp.themes": ["./themes/aiap.css"],
   "markdown.marp.html": "all",
-  "python.analysis.extraPaths": ["labs"],
+  "python.analysis.extraPaths": ["lectures-and-labs"],
   "editor.minimap.enabled": false,
   "git.autofetch": true,
   "files.exclude": {

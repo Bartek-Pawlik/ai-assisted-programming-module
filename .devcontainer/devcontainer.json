@@ -11,6 +11,9 @@
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "customizations": {
+    // The first thing a student sees: the guide, with the week table and the
+    // route through the labs.
+    "codespaces": { "openFiles": ["lectures-and-labs/README.md"] },
     "vscode": {
       "extensions": [
         "ms-python.python",
@@ -30,7 +33,8 @@
         //      AGENTS.md stays because cli-agents teaches that exact format
         //      and the root file is the worked example.
         //   2. Patterns are workspace-root-relative, so a bare name hides only
-        //      the root copy. That matters: labs/prompting/scripts exists, so
+        //      the root copy. That matters: lectures-and-labs/week03/prompting_lab/scripts
+        //      exists, so
         //      "**/scripts" would hide part of a lab. Bare names below are
         //      deliberate, not shorthand for "**/".
         "files.exclude": {

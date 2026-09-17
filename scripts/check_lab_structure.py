@@ -33,7 +33,8 @@ import re
 import sys
 from pathlib import Path
 
-LABS = Path("labs")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from schedule import load  # noqa: E402
 
 # Labs rewritten to the formula and now enforced. ADD TO THIS as each lab is
 # reworked -- never remove an entry to make a failure go away.
@@ -142,11 +143,14 @@ def check_lab(lab: Path) -> list[str]:
 
 
 def main() -> int:
-    if not LABS.is_dir():
-        print("check_lab_structure: no labs/ directory")
+    # (site slug -> source folder) for every scheduled lab: "cicd" ->
+    # lectures-and-labs/week10/cicd_lab. CONFORMING is keyed by the slug.
+    labs = {r.lab: r.lab_dir for r in load().rows if r.lab}
+    if not labs:
+        print("check_lab_structure: the schedule names no labs")
         return 0
 
-    all_labs = sorted(p.name for p in LABS.iterdir() if p.is_dir())
+    all_labs = sorted(labs)
     unknown = CONFORMING - set(all_labs)
     if unknown:
         print(f"check_lab_structure: CONFORMING names a lab that does not "
@@ -156,7 +160,7 @@ def main() -> int:
     findings: list[str] = []
     for name in all_labs:
         if name in CONFORMING:
-            findings.extend(check_lab(LABS / name))
+            findings.extend(check_lab(labs[name]))
 
     for line in findings:
         print(line)

@@ -36,7 +36,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from schedule import LECTURES, Row, Schedule, load  # noqa: E402
+from schedule import Row, Schedule, load  # noqa: E402
 
 # Deck folders from before the schedule became the single source of truth,
 # when they carried the week number. Each gets a redirect stub on the site so
@@ -269,9 +269,9 @@ def build_rows(sched: Schedule) -> tuple[str, int, int]:
     rows, lectures, markers = [], 0, 0
     for row in sched.rows:
         if row.deck:
-            deck = LECTURES / row.deck / "slides.md"
+            deck = row.lecture
             if not deck.is_file():
-                raise SystemExit(f"build_index: week {row.week} names lectures/{row.deck}/slides.md, "
+                raise SystemExit(f"build_index: week {row.week} names {deck.as_posix()}, "
                                  f"which does not exist (check_schedule.py catches this first).")
             rows.append(lecture_row(row, deck_title(deck, row.deck)))
             lectures += 1

@@ -30,10 +30,11 @@ You work in **your own copy** of this repo:
    Don't *Fork*: a fork of a public repo can never be made private.
 2. On *your* repo: **Code → Codespaces → Create codespace**. Python 3.12,
    Node 22 and the `gh` CLI are already there.
-3. Open this week's lab folder under `labs/` and follow its README.
+3. Open this week's folder under `lectures-and-labs/` (the lecture is there
+   too) and follow the lab's README.
 
 Details — including how to pull corrections into your copy mid-semester —
-in **[labs/README.md](labs/README.md)**. Read-only lab pages are also on
+in **[lectures-and-labs/README.md](lectures-and-labs/README.md)**. Read-only lab pages are also on
 the [site](https://danielcregg.is-a.dev/ai-assisted-programming/labs/),
 always the current version.
 
@@ -74,19 +75,19 @@ only.
 <!-- schedule-table:start -->
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
-| **➡️ 1** | Module Introduction | [slides](lectures/introduction/slides.md) | _No labs week 1. Labs start week 2._ |
-| 2 | AIAP Overview | [slides](lectures/overview/slides.md) | [lab](labs/setup/) |
-| 3 | Prompting & Context Engineering | [slides](lectures/prompting/slides.md) | [lab](labs/prompting/) |
-| 4 | Retrieval & Grounding | [slides](lectures/rag/slides.md) | [lab](labs/rag/) |
-| 5 | MCP | [slides](lectures/mcp/slides.md) | [lab](labs/mcp/) |
-| 6 | Coding Agents | [slides](lectures/agents/slides.md) | [lab](labs/agents/) |
-| — | Reading week | — | — |
-| 7 | **MCQ 1** (32%) · held during the lab slot | [details](mcq/mcq1/README.md) | — |
-| 8 | Security of AI-Generated Code | [slides](lectures/security/slides.md) | [lab](labs/security/) |
-| 9 | CLI Coding Agents | [slides](lectures/cli-agents/slides.md) | [lab](labs/cli-agents/) |
-| 10 | CI/CD & Evals | [slides](lectures/cicd/slides.md) | [lab](labs/cicd/) |
-| 11 | Vibe Coding & Spec-Driven | [slides](lectures/vibe-coding/slides.md) | [lab](labs/vibe-coding/) |
-| 12 | **MCQ 2** (32%) · held during the lab slot | [details](mcq/mcq2/README.md) | — |
+| **➡️ 1** | Module Introduction | [slides](lectures-and-labs/week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
+| 2 | AIAP Overview | [slides](lectures-and-labs/week02/overview-lecture.md) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
+| 3 | Prompting & Context Engineering | [slides](lectures-and-labs/week03/prompting-lecture.md) | [lab](lectures-and-labs/week03/prompting_lab/README.md) |
+| 4 | Retrieval & Grounding | [slides](lectures-and-labs/week04/rag-lecture.md) | [lab](lectures-and-labs/week04/rag_lab/README.md) |
+| 5 | MCP | [slides](lectures-and-labs/week05/mcp-lecture.md) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
+| 6 | Coding Agents | [slides](lectures-and-labs/week06/agents-lecture.md) | [lab](lectures-and-labs/week06/agents_lab/README.md) |
+| — | Reading week | [details](lectures-and-labs/week06b-reading-week/README.md) | — |
+| 7 | **MCQ 1** (32%) · held during the lab slot | [details](lectures-and-labs/week07/README.md) · [what it covers](mcq/mcq1/README.md) | — |
+| 8 | Security of AI-Generated Code | [slides](lectures-and-labs/week08/security-lecture.md) | [lab](lectures-and-labs/week08/security_lab/README.md) |
+| 9 | CLI Coding Agents | [slides](lectures-and-labs/week09/cli-agents-lecture.md) | [lab](lectures-and-labs/week09/cli_agents_lab/README.md) |
+| 10 | CI/CD & Evals | [slides](lectures-and-labs/week10/cicd-lecture.md) | [lab](lectures-and-labs/week10/cicd_lab/README.md) |
+| 11 | Vibe Coding & Spec-Driven | [slides](lectures-and-labs/week11/vibe-coding-lecture.md) | [lab](lectures-and-labs/week11/vibe_coding_lab/README.md) |
+| 12 | **MCQ 2** (32%) · held during the lab slot | [details](lectures-and-labs/week12/README.md) · [what it covers](mcq/mcq2/README.md) | — |
 <!-- schedule-table:end -->
 
 The schedule is defined once, in [`module/schedule.json`](module/schedule.json);
@@ -101,10 +102,10 @@ own. They recur through the labs, so you meet each one more than once:
 
 | You want to… | Practised in |
 |---|---|
-| **Explain** code you did not write | [setup DIY 4](labs/setup/README.md#diy-4-give-it-something-it-cannot-guess), [agents DIY 1](labs/agents/README.md#diy-1-understand-code-you-did-not-write) |
-| **Debug** from an error or a failing test | [prompting DIY 6](labs/prompting/README.md#diy-6-chain-of-thought-on-a-real-bug), [cli-agents DIY 8](labs/cli-agents/README.md#diy-8-a-script-that-explains-a-failure) |
-| **Write tests**, before or after the code | [prompting DIY 8](labs/prompting/README.md#diy-8-tests-first), [cicd DIY 1](labs/cicd/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](labs/cicd/README.md#diy-5-climb-the-assertion-ladder) |
-| **Review** a change you did not watch being made | [agents DIY 2](labs/agents/README.md#diy-2-refactor-with-the-diff-open), [cicd DIY 3](labs/cicd/README.md#diy-3-a-review-step-that-cannot-lie), [vibe-coding DIY 2](labs/vibe-coding/README.md#diy-2-find-something-you-would-not-ship) |
+| **Explain** code you did not write | [setup DIY 4](lectures-and-labs/week02/setup_lab/README.md#diy-4-give-it-something-it-cannot-guess), [agents DIY 1](lectures-and-labs/week06/agents_lab/README.md#diy-1-understand-code-you-did-not-write) |
+| **Debug** from an error or a failing test | [prompting DIY 6](lectures-and-labs/week03/prompting_lab/README.md#diy-6-chain-of-thought-on-a-real-bug), [cli-agents DIY 8](lectures-and-labs/week09/cli_agents_lab/README.md#diy-8-a-script-that-explains-a-failure) |
+| **Write tests**, before or after the code | [prompting DIY 8](lectures-and-labs/week03/prompting_lab/README.md#diy-8-tests-first), [cicd DIY 1](lectures-and-labs/week10/cicd_lab/README.md#diy-1-make-it-run-your-tests), [cicd DIY 5](lectures-and-labs/week10/cicd_lab/README.md#diy-5-climb-the-assertion-ladder) |
+| **Review** a change you did not watch being made | [agents DIY 2](lectures-and-labs/week06/agents_lab/README.md#diy-2-refactor-with-the-diff-open), [cicd DIY 3](lectures-and-labs/week10/cicd_lab/README.md#diy-3-a-review-step-that-cannot-lie), [vibe-coding DIY 2](lectures-and-labs/week11/vibe_coding_lab/README.md#diy-2-find-something-you-would-not-ship) |
 
 ## Module info
 
@@ -119,16 +120,18 @@ own. They recur through the labs, so you meet each one more than once:
   generated from it, and `scripts/check_schedule.py` fails the build if
   anything disagrees with it. There is no start date in it: week 1 is
   derived from the October bank holiday every year.
-- **Lectures** are Marp markdown, one deck per topic in
-  `lectures/<topic>/slides.md`; folder names carry no week number. All ten
-  are written. Every deck is
+- **Lectures and labs** live together, one folder per week, under
+  `lectures-and-labs/weekNN/`: the deck is `<topic>-lecture.md` (Marp
+  markdown) and the lab is `<topic>_lab/`. The week number names the
+  folder and nothing else; the site keeps topic addresses, taken from the
+  schedule. All ten decks are written. Every deck is
   self-contained and names no lecturer or institution, so any week can be
   lifted into another course unchanged; the introduction may state its
   own schedule and link its own site. `scripts/check_deck_portability.py`
   enforces that.
-- **Labs** are plain Python under `labs/<topic>/`, addressed by topic
-  rather than week number so that a reshuffled schedule never breaks a
-  student's instructions.
+- **Labs** are plain Python in each week's `<topic>_lab/` folder. On the
+  site they are addressed by topic (`/labs/<topic>/`), so a reshuffled
+  schedule renames folders but never a link.
 - **Three GitHub Actions workflows.** `marp` runs on every push to `main`:
   it runs the ten gates (safety audit, links, snippets, lab code, practice
   bank, lab and deck structure, speaker notes, schedule, site index), renders every

@@ -4,7 +4,7 @@
 Two levels, because this module's labs cannot all be verified to the same
 depth and pretending otherwise would be the real failure:
 
-  1. SYNTAX -- every .py under labs/ is byte-compiled. No dependencies, no
+  1. SYNTAX -- every .py in every scheduled lab folder is byte-compiled. No dependencies, no
      network, no keys. Runs for every lab, always.
 
   2. TESTS -- where a lab ships tests, pytest runs them. One lab needs
@@ -30,7 +30,8 @@ import os
 import sys
 from pathlib import Path
 
-LABS = Path("labs")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from schedule import load  # noqa: E402
 
 # Labs whose tests need live API access or a cloud project, so CI cannot run
 # them without secrets. Their syntax is still checked. Keep this list SHORT
@@ -64,8 +65,17 @@ THIRD_PARTY_HINTS = ("flask", "fastapi", "chromadb", "sentence_transformers",
                      "uvicorn", "pydantic", "httpx", "requests", "numpy")
 
 
-def lab_dirs() -> list[Path]:
-    return sorted(p for p in LABS.iterdir() if p.is_dir()) if LABS.is_dir() else []
+def lab_dirs() -> list[tuple[str, Path]]:
+    """(site slug, source folder) for every scheduled lab, in teaching order:
+    ("cicd", lectures-and-labs/week10/cicd_lab). NEEDS_KEY, PLACEHOLDER_TESTS
+    and the report are keyed by the slug, which never changes; the folder
+    moves when the schedule is renumbered."""
+    return [(r.lab, r.lab_dir) for r in load().rows if r.lab]
+
+
+def slug_of(lab: Path) -> str:
+    """cli_agents_lab -> cli-agents (the inverse of schedule.Row.lab_folder)."""
+    return lab.name[:-len("_lab")].replace("_", "-")
 
 
 def python_files(lab: Path) -> list[Path]:
@@ -80,7 +90,7 @@ def test_files(lab: Path) -> list[Path]:
                      if "__pycache__" not in p.parts
                      and "node_modules" not in p.parts)
     placeholders = {(lab / rel).resolve()
-                    for rel in PLACEHOLDER_TESTS.get(lab.name, [])}
+                    for rel in PLACEHOLDER_TESTS.get(slug_of(lab), [])}
     return sorted(p for p in found if p.resolve() not in placeholders)
 
 
@@ -99,7 +109,7 @@ def _pytest(lab: Path, targets: list[str]) -> subprocess.CompletedProcess:
     """Run pytest from INSIDE the lab directory.
 
     cwd matters: labs are self-contained projects, and their tests import
-    their code as a top-level package (labs/cicd/tests/test_app.py does
+    their code as a top-level package (the cicd lab's tests/test_app.py does
     `from hello_app.webapp import app`). Run from the repo root, that import
     fails and the lab looks broken when it is merely being run from the
     wrong place. Students run it from the lab folder; so does this.
@@ -126,7 +136,7 @@ def run_tests(lab: Path) -> tuple[str, str]:
     # Placeholders are judged on their own by check_placeholders, and they
     # are meant to be red -- so they stay out of this run, or a lab holding
     # both kinds of test would always look broken.
-    ignore = ["--ignore=" + rel for rel in PLACEHOLDER_TESTS.get(lab.name, [])]
+    ignore = ["--ignore=" + rel for rel in PLACEHOLDER_TESTS.get(slug_of(lab), [])]
     r = _pytest(lab, [".", *ignore])
     out = (r.stdout or "") + (r.stderr or "")
     tail = [ln for ln in out.strip().split("\n") if ln.strip()]
@@ -147,7 +157,7 @@ def check_placeholders(lab: Path) -> list[str]:
     repo. See PLACEHOLDER_TESTS.
     """
     findings = []
-    for rel in PLACEHOLDER_TESTS.get(lab.name, []):
+    for rel in PLACEHOLDER_TESTS.get(slug_of(lab), []):
         if not (lab / rel).is_file():
             findings.append(f"{lab.as_posix()}/{rel}: placeholder test is "
                             f"listed in PLACEHOLDER_TESTS but does not exist")
@@ -180,14 +190,13 @@ def main() -> int:
 
     labs = lab_dirs()
     if not labs:
-        print("verify_labs: no labs/ directory — nothing to check")
+        print("verify_labs: the schedule names no labs — nothing to check")
         return 0
 
     failures: list[str] = []
     rows: list[tuple[str, int, str]] = []
 
-    for lab in labs:
-        name = lab.name
+    for name, lab in labs:
         errors = compile_lab(lab)
         failures.extend(errors)
         n_py = len(python_files(lab))

@@ -75,15 +75,15 @@ topic covers.
 | Topic | What it covers | Lab |
 |---|---|---|
 | Module Introduction | How the module runs, assessment, tooling setup; licensing and confidentiality before the first tool is installed | — |
-| AIAP Overview | What AI-assisted programming is; the landscape and its limits | [setup](../labs/setup/) |
-| Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../labs/prompting/) |
-| Retrieval &amp; Grounding | Chunking, embeddings, vector search, grounded answers — when long context beats retrieval outright, and how an assistant finds its way round a codebase | [rag](../labs/rag/) |
-| MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../labs/mcp/) |
-| Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../labs/agents/) |
-| Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../labs/security/) |
-| CLI Coding Agents | Agents in the terminal, configured before they are trusted: standing instructions (`AGENTS.md`), built-in and custom slash commands, allow/ask/deny permission policies, and running an agent from a script | [cli-agents](../labs/cli-agents/) |
-| CI/CD &amp; Evals | Pipelines with GitHub Actions, and putting AI inside them (review, triage); evals as a ladder of checks | [cicd](../labs/cicd/) |
-| Vibe Coding &amp; Spec-Driven | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../labs/vibe-coding/) |
+| AIAP Overview | What AI-assisted programming is; the landscape and its limits | [setup](../lectures-and-labs/week02/setup_lab/) |
+| Prompting &amp; Context Engineering | SPEC prompts, constraints and non-goals, personas, chain-of-thought, few-shot — then the shift from *how you ask* to *what you put in front of the model* | [prompting](../lectures-and-labs/week03/prompting_lab/) |
+| Retrieval &amp; Grounding | Chunking, embeddings, vector search, grounded answers — when long context beats retrieval outright, and how an assistant finds its way round a codebase | [rag](../lectures-and-labs/week04/rag_lab/) |
+| MCP | Model Context Protocol: servers, clients, tools, and the 2026 move to a stateless protocol core | [mcp](../lectures-and-labs/week05/mcp_lab/) |
+| Coding Agents | The ladder of autonomy: ask → edit → act; what review means at each rung, and choosing a rung deliberately | [agents](../lectures-and-labs/week06/agents_lab/) |
+| Security of AI-Generated Code | Why generated code fails differently; validation, injection, secrets; slopsquatting and hallucinated dependencies; prompt injection; automated scanning | [security](../lectures-and-labs/week08/security_lab/) |
+| CLI Coding Agents | Agents in the terminal, configured before they are trusted: standing instructions (`AGENTS.md`), built-in and custom slash commands, allow/ask/deny permission policies, and running an agent from a script | [cli-agents](../lectures-and-labs/week09/cli_agents_lab/) |
+| CI/CD &amp; Evals | Pipelines with GitHub Actions, and putting AI inside them (review, triage); evals as a ladder of checks | [cicd](../lectures-and-labs/week10/cicd_lab/) |
+| Vibe Coding &amp; Spec-Driven | Prompt-first tools and the backlash against them; comprehension debt, the security cost, and when a spec beats a prompt | [vibe-coding](../lectures-and-labs/week11/vibe_coding_lab/) |
 
 **MCQ 1** (32%) covers everything before the reading week and **MCQ 2**
 (32%) everything after it; both are sat in person during the lab slot.

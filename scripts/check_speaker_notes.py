@@ -32,7 +32,7 @@ import re
 import sys
 from pathlib import Path
 
-LECTURES = Path("lectures")
+ROOT = Path("lectures-and-labs")
 
 NOTE_RE = re.compile(r"<!--\s*Speaker notes:(.*?)-->", re.S)
 HEADING_RE = re.compile(r"(?m)^#{1,2}\s+(.+?)\s*$")
@@ -121,9 +121,9 @@ def check(deck: Path) -> list[str]:
 
 
 def main() -> int:
-    if not LECTURES.is_dir():
+    if not ROOT.is_dir():
         return 0
-    decks = sorted(LECTURES.glob("*/slides.md"))
+    decks = sorted(ROOT.glob("*/*-lecture.md"))
     findings, n_notes, n_predict = [], 0, 0
     for deck in decks:
         text = deck.read_text(encoding="utf-8")

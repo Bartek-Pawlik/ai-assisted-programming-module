@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Render the lab READMEs, their supporting pages and the MCQ pages for GitHub Pages.
 
-For every labs/<slug>/README.md this emits OUTPUT_DIR/labs/<slug>/index.html in
-the site's visual identity, plus a labs index at OUTPUT_DIR/labs/index.html.
+For every scheduled lab (lectures-and-labs/weekNN/<slug>_lab/README.md) this
+emits OUTPUT_DIR/labs/<slug>/index.html in the site's visual identity, plus a
+labs index at OUTPUT_DIR/labs/index.html. <slug> is the schedule's lab name,
+so a lab keeps its web address when the semester is renumbered.
 Every other Markdown file under a lab (a TROUBLESHOOTING.md, a part folder's
 README, a worksheet template) is rendered beside it at the same relative path
 (README.md -> index.html, NAME.md -> NAME.html), so links between them keep
@@ -36,7 +38,6 @@ from pathlib import Path
 
 from markdown_it import MarkdownIt
 
-LABS = Path("labs")
 MCQ = Path("mcq")
 REPO_URL = "https://github.com/danielcregg/ai-assisted-programming"
 
@@ -249,17 +250,13 @@ def dest_for(source: Path, root: Path, out: Path) -> Path:
     return out / rel.with_suffix(".html")
 
 
-def scheduled_labs() -> list[tuple[str, str]]:
-    """(week number, lab slug) for every scheduled lab, in teaching order.
-
-    Lab folders carry no week number (labs are addressed by topic), so on
-    its own this script can only list them alphabetically. The schedule
-    (module/schedule.json, via scripts/schedule.py) knows which week teaches
-    which lab; read it so the labs page reads in the same order as the decks.
-    """
+def scheduled_labs():
+    """Every scheduled lab, in teaching order (module/schedule.json via
+    scripts/schedule.py): the rows with a lab, each naming its site slug
+    (row.lab), its week folder (row.dir) and its source (row.lab_dir)."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from schedule import load
-    return [(r.week, r.lab) for r in load().rows if r.lab]
+    return [r for r in load().rows if r.lab]
 
 
 def main() -> None:
@@ -268,8 +265,9 @@ def main() -> None:
     out_labs.mkdir(parents=True, exist_ok=True)
 
     labs, pages = [], 0
-    for lab_dir in sorted(p for p in LABS.iterdir() if p.is_dir()):
-        slug = lab_dir.name
+    scheduled = scheduled_labs()
+    for row in scheduled:
+        slug, lab_dir = row.lab, row.lab_dir
         readme = lab_dir / "README.md"
         if not readme.is_file():
             continue
@@ -285,11 +283,11 @@ def main() -> None:
         banner = (f'<div class="copy-banner">Read-only preview. To <strong>do</strong> '
                   f'this lab: <a href="{REPO_URL}/generate">make your own copy of the '
                   f'repo</a> ("Use this template"), open a Codespace on it, and work '
-                  f'in <code>labs/{slug}/</code>.</div>')
+                  f'in <code>{lab_dir.as_posix()}/</code>.</div>')
         for source in sorted(lab_dir.rglob("*.md")):
             if any(part.startswith(".") for part in source.relative_to(lab_dir).parts):
                 continue   # .pytest_cache and friends ship a README of their own
-            dest = dest_for(source, LABS, out_labs)
+            dest = dest_for(source, lab_dir, out_labs / slug)
             depth = len(source.relative_to(lab_dir).parts) - 1
             up = "../" * depth
             if source == readme:
@@ -311,23 +309,15 @@ def main() -> None:
     # (optional extra material, should there ever be any) goes under its own
     # heading rather than being listed as if it were taught.
     titles = dict(labs)
-    scheduled = scheduled_labs()
-    in_schedule = {slug for _, slug in scheduled}
-    extra = [slug for slug, _ in labs if slug not in in_schedule]
 
     def row(slug: str, label: str) -> str:
         return (f'<li><span class="wk">{label}</span>'
                 f'<span class="t"><a href="{slug}/">{html.escape(titles[slug])}</a></span>'
                 f'<a class="open" href="{slug}/">open</a></li>\n')
 
-    rows = "".join(row(slug, f"week {n}") for n, slug in scheduled)
-    optional = ""
-    if extra:
-        optional = ("<h2>Optional</h2>\n"
-                    "<p>Extra material outside the schedule. Not assessed.</p>\n"
-                    '<ul class="row-list">\n'
-                    + "".join(row(slug, "extra") for slug in extra)
-                    + "</ul>\n")
+    rows = "".join(row(r.lab, f"week {r.week}") for r in scheduled)
+    optional = ""   # every lab is a schedule row now; the shape gate forbids strays
+
     index_body = (f"<h1>Labs</h1>\n"
                   f"<p>The module's lab exercises in teaching order, one page per "
                   f"lab — read-only previews of the instructions, always the "

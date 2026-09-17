@@ -28,7 +28,7 @@ import re
 import sys
 from pathlib import Path
 
-LECTURES = Path("lectures")
+ROOT = Path("lectures-and-labs")
 
 # The introduction: identity rules apply, schedule rules do not.
 INTRO = "introduction"
@@ -103,12 +103,12 @@ def check(deck: Path, identity_only: bool = False) -> list[str]:
 
 
 def main() -> int:
-    if not LECTURES.is_dir():
+    if not ROOT.is_dir():
         return 0
-    decks = sorted(LECTURES.glob("*/slides.md"))
+    decks = sorted(ROOT.glob("*/*-lecture.md"))
     findings = []
     for deck in decks:
-        findings.extend(check(deck, identity_only=(deck.parent.name == INTRO)))
+        findings.extend(check(deck, identity_only=(deck.name == f"{INTRO}-lecture.md")))
 
     for line in findings:
         print(line)
