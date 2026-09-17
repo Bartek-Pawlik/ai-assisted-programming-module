@@ -41,7 +41,7 @@ what replaced it. Let them sit in the discomfort for three slides. -->
 
 * Who could **explain every line** it gave you?
 
-<span class="kicker">// the gap between those two answers is this module</span>
+* <span class="kicker">// the gap between those two answers is this module</span>
 
 ---
 
@@ -57,9 +57,9 @@ point, not a flaw. -->
 
 * How to **direct** an AI assistant, and how to **judge** what comes back
 
-- Prompting, retrieval, protocols, agents, deployment, review
+* Prompting, retrieval, protocols, agents, deployment, review
 
-<div class="callout">
+<div class="callout fragment">
 
 **The uncomfortable part.** You are accountable for code you did not
 write. The assistant is fast; your name is on the commit.
