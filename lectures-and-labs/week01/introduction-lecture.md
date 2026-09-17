@@ -59,12 +59,7 @@ point, not a flaw. -->
 
 * Prompting, retrieval, protocols, agents, deployment, review
 
-<div class="callout fragment">
-
-**The uncomfortable part.** You are accountable for code you did not
-write. The assistant is fast; your name is on the commit.
-
-</div>
+* <span class="callout" style="display: block;"><strong>The uncomfortable part.</strong> You are accountable for code you did not write. The assistant is fast; your name is on the commit.</span>
 
 ---
 
@@ -124,15 +119,11 @@ Callback to the two questions at the start. -->
 
 * But the review didn't disappear — it **moved**
 
-- From *reading every line* → to *tests, types, and CI that must pass*
-- From *"looks right"* → to *"prove it behaves right"*
+* From *reading every line* → to *tests, types, and CI that must pass*
 
-<div class="callout">
+* From *"looks right"* → to *"prove it behaves right"*
 
-**The trade only works if the verification is real.** Skip the tests and
-you have not moved up a level — you have just stopped checking.
-
-</div>
+* <span class="callout" style="display: block;"><strong>The trade only works if the verification is real.</strong> Skip the tests and you have not moved up a level — you have just stopped checking.</span>
 
 ---
 
@@ -186,15 +177,10 @@ legal side: the name on the commit is yours either way. -->
   assistants can **block suggestions that match public code** — find out
   whether yours does
 
-- The law on training data is still being argued in court. Do not build
+* The law on training data is still being argued in court. Do not build
   your habits on how it comes out
 
-<div class="callout">
-
-Treat generated code as code of **unknown origin**: you can stand over it
-once you have read and tested it — or you cannot ship it.
-
-</div>
+* <span class="callout" style="display: block;">Treat generated code as code of <strong>unknown origin</strong>: you can stand over it once you have read and tested it — or you cannot ship it.</span>
 
 ---
 
@@ -230,10 +216,10 @@ the trade, not the recommendation. -->
 * Never in a prompt: **credentials**, other people's **personal data**,
   code you have **no right to share**. Whatever the plan says
 
-- Employer code goes only into the tool the employer licensed. A local
+* Employer code goes only into the tool the employer licensed. A local
   model keeps everything on your machine — at a cost in capability
 
-<span class="kicker">// nothing in this module ever needs a secret in a prompt</span>
+* <span class="kicker">// nothing in this module ever needs a secret in a prompt</span>
 
 ---
 
@@ -248,23 +234,20 @@ codebase from their own past self. Most hands go up, AI or no AI. -->
 
 ## The words you'll hear this year
 
-- **Vibe coding** — prompt it, run it, ship it, barely read it
-- **Comprehension debt** — the future cost of understanding code a
-  machine wrote and nobody read
-- **Haunted codebase** — a working system the team no longer understands
-- **Context engineering** — the shift from *how you ask* to *what you
-  put in front of the model*
-- **Spec-driven development** — the backlash: write the spec, let the
-  agent implement it
+* **Vibe coding** <span class="kicker" data-marpit-fragment="2">— prompt it, run it, ship it, barely read it</span>
+* **Comprehension debt** <span class="kicker" data-marpit-fragment="4">— the future cost of understanding code a machine wrote and nobody read</span>
+* **Haunted codebase** <span class="kicker" data-marpit-fragment="6">— a working system the team no longer understands</span>
+* **Context engineering** <span class="kicker" data-marpit-fragment="8">— the shift from *how you ask* to *what you put in front of the model*</span>
+* **Spec-driven development** <span class="kicker" data-marpit-fragment="10">— the backlash: write the spec, let the agent implement it</span>
 
-<span class="kicker">// half of these did not exist two years ago</span>
+* <span class="kicker">// half of these did not exist two years ago</span>
 
 ---
 
 <!-- Speaker notes: ~0:20. Agenda. Reference slide, immediate bullets, take
 it at pace. The argument is done; this is the logistics that remain. -->
 
-## This hour
+## Module Delivery
 
 - Act 1 — how the module runs: schedule, assessment, effort
 - Act 2 — the tools you need set up before next week
@@ -323,8 +306,6 @@ the one that actually drives the assessment design — flag it. -->
 - **Critically analyse** their limits: code quality, over-reliance, bias
 - **Explore** emerging trends in the field
 
-<span class="kicker">// outcome 3 is why the assessment looks the way it does</span>
-
 ---
 
 <!-- Speaker notes: ~0:30. Assessment. THE slide of the hour — expect
@@ -340,7 +321,7 @@ as zero — it is not dropped from the total. -->
 |---|---|---|
 | MCQ 1 | **32%** | Week 7, in the lab |
 | MCQ 2 | **32%** | Week 12, in the lab |
-| Practical Assessments | **9 × 4%** | One per lab, open all that week |
+| Practical Assessments | **9 × 4%** | One per week, open all that week |
 
 <div class="callout">
 
@@ -363,9 +344,9 @@ module's own material. -->
 
 * Drawn from the lectures **and the labs** of previous weeks
 
-- MCQ 1 covers weeks 1–6 · MCQ 2 covers weeks 8–11
+* MCQ 1 covers weeks 1–6 · MCQ 2 covers weeks 8–11
 
-**To practise:** use the practice app on the module site, or upload the
+* **To practise:** use the practice app on the module site, or upload the
 week's material to a tool like NotebookLM and ask it to generate questions.
 
 ---
@@ -380,13 +361,11 @@ run, or what is true right now. Doing the lab is the preparation. -->
 
 ## The Practical Assessments (PAs)
 
-- **One per lab**, on the VLE, worth **4%** each
-- Open **all week** — do it when it suits you, not only in the lab
-- You **may** use AI tools, as you do in the labs
-- But the question alone is not enough: each asks about **the lab code in
-  front of you** and what it actually does
+* **One per week**, on the VLE, worth **4%** each
+* Open **all week** — do it when it suits you
+* You **may** use AI tools
 
-<span class="kicker">// the first one opens with the first lab</span>
+* <span class="kicker">// the first one opens week 2</span>
 
 ---
 
@@ -420,12 +399,7 @@ it is the account they will show an employer. -->
 
 * Change your GitHub username to **your actual name**
 
-<div class="callout">
-
-Your GitHub account is the one an employer will look at. Start it as you
-mean to continue.
-
-</div>
+* <span class="callout" style="display: block;">Your GitHub account is the one an employer will look at. Start it as you mean to continue.</span>
 
 ---
 
@@ -436,19 +410,17 @@ correction and their copy may not. -->
 
 ## Where everything lives
 
-- **The module site** — every lecture, every lab and the MCQ practice, in
-  a browser
+- **The module site** — every lecture, every lab and the MCQ practice, in a browser
 <div style="text-align: center; font-size: 1.5em;">
   <a href="https://danielcregg.is-a.dev/ai-assisted-programming">https://danielcregg.is-a.dev/ai-assisted-programming</a>
 </div>
 <br>
 
-- **Your own copy** — click *Use this template* to get a private
-  repository for your lab work
+- **Your own copy** — click below to create a private copy of the module repository for your lab work
 
 
 <div style="text-align: center; font-size: 1.5em;">
-  <a href="https://github.com/danielcregg/ai-assisted-programming">https://github.com/danielcregg/ai-assisted-programming</a>
+  <a href="https://github.com/danielcregg/ai-assisted-programming">https://github.com/new?template_owner=danielcregg&amp;template_name=ai-assisted-programming&amp;visibility=private&amp;name=ai-assisted-programming-module</a>
 </div>
 <br>
 
@@ -469,5 +441,4 @@ Leave time for questions. -->
 **The one idea to keep:** you don't have to read every line — but
 something has to check it, and if that something isn't a test, it's you.
 
-**Next week:** what AI-assisted programming actually is — and the first
-lab.
+**Next week:** what AI-assisted programming actually is — and the first lab.
