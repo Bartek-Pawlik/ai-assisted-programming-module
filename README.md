@@ -69,14 +69,14 @@ only.
 ## Module schedule
 
 <!-- current-week:start -->
-> 🗓️ **Current teaching week: 1 — Module Introduction** (week beginning 14 Sep 2026).
+> 🗓️ **Current teaching week: 2 — AIAP Overview** (week beginning 21 Sep 2026).
 <!-- current-week:end -->
 
 <!-- schedule-table:start -->
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
-| **➡️ 1** | Module Introduction | [slides](lectures-and-labs/week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
-| 2 | AIAP Overview | [slides](lectures-and-labs/week02/overview-lecture.md) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
+| 1 | Module Introduction | [slides](lectures-and-labs/week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
+| **➡️ 2** | AIAP Overview | [slides](lectures-and-labs/week02/overview-lecture.md) | [lab](lectures-and-labs/week02/setup_lab/README.md) |
 | 3 | Prompting & Context Engineering | [slides](lectures-and-labs/week03/prompting-lecture.md) | [lab](lectures-and-labs/week03/prompting_lab/README.md) |
 | 4 | Retrieval & Grounding | [slides](lectures-and-labs/week04/rag-lecture.md) | [lab](lectures-and-labs/week04/rag_lab/README.md) |
 | 5 | MCP | [slides](lectures-and-labs/week05/mcp-lecture.md) | [lab](lectures-and-labs/week05/mcp_lab/README.md) |
