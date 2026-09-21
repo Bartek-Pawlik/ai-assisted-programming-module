@@ -56,7 +56,7 @@ end. The gap between the two is the lecture. -->
 
 ## A question you already know the answer to
 
-You type a function name. It writes the body.
+You type a function name. The AI llm writes the body.
 
 <!-- no-parse -->
 ```python
@@ -138,7 +138,7 @@ the context is the only steering. -->
 * It cannot tell you what it does not know, because it does not know that
   it does not know
 
-- Change the context and you change the output. That is your entire
+* Change the context and you change the output. That is your entire
   steering wheel
 
 ---
@@ -358,7 +358,7 @@ engineering directly, and the lab has them run both prompts. -->
 We accept anything with an @ and a dot after it — we deliberately do NOT
 want RFC 5322 compliance. Reject anything over 254 characters.</p>
 
-* Same tool. Same model. **Same day.**
+- Same tool. Same model. **Same day.**
 
 ---
 
