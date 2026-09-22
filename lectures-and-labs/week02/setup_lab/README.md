@@ -290,7 +290,7 @@ model was not smarter the second time, it could just *see* more.
 1. Fresh conversation:
 
    > Write a Python function to validate an email address. Put it in a
-   > new file called validate_a.py in this folder.
+   > new file called validate_a.py in the setup_lab folder.
 
    If it asks permission to create the file, allow it.
 2. Fresh conversation:
@@ -298,7 +298,7 @@ model was not smarter the second time, it could just *see* more.
    > Write a Python function to validate an email address. We accept
    > anything with an @ and a dot after it — we deliberately do NOT want
    > RFC 5322 compliance. Reject anything over 254 characters. Put it in
-   > a new file called validate_b.py in this folder.
+   > a new file called validate_b.py in the setup_lab folder.
 
 3. Let the harness compare them. It calls the first function in each
    file and tries eleven awkward addresses:
@@ -395,6 +395,8 @@ first in that file.
 
 The first line of `python tokens.py` looks like this; the exact split
 depends on the tokeniser, and the boundaries are not the point.
+
+Try the above checks using different models and let me know if you can catch one out!
 
 <details><summary>Hint</summary>
 
