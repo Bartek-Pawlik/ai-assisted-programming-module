@@ -132,8 +132,7 @@ plausible text, with a tool around it that sometimes goes and looks.
    have your fiction.
 2. Read what comes back. Notice how good it looks: a sensible name, a
    docstring, probably a real `engine=` argument on the fictional
-   function. Save it as `hallucination.py` and run it — or, if it
-   created and ran the file itself, read the error in its output:
+   function. Save it as `hallucination.py`. You can use the 3 dot menu in the code block generated inside the chate window to select **Insert into New File**. Run it — or, if it created and ran the file itself, read the error in its output:
 
    ```bash
    python hallucination.py
@@ -142,7 +141,7 @@ plausible text, with a tool around it that sometimes goes and looks.
 3. Copy the last line of the traceback, start a **fresh** conversation,
    paste it in and ask *"What went wrong?"* The same model that wrote
    the fiction now diagnoses it.
-4. The check that settles it, without an assistant:
+4. Do a True/False check to make sure it does not exist, without an assistant:
 
    ```bash
    python -c "import pandas; print(hasattr(pandas, 'read_excel_fast'))"
