@@ -365,8 +365,8 @@ self-check.
 
 ### How a lab is delivered — tasks, not write-ups
 
-Set by the module owner on 22 Sep 2026 after the first lab ran; the setup
-lab (`lectures-and-labs/week02/setup_lab/`) is the worked example.
+The setup lab (`lectures-and-labs/week02/setup_lab/`) is the worked
+example.
 
 - **Where it runs.** In the student's own private template copy, in a
   Codespace built from the root `.devcontainer/` (Debian, Python 3.12,
@@ -381,22 +381,22 @@ lab (`lectures-and-labs/week02/setup_lab/`) is the worked example.
   Assessment on Moodle is the only assessed piece of a lab week. A lab
   therefore never asks for a file, table or note "to hand in", and never
   says "record", "write down" or "for submission".
-- **Tasks, not reflection.** Students do not like sitting and reflecting
-  or recording results; they like completing tasks with the assistant and
-  seeing results, ideally surprising ones. Every DIY step is therefore a
+- **Tasks, not reflection.** A lab is built from tasks with visible
+  results, not from reflection tables or write-ups. Every DIY step is a
   prompt to type, a command to run, or something to look at. No
   reflection tables, no `REFLECTION.md`. When the point needs a
   comparison, ship a script that makes it (the setup lab's
   `email_check.py` runs every validator the student got against the same
   awkward addresses and counts where they disagree) rather than asking
-  the student to compare by eye and write it down.
+  the student to compare by eye and write it down. When a lab runs
+  short, extend a task rather than adding a write-up: the same prompt
+  put to two or three other models from the model picker, framed as a
+  hunt ("which one can you catch out?"), is the cheapest extension.
 - **Surprises that teach either way.** Model behaviour moves every few
-  months: the fake-function bait the overview deck was built on is caught
-  by every 2026 model tested. So a DIY must land whichever way the model
-  behaves — anchor it on something the student checks themselves
-  (`hasattr`, `wc -l`, running the file, a shipped harness) rather than
-  on the model failing. A lab that depends on the model failing has a
-  shelf life.
+  months, so a DIY must land whichever way the model behaves — anchor it
+  on something the student checks themselves (`hasattr`, `wc -l`,
+  running the file, a shipped harness) rather than on the model failing.
+  A lab that depends on the model failing has a shelf life.
 - **Say which chat mode, every time — and know there is no no-tools
   mode.** In a Codespace the Copilot chat offers **Interactive** (reads
   freely, asks before it runs a command or changes a file), **Plan**
@@ -411,9 +411,8 @@ lab (`lectures-and-labs/week02/setup_lab/`) is the worked example.
   the mechanism behind the surprise goes in the `<details>` hint, a
   paragraph or two, so a student who wants it has it and one who does not
   is not made to sit through it.
-- **Sized to two hours, with a named skip.** Say in the intro which DIY
-  can be dropped if a class runs slow, and let the rest run to about 110
-  minutes including Codespace start-up.
+- **Sized to two hours.** Let the exercises run to about 110 minutes
+  including Codespace start-up.
 
 Labs written before this rule (prompting, agents, vibe-coding) still carry
 `REFLECTION.md` exercises; bring each into line when it is next edited,

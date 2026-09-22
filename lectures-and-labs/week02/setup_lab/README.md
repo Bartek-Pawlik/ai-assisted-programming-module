@@ -53,6 +53,11 @@ There is no mode in which it cannot look at your files. So when a step
 wants an answer from memory, the prompt says so — and part of the
 exercise is watching whether it obeys.
 
+The third control is the **model picker**. Several exercises end with a
+hunt: the same question put to two or three other models, to see which
+one you can catch out. They were trained on different data, at
+different times, by different people, and it shows.
+
 Whenever a step says *fresh conversation*, press the `+` at the top of
 the chat panel first. It matters more than it looks.
 
@@ -147,6 +152,13 @@ plausible text, with a tool around it that sometimes goes and looks.
    python -c "import pandas; print(hasattr(pandas, 'read_excel_fast'))"
    ```
 
+5. **The hunt.** Open the model picker and choose a different model.
+   Fresh conversation, the first prompt again — the plain one, with no
+   push. Then a third model. Does any of them write `read_excel_fast`
+   without being told to? Smaller and older models are the likeliest to
+   fall for it, and one that does has just handed you a hallucination
+   the honest way: unasked.
+
 **Expected output**
 
 ```text
@@ -200,6 +212,12 @@ model was trained is not — unless something goes and looks.
    > pandas? Answer only from what you are sure of. If you cannot be
    > sure, say "I don't know" and say why.
 
+5. **The hunt.** Put the from-memory question from step 1 to two other
+   models, a fresh conversation each. Each was trained up to a different
+   date, so each names a different "latest" version. Line the three up
+   against the truth from step 2: the furthest behind has the oldest
+   cutoff, and the one that says so is the most honest.
+
 **What you should have**
 
 Three different behaviours from one question: a confident answer from
@@ -252,6 +270,11 @@ There is a file in this folder called `speedup.py`. Do not open it yet.
    ```
 
    and open the file.
+4. **The hunt.** Put the from-the-name-alone question from step 1 to
+   two other models. Three fictions for one filename — compare the jobs
+   they invent and the line counts they guess. A model that refuses to
+   guess and asks to read the file has behaved better than the others;
+   remember which one it was.
 
 **Expected output**
 
@@ -312,9 +335,10 @@ model was not smarter the second time, it could just *see* more.
 5. Ask the first prompt again in a fresh conversation, into
    `validate_c.py`, and run the harness on all three. Same tool, same
    words: is it the same function?
-6. If your chat has a model picker, switch to a different model, ask the
-   first prompt once more into `validate_d.py`, and add it to the
-   harness.
+6. **The hunt.** Switch to a different model, ask the first prompt once
+   more into `validate_d.py`, then a third model into `validate_e.py`,
+   and run the harness on all of them — it takes any number of names.
+   Which model made the most decisions for you? Which made the fewest?
 
 **What you should have**
 
@@ -500,6 +524,9 @@ the four is always *what did I review, and when?*
 
 4. Ask it for two more, and test those too. Stop when it is wrong once,
    or when you have run out of curiosity.
+5. **The hunt.** Switch model and repeat steps 1 to 4 in a fresh
+   conversation. Then a third. Keep count: which model was caught out
+   first, and which never was?
 
 **What you should have**
 
@@ -552,4 +579,7 @@ not get cheap.
 - Four shapes — completion, chat, edit, agent — separated by what has
   already changed by the time you see anything, and by whether anyone
   asked you first.
+- Models differ — in what they were trained on, when that stopped, and
+  how readily they admit it. The model picker is an instrument, not a
+  preference.
 - Asking it to *explain* is often worth more than asking it to *write*.
