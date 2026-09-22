@@ -43,10 +43,16 @@ guess, watching it go and look, and steering it with what you show it.
    applied.
 4. Look at the row of controls under the chat input. One picks which
    assistant runs the session — choose **Copilot**. One picks its
-   **role**: **Ask** answers from what is in the conversation; **Agent**
-   may read files and run commands on its own; **Plan** reads but does
-   not change. This lab says which role to use each time, because the
-   role decides what the assistant can see. Start in **Ask**.
+   **mode**: **Interactive** may read your files and will ask you before
+   it runs a command or changes a file; **Plan** reads and thinks but
+   writes no code; **Autopilot** runs without asking. Stay in
+   **Interactive** unless a step says otherwise. If your picker uses
+   other names, those are the three to look for: the one that asks
+   first, the read-only one, and the one that never asks.
+
+There is no mode in which it cannot look at your files. So when a step
+wants an answer from memory, the prompt says so — and part of the
+exercise is watching whether it obeys.
 
 Whenever a step says *fresh conversation*, press the `+` at the top of
 the chat panel first. It matters more than it looks.
@@ -66,10 +72,10 @@ the chat panel first. It matters more than it looks.
 2. The first three lines are essential: fix anything marked `[!!]` and
    run it again until it says *Ready*. The last three are reported only —
    they print `[--]` when not met and cannot fail the check.
-3. Open `setup_lab.py` in the editor and ask the chat panel (Ask role):
-   *"Which of this script's checks can fail the run, and which are only
-   reported?"* It should name the three markers — that is your proof the
-   assistant can see the file.
+3. Open `setup_lab.py` in the editor and ask the chat panel: *"Which of
+   this script's checks can fail the run, and which are only reported?"*
+   It should name the three markers — that is your proof the assistant
+   can see the file.
 4. One more, while the file is open: *"What would this script print on a
    laptop with no git installed?"* Then check its answer against the
    code. You have just used the assistant the way it is most reliable:
@@ -112,7 +118,7 @@ plausible text, with a tool around it that sometimes goes and looks.
 
 ### DIY 2: Make it write fiction
 
-1. Fresh conversation, **Ask** role. Ask, exactly:
+1. Fresh conversation. Ask, exactly:
 
    > Write a Python function that loads a spreadsheet using
    > `pandas.read_excel_fast()`.
@@ -127,7 +133,8 @@ plausible text, with a tool around it that sometimes goes and looks.
    have your fiction.
 2. Read what comes back. Notice how good it looks: a sensible name, a
    docstring, probably a real `engine=` argument on the fictional
-   function. Save it as `hallucination.py` and run it:
+   function. Save it as `hallucination.py` and run it — or, if it
+   created and ran the file itself, read the error in its output:
 
    ```bash
    python hallucination.py
@@ -166,26 +173,34 @@ things that are not in the weights at all.
 
 ### DIY 3: Ask about something it cannot know
 
-1. Fresh conversation, **Ask** role:
+A famous function is in the weights. Anything that happened after the
+model was trained is not — unless something goes and looks.
 
-   > What is the latest released version of pandas, and what did it add?
+1. Fresh conversation. Ask it to stay in its own head:
 
-   Note the version it names, and whether it mentions that its
-   knowledge has a cutoff at all.
+   > Without using any tools or searching — from memory only — what is
+   > the latest released version of pandas, and what did it add?
+
+   Note the version it names, and whether it says when its knowledge
+   ends or just asserts.
 2. Get the truth:
 
    ```bash
    pip index versions pandas
    ```
 
-3. Fresh conversation, **Agent** role, the same question. This time
-   watch the space above the answer before any text arrives: a search
-   or a fetch appears, and then the answer.
-4. Back in **Ask**, fresh conversation, ask the same question with this
-   in front of it:
+3. Fresh conversation, the same question with the restriction removed:
 
-   > Answer only from evidence you can cite. If you cannot be sure,
-   > say "I don't know" and say why.
+   > What is the latest released version of pandas, and what did it add?
+
+   Watch the space above the answer before any text arrives: a search,
+   a fetch or a command appears, and then the answer. If nothing appears
+   and it simply answers, add *"Check pypi.org first."* and watch again.
+4. Fresh conversation, from memory again but with an escape hatch:
+
+   > Without using any tools: what is the latest released version of
+   > pandas? Answer only from what you are sure of. If you cannot be
+   > sure, say "I don't know" and say why.
 
 **What you should have**
 
@@ -200,14 +215,17 @@ model's training cutoff, so it names whatever was current then — often
 without saying so. If it happened to be right, the cutoff is simply
 recent: ask about something that released this week instead.
 
-The Agent answer is usually right, and not because it is a better
+The second answer is usually right, and not because it is a better
 model. A search result was pasted into its context and prediction
 continued over that text. It could see more. That is also why a
 looked-up answer still needs checking: the step after the lookup is
 still prediction.
 
-The fourth ask shows you can make "I don't know" more likely by giving
-it a boundary and an escape. You cannot make it a guarantee.
+The third shows you can make "I don't know" more likely by giving it a
+boundary and an escape. You cannot make it a guarantee — and if it
+searched in step 1 despite being told not to, you have seen the same
+thing from the other side: an instruction is context, and context tips
+the odds rather than flipping a switch.
 
 </details>
 
@@ -216,15 +234,19 @@ it a boundary and an escape. You cannot make it a guarantee.
 There is a file in this folder called `speedup.py`. Do not open it yet.
 
 1. Close every editor tab (right-click any tab and choose *Close All*).
-   Fresh conversation, **Ask** role:
+   Fresh conversation:
+
+   > Without opening, searching for, or running anything — from the name
+   > alone — what does speedup.py in this folder do, and roughly how many
+   > lines long is it?
+
+2. Fresh conversation, and this time let it look:
 
    > What does speedup.py do?
 
-2. Follow up in the same conversation:
-
-   > How many lines long is it?
-
-3. Now look:
+   Watch the list above the answer: it finds the file and reads it, and
+   the answer changes character completely.
+3. Now look for yourself:
 
    ```bash
    wc -l speedup.py
@@ -232,8 +254,6 @@ There is a file in this folder called `speedup.py`. Do not open it yet.
    ```
 
    and open the file.
-4. Fresh conversation, **Agent** role, the first question again. Watch
-   what it does before answering this time.
 
 **Expected output**
 
@@ -248,18 +268,18 @@ Done. Your code is now exactly as fast as it was before.
 <details><summary>Hint</summary>
 
 The first answer is a description of what a file called `speedup.py`
-usually does — profiling, caching, something with performance. Every
-word is plausible and none of it is about this file. Listen for
-*typically*, *probably*, *likely*: those are the words of a guess from a
-filename, and they are the honest part.
+usually does — profiling, caching, something with performance — and a
+line count it had no way of knowing. Every word is plausible and none of
+it is about this file. Listen for *typically*, *probably*, *likely*:
+those are the words of a guess from a filename, and they are the honest
+part. If instead it refused to guess and asked to read the file, that is
+the better behaviour, and the lesson is the same: what is in front of it
+and what is not are different things.
 
-The line count is the sharper version: there is no plausible-sounding
-way to know it, so watch whether it says so or just picks a number.
-
-In the Agent role it searched for the file, read it, and answered
-correctly. Not smarter — a tool pasted the file into its context. That
-is the whole of context engineering in one exercise: the model was not
-smarter the second time, it could just *see* more.
+The second time it searched, read, and answered correctly — including
+that the docstring lies. Not smarter: a tool pasted the file into its
+context. That is the whole of context engineering in one exercise: the
+model was not smarter the second time, it could just *see* more.
 
 </details>
 
@@ -269,18 +289,19 @@ smarter the second time, it could just *see* more.
 
 ### DIY 5: Two prompts and one harness
 
-1. Fresh conversation, **Ask** role:
+1. Fresh conversation:
 
-   > Write a Python function to validate an email address.
+   > Write a Python function to validate an email address. Put it in a
+   > new file called validate_a.py in this folder.
 
-   Save the code as `validate_a.py` in this folder.
+   If it asks permission to create the file, allow it.
 2. Fresh conversation:
 
    > Write a Python function to validate an email address. We accept
    > anything with an @ and a dot after it — we deliberately do NOT want
-   > RFC 5322 compliance. Reject anything over 254 characters.
+   > RFC 5322 compliance. Reject anything over 254 characters. Put it in
+   > a new file called validate_b.py in this folder.
 
-   Save it as `validate_b.py`.
 3. Let the harness compare them. It calls the first function in each
    file and tries eleven awkward addresses:
 
@@ -290,11 +311,11 @@ smarter the second time, it could just *see* more.
 
 4. Look at the rows where the two disagree. Each one is a decision the
    first prompt left open — and something decided it anyway.
-5. Ask the first prompt again in a fresh conversation, save it as
+5. Ask the first prompt again in a fresh conversation, into
    `validate_c.py`, and run the harness on all three. Same tool, same
    words: is it the same function?
 6. If your chat has a model picker, switch to a different model, ask the
-   first prompt once more, save it as `validate_d.py`, and add it to the
+   first prompt once more into `validate_d.py`, and add it to the
    harness.
 
 **What you should have**
@@ -344,10 +365,10 @@ first in that file.
    ```
 
    Try your own text: `python tokens.py "your name here"`.
-2. Fresh conversation, **Ask** role:
+2. Fresh conversation, from memory:
 
-   > How many times does the letter i appear in
-   > supercalifragilisticexpialidocious?
+   > Without running any code: how many times does the letter i appear
+   > in supercalifragilisticexpialidocious?
 
    Check it:
 
@@ -357,7 +378,7 @@ first in that file.
 
 3. Same conversation:
 
-   > What is 48391 multiplied by 7263?
+   > Still without running code: what is 48391 multiplied by 7263?
 
    Check it:
 
@@ -365,8 +386,8 @@ first in that file.
    python -c "print(48391 * 7263)"
    ```
 
-4. Fresh conversation, **Agent** role, the multiplication again. Watch
-   what it reaches for.
+4. Fresh conversation, the multiplication again with no restriction.
+   Watch what it reaches for.
 
 **Expected output**
 
@@ -384,8 +405,8 @@ punctuation — each turned into a number, so counting the letters inside
 a piece is a question it has no direct way to answer, and arithmetic is
 done on tokens rather than digits. It may still get both right: recent
 models have been trained hard on exactly these party tricks. The point
-is the shape of the failure when it comes, and that in the Agent role
-the sensible move is the one it usually makes: run Python.
+is the shape of the failure when it comes, and that when it is allowed
+to, the sensible move is the one it usually makes: run Python.
 
 </details>
 
@@ -394,7 +415,7 @@ the sensible move is the one it usually makes: run Python.
 ## 5. Four shapes and four twists
 
 Commit what you have so far (the Source Control panel, then *Commit*
-and *Sync Changes*), so that anything the last twist changes can be
+and *Sync Changes*), so that anything the last twists change can be
 undone with *Discard Changes*.
 
 ### DIY 7: Use each shape once
@@ -410,38 +431,43 @@ undone with *Discard Changes*.
 
    Wait for the grey text. The name says one thing and the docstring
    says another: which one did it follow? It did not ask.
-2. **Chat.** With `validate_a.py` open, **Ask** role: *"What does this
-   regex accept that it should not?"* Nothing in the file changes.
+2. **Chat.** Switch the mode to **Plan** — it may read but not write —
+   open `validate_a.py` and ask: *"What does this regex accept that it
+   should not?"* Nothing in the file changes. Switch back to
+   **Interactive** afterwards.
 3. **Edit.** Select the function in `validate_a.py`, press `Ctrl+I`
    (`Cmd+I` on a Mac) for inline chat, and ask: *"reject any address
    longer than 254 characters"*. Read the diff, then *Keep* or *Undo*.
    Run the harness again to see the row that flipped.
-4. **Agent.** Fresh conversation, **Agent** role:
+4. **Agent.** Fresh conversation, **Interactive**:
 
    > Write pytest tests for validate_b.py in test_validate_b.py, covering
    > a normal address, a missing dot, and a 300-character address. Run
    > them and fix anything that fails.
 
-   Before pressing Enter, find the permission control: it decides what
-   the agent may do without asking you. Then watch it create, run and
-   possibly edit, and read what it left behind with `git diff`.
+   It will stop and ask before it runs the tests — that pause is the
+   permission model in action. Read what it wants to run, then allow
+   it. When it finishes, read what it left behind with `git diff`.
+5. **Autopilot, once.** Fresh conversation, mode **Autopilot**, and ask
+   it to add one more test case and run the tests again. Notice what it
+   no longer asks you. Switch back to **Interactive** when it is done.
 
 **What you should have**
 
 Four things on screen: a suggestion you did not accept, an answer that
 changed nothing, a diff you chose to keep or undo, and a test file plus
 a test run you did not type — with a `git diff` showing exactly what the
-agent touched.
+agent touched, and one run in which nobody asked you anything.
 
 <details><summary>Hint</summary>
 
 The four shapes differ in what has already changed by the time you see
-anything. A completion changed nothing; a chat answer changed nothing;
+anything. A completion changed nothing; a Plan answer changed nothing;
 an edit changed the selection, and showed you first; the agent had
-created a file and run commands before there was anything to look at.
-So the thing you review moves too: a suggestion, then a diff, then an
-outcome. The question that separates the four is always *what did I
-review, and when?*
+created a file and run commands before there was anything to look at —
+and in Autopilot, without asking. So the thing you review moves too: a
+suggestion, then a diff, then an outcome. The question that separates
+the four is always *what did I review, and when?*
 
 </details>
 
@@ -451,8 +477,8 @@ review, and when?*
 
 ### DIY 8: Break a regex with its help
 
-1. Fresh conversation, **Ask** role. Paste this and ask it to explain
-   the pattern piece by piece:
+1. Fresh conversation. Paste this and ask it to explain the pattern
+   piece by piece:
 
    ```text
    ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$
@@ -497,13 +523,14 @@ not get cheap.
 
 - **Skipping a failed setup check** because it seems unrelated. It will
   cost you an hour in a later week instead of five minutes now.
-- **Assuming it can see your file** because the file is in the repo. In
-  the Ask role it sees the conversation and whatever is open or attached;
-  in the Agent role it sees whatever it chose to read, and the chat
-  lists what that was.
+- **Assuming it can see your file** because the file is in the repo. It
+  sees the conversation, whatever is open or attached, and whatever it
+  chose to go and read — and the chat lists what that was. Look.
+- **Treating "don't use tools" as a switch.** It is an instruction, and
+  an instruction is context: usually obeyed, never guaranteed.
 - **Reading a caught fake as proof that it checks.** It does not check;
-  a famous name was in the weights. Ask about your own file and the same
-  tool guesses.
+  a famous name was in the weights. Ask about your own file from memory
+  and the same tool guesses.
 - **Reading a hallucination as a bug in the tool.** It is the mechanism
   working normally; your job is to notice.
 - **Judging the two validators on style** rather than on what the
@@ -520,8 +547,9 @@ not get cheap.
   produces the useful output, and there is no tell in the text. The
   check is outside it.
 - **Context is your steering wheel.** The same tool gives a different
-  answer when it can see more, and the role you pick decides what it
-  can see.
+  answer when it can see more — and what it can see is what you opened,
+  attached, or let it go and read.
 - Four shapes — completion, chat, edit, agent — separated by what has
-  already changed by the time you see anything.
+  already changed by the time you see anything, and by whether anyone
+  asked you first.
 - Asking it to *explain* is often worth more than asking it to *write*.
