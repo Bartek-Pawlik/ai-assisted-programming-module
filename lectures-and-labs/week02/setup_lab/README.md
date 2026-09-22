@@ -4,10 +4,6 @@ Two jobs. Get your environment working, then spend the rest of the
 session catching the assistant out: making it invent things, watching it
 guess, watching it go and look, and steering it with what you show it.
 
-Nothing is handed in and nothing is marked. The point is to see each of
-these things happen on your own screen. Sized for two hours; if you run
-short, DIY 6 stands alone and can wait.
-
 ## What you'll learn
 
 - Get a working AI-assisted environment and prove it works
@@ -30,7 +26,10 @@ short, DIY 6 stands alone and can wait.
 
 ## Getting started
 
-1. Open a Codespace on **your own copy** of the module repo.
+1. Open a Codespace on **your own copy** of the module repo. If VS Code
+   asks whether you trust the authors of the files, choose **Yes**: it is
+   your own copy of the module's files, and the lab cannot run in
+   Restricted Mode.
 2. Move into this lab:
 
    ```bash
