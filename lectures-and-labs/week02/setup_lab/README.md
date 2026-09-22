@@ -41,9 +41,8 @@ guess, watching it go and look, and steering it with what you show it.
    icon should also be in the status bar. If neither appears, check you
    are signed in to the GitHub account with the student developer pack
    applied.
-4. Look at the row of controls under the chat input. One picks which
-   assistant runs the session — choose **Copilot**. One picks its
-   **mode**: **Interactive** may read your files and will ask you before
+4. Look at the row of controls under the chat input. Pick which
+   assistant runs the session — choose **Copilot**. It may say **Local** currently. Next pick the **mode**: **Interactive** may read your files and will ask you before
    it runs a command or changes a file; **Plan** reads and thinks but
    writes no code; **Autopilot** runs without asking. Stay in
    **Interactive** unless a step says otherwise. If your picker uses
